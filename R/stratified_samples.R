@@ -1,7 +1,7 @@
 #' @title Summarize stratified sample
 #' @description Summarizes strata- and population-level statistics for
 #' stratified sample data
-#' @param trainintData dataframe containing observations of variable of
+#' @param trainingData dataframe containing observations of variable of
 #' interest, and stratum assignment for each plot
 #' @param attribute character name of attribute to be summarized
 #' @param stratumTab dataframe containing acreages for each stratum
