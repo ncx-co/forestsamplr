@@ -8,6 +8,7 @@
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9)
 #' @param post logical true if post-stratification was used
 #' @author Henry Rodman
+#' @importFrom dplyr
 #' @examples
 #' \dontrun{
 #' trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
