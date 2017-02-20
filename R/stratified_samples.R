@@ -44,8 +44,7 @@ summarize_stratified <- function(trainingData, attribute,
 						popVar = sum(stratVarTot) / (sum(acres) ^ 2),
 						popSE = sqrt(popVar),
 						popCIhalf = popSE * qt(1 - (1 - desiredConfidence) / 2,
-								df = sum(stratPlots - 1)),
-						nPlots = stratPlots) %>%
+								df = sum(stratPlots - 1))) %>%
 				select(popMean, popSE, popCIhalf)
 	} else { # summarize (post-stratification, in progress)
 #		totalSummary <- stratumSummaries %>%
