@@ -27,18 +27,18 @@ summarize_stratified <- function(trainingData, attribute,
 	trainingData$attr <- attrTemp
 	
 	# summarize strata
-	stratumSummaries <- trainingData %>%
-			left_join(stratumTab) %>%
-			mutate(attrExpanded = attr * acres) %>%
-			group_by(stratum) %>%
-			summarize(stratMeanTot = mean(attr),
-					stratVarTot = var(attrExpanded) / n(),
-					stratVarMean = stratVarTot / mean(acres) ^ 2,
-					stratSE = sqrt(stratVarMean),
-					stratPlots = n())
-	
-	# summarize population (non-post-stratification)
 	if(!post) {
+		# summarize strata
+		stratumSummaries <- trainingData %>%
+				left_join(stratumTab) %>%
+				mutate(attrExpanded = attr * acres) %>%
+				group_by(stratum) %>%
+				summarize(stratMeanTot = mean(attr),
+						stratVarTot = var(attrExpanded) / n(),
+						stratVarMean = stratVarTot / mean(acres) ^ 2,
+						stratSE = sqrt(stratVarMean),
+						stratPlots = n())
+		
 		totalSummary <- stratumSummaries %>%
 				left_join(stratumTab) %>%
 				summarize(popMean = weighted.mean(stratMeanTot, w = acres),
@@ -47,15 +47,24 @@ summarize_stratified <- function(trainingData, attribute,
 						popCIhalf = popSE * qt(1 - (1 - desiredConfidence) / 2,
 								df = sum(stratPlots - 1))) %>%
 				select(popMean, popSE, popCIhalf)
+		
 	} else { # summarize (post-stratification, in progress)
-#		totalSummary <- stratumSummaries %>%
-#				left_join(stratumTab) %>%
-#				summarize(popMean = weighted.mean(stratMeanTot, w = acres),
-#						popMeanVar = sqrt(sum((acres / sum(acres)) ^ 2 * (1 / stratPlots) * stratSE ^ 2)),
-#						popSE = sqrt(popVar),
-#						popCIhalf = popSE * qt(1 - (1 - desiredConfidence) / 2,
-#								df = sum(stratPlots - 1))) %>%
-#				select(popMean, popSE, popCIhalf)
+		stratumSummaries <- trainingData %>%
+				left_join(stratumTab) %>%
+				group_by(stratum) %>%
+				summarize(stratMean = mean(attr),
+						stratVarMean = var(attr) / n(),
+						stratSE = sqrt(stratVarMean),
+						stratPlots = n())
+		
+		totalSummary <- stratumSummaries %>%
+				left_join(stratumTab) %>%
+				summarize(popMean = weighted.mean(stratMean, w = acres),
+						popMeanVar = sum((acres / sum(acres)) ^ 2 * stratVarMean),
+						popSE = sqrt(popMeanVar),
+						popCIhalf = popSE * qt(1 - (1 - desiredConfidence) / 2,
+								df = sum(stratPlots - 1))) %>%
+				select(popMean, popSE, popCIhalf)
 	}
 	
 	# return list of 
