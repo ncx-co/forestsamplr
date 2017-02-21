@@ -1,6 +1,9 @@
 #' @title Summarize stratified sample
 #' @description Summarizes strata- and population-level statistics for
-#' stratified sample data
+#' stratified sample data. The calculations are derived from Chapter 5 in
+#' Gregoire and Valentine's (2008) Sampling Strategies for Natural Resources
+#' and the Environment. The variance terms refer to the variance of the mean,
+#' hence the \code{n} terms in the deonminators.
 #' @param trainingData dataframe containing observations of variable of
 #' interest, and stratum assignment for each plot
 #' @param attribute character name of attribute to be summarized
@@ -25,20 +28,20 @@ summarize_stratified <- function(trainingData, attribute,
 	# give the variable of interest a generic name
 	attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))
 	trainingData$attr <- attrTemp
-	
-	# summarize strata
-	stratumSummaries <- trainingData %>%
-			left_join(stratumTab) %>%
-			mutate(attrExpanded = attr * acres) %>%
-			group_by(stratum) %>%
-			summarize(stratMeanTot = mean(attr),
-					stratVarTot = var(attrExpanded) / n(),
-					stratVarMean = stratVarTot / mean(acres) ^ 2,
-					stratSE = sqrt(stratVarMean),
-					stratPlots = n())
-	
+		
 	# summarize population (non-post-stratification)
 	if(!post) {
+		# summarize strata
+		stratumSummaries <- trainingData %>%
+				left_join(stratumTab) %>%
+				mutate(attrExpanded = attr * acres) %>%
+				group_by(stratum) %>%
+				summarize(stratMeanTot = mean(attr),
+						stratVarTot = var(attrExpanded) / n(),
+						stratVarMean = stratVarTot / mean(acres) ^ 2,
+						stratSE = sqrt(stratVarMean),
+						stratPlots = n())
+		
 		totalSummary <- stratumSummaries %>%
 				left_join(stratumTab) %>%
 				summarize(popMean = weighted.mean(stratMeanTot, w = acres),
@@ -47,15 +50,24 @@ summarize_stratified <- function(trainingData, attribute,
 						popCIhalf = popSE * qt(1 - (1 - desiredConfidence) / 2,
 								df = sum(stratPlots - 1))) %>%
 				select(popMean, popSE, popCIhalf)
+		
 	} else { # summarize (post-stratification, in progress)
-#		totalSummary <- stratumSummaries %>%
-#				left_join(stratumTab) %>%
-#				summarize(popMean = weighted.mean(stratMeanTot, w = acres),
-#						popMeanVar = sqrt(sum((acres / sum(acres)) ^ 2 * (1 / stratPlots) * stratSE ^ 2)),
-#						popSE = sqrt(popVar),
-#						popCIhalf = popSE * qt(1 - (1 - desiredConfidence) / 2,
-#								df = sum(stratPlots - 1))) %>%
-#				select(popMean, popSE, popCIhalf)
+		stratumSummaries <- trainingData %>%
+				left_join(stratumTab) %>%
+				group_by(stratum) %>%
+				summarize(stratMean = mean(attr),
+						stratVarMean = var(attr) / n(),
+						stratSE = sqrt(stratVarMean),
+						stratPlots = n())
+		
+		totalSummary <- stratumSummaries %>%
+				left_join(stratumTab) %>%
+				summarize(popMean = weighted.mean(stratMean, w = acres),
+						popMeanVar = sum((acres / sum(acres)) ^ 2 * stratVarMean),
+						popSE = sqrt(popMeanVar),
+						popCIhalf = popSE * qt(1 - (1 - desiredConfidence) / 2,
+								df = sum(stratPlots - 1))) %>%
+				select(popMean, popSE, popCIhalf)
 	}
 	
 	# return list of 
