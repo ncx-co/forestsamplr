@@ -58,7 +58,9 @@ summarize_stratified <- function(trainingData, attribute,
 				summarize(stratMean = mean(attr),
 						stratVarMean = var(attr) / n(),
 						stratSE = sqrt(stratVarMean),
-						stratPlots = n())
+						stratPlots = n()) %>%
+				mutate(stratCIpct = 100 * stratSE * qt(1 - (1 - desiredConfidence) / 2,
+								df = stratPlots - 1) / stratMean)
 		
 		totalSummary <- stratumSummaries %>%
 				left_join(stratumTab) %>%
@@ -67,12 +69,13 @@ summarize_stratified <- function(trainingData, attribute,
 						popSE = sqrt(popMeanVar),
 						popCIhalf = popSE * qt(1 - (1 - desiredConfidence) / 2,
 								df = sum(stratPlots - 1))) %>%
+				mutate(ciPct = 100 * popCIhalf / popMean) %>%
 				select(popMean, popSE, popCIhalf)
 	}
 	
 	# return list of 
-	outList <- list(stratumSummaries = stratumSummaries,
-			totalSummary = totalSummary)
+	outList <- list(stratumSummaries = data.frame(stratumSummaries),
+			totalSummary = data.frame(totalSummary))
 	
 	return(outList)
 	
