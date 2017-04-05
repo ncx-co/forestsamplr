@@ -40,7 +40,8 @@ summarize_stratified <- function(trainingData, attribute,
 						stratVarTot = var(attrExpanded) / n(),
 						stratVarMean = stratVarTot / mean(acres) ^ 2,
 						stratSE = sqrt(stratVarMean),
-						stratPlots = n())
+						stratPlots = n(),
+						stratAcres = mean(acres))
 		
 		totalSummary <- stratumSummaries %>%
 				left_join(stratumTab) %>%
@@ -59,7 +60,8 @@ summarize_stratified <- function(trainingData, attribute,
 				summarize(stratMean = mean(attr),
 						stratVarMean = var(attr) / n(),
 						stratSE = sqrt(stratVarMean),
-						stratPlots = n())
+						stratPlots = n(),
+						stratAcres = mean(acres))
 		
 		totalSummary <- stratumSummaries %>%
 				left_join(stratumTab) %>%
