@@ -47,7 +47,7 @@ summarize_simple_random <- function(trainingData, attribute,
                 highCL = mean(y) + qt(desiredConfidence / 2, n - 1) * SE, #2-tailed
                 lowCL = mean(y) - qt(desiredConfidence / 2, n - 1) * SE,
                 sampIntensityReplacement = (qt(desiredConfidence / 2, n - 1) * SE
-                                 / ((highCL - lowCL) / 2)) ^ 2, #w/replacement
+                                          / ((highCL - lowCL) / 2)) ^ 2, #w/replacement
                 sampIntensityNoReplacement = 1 / (sampIntensityReplacement + (1 / N))
                                           #w/o replacement
                 #plot size influences?
