@@ -1,4 +1,4 @@
-context("Forest sampling statistics calculations")
+context("Forest sampling statistics calculations: stratified sample")
 
 
 
@@ -21,7 +21,7 @@ finalSum = list('stratumSummaries' = data.frame(stratSum),
 
 
 
-test_that("stratified functions", {
+test_that("stratified functions correctly", {
   strat <- summarize_stratified(trainingData, attribute,stratumTab,
                                 desiredConfidence = 0.9, post = T)
   expect_equal(strat,
