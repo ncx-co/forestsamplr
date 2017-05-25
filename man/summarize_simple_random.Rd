@@ -17,6 +17,8 @@ interest, and stratum assignment for each plot}
 
 \item{attribute}{character name of attribute to be summarized}
 
+\item{popN}{numeric population size.}
+
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9)}
 
 \item{infReplacement}{logical true if sample was done with replacement
@@ -28,12 +30,12 @@ from a finite population.}
 \item{post}{logical true if post-stratification was used}
 
 \item{trainingData}{dataframe containing observations of variable of
-interest, and stratum assignment for each plot}
+interest.}
 
 \item{attribute}{character name of attribute to be summarized. Attribute
-must already be expanded to plot level.}
+must already be expanded.}
 
-\item{desiredConfidence}{numeric desired confidence level (e.g. 0.9)}
+\item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
 \description{
 Summarizes population-level statistics for

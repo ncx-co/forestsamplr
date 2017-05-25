@@ -8,11 +8,14 @@ summarize_systematic(trainingData, attribute, popN, desiredConfidence = 0.9)
 }
 \arguments{
 \item{trainingData}{dataframe containing observations of variable of
-interest #not exactly necessary}
+interest.}
 
-\item{desiredConfidence}{numeric desired confidence level (e.g. 0.9)}
+\item{attribute}{character name of attribute to be summarized. Attribute
+must already be expanded.}
 
-\item{y}{attribute: vector of attribute to be summarized}
+\item{popN}{numeric population size.}
+
+\item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
 \description{
 Summarizes population-level statistics for

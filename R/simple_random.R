@@ -5,10 +5,11 @@
 #' variance terms refer to the variance of the mean, hence the
 #' \code{n} terms in the deonminators.
 #' @param trainingData dataframe containing observations of variable of
-#' interest, and stratum assignment for each plot
+#' interest.
 #' @param attribute character name of attribute to be summarized. Attribute
-#' must already be expanded to plot level.
-#' @param desiredConfidence numeric desired confidence level (e.g. 0.9)
+#' must already be expanded.
+#' @param popN numeric population size.
+#' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param infReplacement logical true if sample was done with replacement
 #' or from an infite population. False if sampled without replacement,
 #' from a finite population.

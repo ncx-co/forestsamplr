@@ -5,9 +5,11 @@
 #' variance terms refer to the variance of the mean, hence the
 #' \code{n} terms in the deonminators.
 #' @param trainingData dataframe containing observations of variable of
-#' interest #not exactly necessary
-#' @param y attribute: vector of attribute to be summarized
-#' @param desiredConfidence numeric desired confidence level (e.g. 0.9)
+#' interest.
+#' @param attribute character name of attribute to be summarized. Attribute
+#' must already be expanded.
+#' @param popN numeric population size.
+#' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples
