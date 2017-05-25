@@ -43,8 +43,8 @@ summarize_simple_random <- function(trainingData, attribute, popN = NA,
 
   test <- (!is.na(popN) && (!infReplacement))
   simpRandomSummary <- trainingData %>%
-    # set NA in attribute to 0
-    mutate(attr = ifelse(is.na(attr), 0, attr)) %>% #can I do this?? or is there a better way?
+    # set any NA in attribute to 0
+    mutate(attr = ifelse(is.na(attr), 0, attr)) %>%
     mutate(popMean = mean(attr)) %>%
     mutate(var = (sum(attr ^ 2) - (sum(attr ^ 2) / n)) / (n - 1)) %>%
     mutate(se = ifelse(test, sqrt((var / n) * ((popN - n) / popN)),  # without replacement, finite population
