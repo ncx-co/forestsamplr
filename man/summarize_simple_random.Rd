@@ -5,11 +5,11 @@
 \alias{summarize_simple_random}
 \title{Summarize simple random sample}
 \usage{
-summarize_simple_random(trainingData, attribute, popN,
-  desiredConfidence = 0.9, infReplacement)
+summarize_simple_random(trainingData, attribute, popN = NA,
+  desiredConfidence = 0.9, infReplacement = F)
 
-summarize_simple_random(trainingData, attribute, popN,
-  desiredConfidence = 0.9, infReplacement)
+summarize_simple_random(trainingData, attribute, popN = NA,
+  desiredConfidence = 0.9, infReplacement = F)
 }
 \arguments{
 \item{trainingData}{dataframe containing observations of variable of
@@ -17,13 +17,14 @@ interest, and stratum assignment for each plot}
 
 \item{attribute}{character name of attribute to be summarized}
 
-\item{popN}{numeric population size.}
+\item{popN}{numeric population size. Assumes popN is not known.}
 
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9)}
 
 \item{infReplacement}{logical true if sample was done with replacement
 or from an infite population. False if sampled without replacement,
-from a finite population.}
+from a finite population. Assumes without replacement, from a finite
+population.}
 
 \item{stratumTab}{dataframe containing acreages for each stratum}
 

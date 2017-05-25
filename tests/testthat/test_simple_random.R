@@ -12,10 +12,13 @@ test_that("simple random functions correctly", {
 
   sampT <- summarize_simple_random(trainingData, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = T)
   sampNA <- summarize_simple_random(trainingData, attribute, popN = NA, desiredConfidence = 0.9, infReplacement = T)
-  #sampNoN <- summarize_simple_random(trainingData, attribute, desiredConfidence = 0.9, infReplacement = T)
+  sampNoN <- summarize_simple_random(trainingData, attribute, desiredConfidence = 0.9, infReplacement = T)
+  sampNoReplacement <- summarize_simple_random(trainingData, attribute, popN = 50, desiredConfidence = 0.9)
   sampF <- summarize_simple_random(trainingData, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = F)
   sampReplacementNA <- summarize_simple_random(trainingData, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = NA)
   expect_equal(sampNA, sampT)
+  expect_equal(sampNA, sampNoN)
+  expect_equal(sampF, sampNoReplacement)
   expect_equal(sampF, sampReplacementNA)
   expect_error(summarize_simple_random(trainingData, attribute, popN = 0, desiredConfidence = 0.9, infReplacement = T))
 
@@ -37,3 +40,4 @@ test_that("simple random functions correctly", {
 
 
 })
+

@@ -13,7 +13,7 @@ interest.}
 \item{attribute}{character name of attribute to be summarized. Attribute
 must already be expanded.}
 
-\item{popN}{numeric population size.}
+\item{popN}{numeric population size. Assumes popN is not known.}
 
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }

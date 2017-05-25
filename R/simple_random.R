@@ -8,11 +8,12 @@
 #' interest.
 #' @param attribute character name of attribute to be summarized. Attribute
 #' must already be expanded.
-#' @param popN numeric population size.
+#' @param popN numeric population size. Assumes popN is not known.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param infReplacement logical true if sample was done with replacement
 #' or from an infite population. False if sampled without replacement,
-#' from a finite population.
+#' from a finite population. Assumes without replacement, from a finite
+#' population.
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples
@@ -24,8 +25,8 @@
 #' }
 #' @export
 
-summarize_simple_random <- function(trainingData, attribute, popN, desiredConfidence = 0.9,
-                                    infReplacement) { # make it able to not pass in a popN
+summarize_simple_random <- function(trainingData, attribute, popN = NA,
+                                    desiredConfidence = 0.9, infReplacement = F) {
 
   # give the variable of interest a generic name
   attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))
@@ -39,9 +40,6 @@ summarize_simple_random <- function(trainingData, attribute, popN, desiredConfid
   if (is.na(infReplacement)) {
     infReplacement <- FALSE
   }
-
-
-
 
   test <- (!is.na(popN) && (!infReplacement))
   simpRandomSummary <- trainingData %>%

@@ -8,7 +8,7 @@
 #' interest.
 #' @param attribute character name of attribute to be summarized. Attribute
 #' must already be expanded.
-#' @param popN numeric population size.
+#' @param popN numeric population size. Assumes popN is not known.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @author Karin Wolken
 #' @import dplyr
