@@ -1,32 +1,39 @@
 context("Forest sampling statistics calculations: simple random sample")
 
-testTrees <- system.file('data', 'ph_trees.csv', package = 'forestSampling')
-testPlots <- system.file('data', 'plots.csv', package = 'forestSampling')
+#testTrees <- system.file('data', 'ph_trees.csv', package = 'forestSampling')
+#testPlots <- system.file('data', 'plots.csv', package = 'forestSampling')
 
-y = c(5, 6, 3, 1, 8, 10)
+trainingData = data.frame(bapa = c(120, 140, 160, 110, 100, 90),
+                          plots = c(1, 2, 3, 4, 5, 6))
+attribute = 'bapa'
 
 
+test_that("simple random functions correctly", {
 
-
-
-test_that("simple random: popN and infReplacement function correctly", {
-
-  sampT <- summarize_simple_random(y, popN = 50, infReplacement = T, desiredConfidence = 0.9, post = T)
-  sampNA <- summarize_simple_random(y, popN = NA, infReplacement = T, desiredConfidence = 0.9, post = T)
-  samp0 <- summarize_simple_random(y, popN = 0, infReplacement = T, desiredConfidence = 0.9, post = T)
-  sampF <- summarize_simple_random(y, popN = 50, infReplacement = F, desiredConfidence = 0.9, post = T)
+  sampT <- summarize_simple_random(trainingData, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = T)
+  sampNA <- summarize_simple_random(trainingData, attribute, popN = NA, desiredConfidence = 0.9, infReplacement = T)
+  #sampNoN <- summarize_simple_random(trainingData, attribute, desiredConfidence = 0.9, infReplacement = T)
+  sampF <- summarize_simple_random(trainingData, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = F)
+  sampReplacementNA <- summarize_simple_random(trainingData, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = NA)
   expect_equal(sampNA, sampT)
-  expect_error(samp0)
+  expect_equal(sampF, sampReplacementNA)
+  expect_error(summarize_simple_random(trainingData, attribute, popN = 0, desiredConfidence = 0.9, infReplacement = T))
 
-  expect_equal(sampF, data.frame('mean' = 5.5, 'variance' = 39.16, 'standardError' = 2.39,
-                                 'upperLimitCI' = 10.32, 'lowerLimitCI' = 0.67),
+  expect_equal(sampF, data.frame('mean' = 120, 'variance' = 14966.67, 'standardError' = 46.85,
+                                 'upperLimitCI' = 214.40, 'lowerLimitCI' = 25.59),
                                  tolerance = 0.1)
 
-  y2 <- c(4)
-  samp2 <- summarize_simple_random(y2, popN = 50, infReplacement = T, desiredConfidence = 0.9, post = T)
-  expect_equal(sampT, samp2)
-  y3 <- c(NA)
-  samp3 <- summarize_simple_random(y3, popN = 50, infReplacement = T, desiredConfidence = 0.9, post = T)
-  expect_equal(samp2, samp3)
+  # attribute has few or no entries
+  trainingDataOne <- data.frame('bapa' = c(4), 'plot' = c(10))
+  trainingDataTwo <- data.frame('bapa' = c(4, 5), 'plot' = c(10, 11))
+  trainingDataThree <- data.frame('bapa' = c(4, 5, NA), 'plot' = c(10, 11, 12))
+  trainingDataNone <- data.frame('bapa' = c(NA), 'plot' = c(10))
+  expect_warning(summarize_simple_random(trainingDataOne, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = T))
+  expect_warning(summarize_simple_random(trainingDataNone, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = T))
+  sampTwo <- summarize_simple_random(trainingDataTwo, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = T)
+  sampThree <- summarize_simple_random(trainingDataThree, attribute, popN = 50, desiredConfidence = 0.9, infReplacement = T)
+  expect_false(is.na(sampThree$lowerLimitCI))
+  expect_equal(sampTwo$mean,  mean(trainingDataTwo[[1]]))
+
 
 })

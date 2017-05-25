@@ -13,18 +13,16 @@
 #' @examples
 #' \dontrun{
 #' trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
-#'   plots = c(1, 2, 3, 4, 5, 6)) #not accurate
+#'   plots = c(1, 2, 3, 4, 5, 6))
 #' attribute = 'bapa'
 #' desiredConfidence = 0.9
 #' }
 #' @export
 
-summarize_systematic <- function(y, popN, desiredConfidence = 0.9) {
-
-  summarize_simple_random(y, popN, desiredConfidence = 0.9, FALSE)
+summarize_systematic <- function(trainingData, attribute, popN, desiredConfidence = 0.9) {
 
   # return dataframe of
-  output <- simpRandomSummary
+  output <- summarize_simple_random(trainingData, attribute, popN, desiredConfidence = 0.9, FALSE)
 
   return(output)
 
