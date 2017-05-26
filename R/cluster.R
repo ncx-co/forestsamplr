@@ -25,37 +25,49 @@
 #' }
 #' @export
 
-summarize_simple_random <- function(trainingData, attribute, popN = NA,
+summarize_cluster <- function(trainingData, attribute, popN = NA,
                                     desiredConfidence = 0.9, infReplacement = F) {
 
   # give the variable of interest a generic name
   attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))
   trainingData$attr <- attrTemp
 
-  n <- length(trainingData$attr)
-  if (!is.na(popN) && popN <= n) {
-    stop("Population size must be greater than sample size.")
-  }
+  trainingData <- data.frame('m' = c(5, 7, 3, 90), #number of elements in one cluster
+             'clusterID' = c(1, 2, 1, 5), #distinct clusters
+             'isUsed' = c(T, T, T, F), #whether or not the cluster is included in the sample
+             'attr' = c(10, 15, 20, 80) #attribute, or 'y'
+             )
 
-  if (is.na(infReplacement)) {
-    infReplacement <- FALSE
-  }
 
-  test <- (!is.na(popN) && (!infReplacement))
-  simpRandomSummary <- trainingData %>%
-    # set any NA in attribute to 0
-    mutate(attr = ifelse(is.na(attr), 0, attr)) %>%
-    mutate(popMean = mean(attr)) %>%
-    mutate(var = (sum(attr ^ 2) - (sum(attr ^ 2) / n)) / (n - 1)) %>%
-    mutate(se = ifelse(test, sqrt((var / n) * ((popN - n) / popN)),  # without replacement, finite population
-                       sqrt(var / n))) %>%  # with replacement, infinite population
-    mutate(highCL = mean(attr) + qt(1 - ((1 - desiredConfidence) / 2), n - 1) * se) %>%  # 2-tailed
-    mutate(lowCL = mean(attr) - qt(1 - ((1 - desiredConfidence) / 2), n - 1) * se) %>%
-    summarize('mean' = popMean[1], 'variance' = var[1], 'standardError' = se[1],
-              'upperLimitCI' = highCL[1], 'lowerLimitCI' = lowCL[1])
+  popValues <- trainingData %>%
+    summarize(mPop = sum(m),
+              nPop = n(),
+              mPopBar = mPop / nPop)
+    if (mPopBar = NA) { #if Mbar (pop) is unknown, approximate it with mbar (samp)
+      mPopBar <- mSampBar
+    }
+
+  sampValues <- trainingData[trainingData$isUsed,]
+  vals <- uniqueCluster = unique(sampValues$clusterID) %>%
+    mutate(mSum <- for (all.uniqueCluster) {sum(sampValues$m)})
+    summarize(mSamp = sum(m),
+              nSamp = n(),
+              mSampBar = mSamp / nSamp,
+              ySum = sum(attr)) #doesn't make sense.
+
+
+  values <- bind_cols(popValues, sampValues)
+
+  clusterSummary <- trainingData[trainingData$isUsed,] %>%
+    mutate(yBar = ySum / mSamp) %>%
+    mutate(ySE = sqrt(((nPop - nSamp) / (nPop * nSamp * (mPopBar ^ 2)))
+               * (for_each(yValue - yBar * mVlaue) / (nSamp - 1)))) %>%
+    mutate(highCL = yBar + 2 * SE) %>% #for 95% confidence interval
+    mutate(lowCL = yBar - 2 * SE)
+
 
   # return dataframe of
-  output <- simpRandomSummary
+  output <- clusterSummary
 
   return(output)
 
