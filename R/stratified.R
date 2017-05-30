@@ -3,7 +3,7 @@
 #' stratified sample data. The calculations are derived from Chapter 5 in
 #' Gregoire and Valentine's (2008) Sampling Strategies for Natural Resources
 #' and the Environment. The variance terms refer to the variance of the mean,
-#' hence the \code{n} terms in the deonminators.
+#' hence the \code{n} terms in the denominators.
 #' @param trainingData dataframe containing observations of variable of
 #' interest, and stratum assignment for each plot
 #' @param attribute character name of attribute to be summarized
@@ -24,11 +24,11 @@
 
 summarize_stratified <- function(trainingData, attribute,
 		stratumTab, desiredConfidence = 0.9, post = T) {
-	
+
 	# give the variable of interest a generic name
 	attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))
 	trainingData$attr <- attrTemp
-	
+
 	# summarize strata
 	if(!post) {
 		# summarize strata
@@ -42,7 +42,7 @@ summarize_stratified <- function(trainingData, attribute,
 						stratSE = sqrt(stratVarMean),
 						stratPlots = n(),
 						stratAcres = mean(acres))
-		
+
 		totalSummary <- stratumSummaries %>%
 				left_join(stratumTab) %>%
 				summarize(popMean = weighted.mean(stratMeanTot, w = acres),
@@ -52,7 +52,7 @@ summarize_stratified <- function(trainingData, attribute,
 								df = sum(stratPlots - 1))) %>%
 				mutate(ciPct = 100 * popCIhalf / popMean) %>%
 				select(popMean, popSE, popCIhalf, ciPct)
-		
+
 	} else { # summarize (post-stratification, in progress)
 		stratumSummaries <- trainingData %>%
 				left_join(stratumTab) %>%
@@ -62,7 +62,7 @@ summarize_stratified <- function(trainingData, attribute,
 						stratSE = sqrt(stratVarMean),
 						stratPlots = n(),
 						stratAcres = mean(acres))
-		
+
 		totalSummary <- stratumSummaries %>%
 				left_join(stratumTab) %>%
 				summarize(popMean = weighted.mean(stratMean, w = acres),
@@ -73,11 +73,11 @@ summarize_stratified <- function(trainingData, attribute,
 				mutate(ciPct = 100 * popCIhalf / popMean) %>%
 				select(popMean, popSE, popCIhalf, ciPct)
 	}
-	
-	# return list of 
+
+	# return list of key values
 	outList <- list(stratumSummaries = data.frame(stratumSummaries),
 			totalSummary = data.frame(totalSummary))
-	
+
 	return(outList)
-	
+
 }

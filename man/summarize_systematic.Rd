@@ -4,25 +4,30 @@
 \alias{summarize_systematic}
 \title{Summarize systematic sample}
 \usage{
-summarize_systematic(trainingData, attribute, popN, desiredConfidence = 0.9)
+summarize_systematic(trainingData, attribute, popSize = NA,
+  desiredConfidence = 0.9)
 }
 \arguments{
 \item{trainingData}{dataframe containing observations of variable of
 interest.}
 
 \item{attribute}{character name of attribute to be summarized. Attribute
-must already be expanded.}
+must already be expanded to the level of interest (e.g. stand-level).}
 
-\item{popN}{numeric population size. Assumes popN is not known.}
+\item{popSize}{numeric population size. Assumes popN is not known.}
 
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
+}
+\value{
+a dataframe of population mean, variance, standard error, and
+high and low confidence limits.
 }
 \description{
 Summarizes population-level statistics for
 systematic sample data. The calculations are derived from Chapter 3 in
 Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 variance terms refer to the variance of the mean, hence the
-\code{n} terms in the deonminators.
+\code{sampleSize} terms in the denominators.
 }
 \examples{
 \dontrun{
