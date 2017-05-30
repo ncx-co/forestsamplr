@@ -51,13 +51,9 @@ test_that("simple random throws errors for data with few or no entries, or missi
 
 
 
-test_that("simple random processes data with two or more entries", {
+test_that("simple random processes data with at least two", {
 
   trainingDataTwo <- data.frame('bapa' = c(4, 5), 'plot' = c(10, 11))
-  trainingDataThree <- data.frame('bapa' = c(4, 5, 7), 'plot' = c(10, 11, 12))
-
-  summarize_simple_random(trainingDataThree, attribute, popSize = 50,
-                          desiredConfidence = 0.9, infiniteReplacement = T)
 
   sampTwo <- summarize_simple_random(trainingDataTwo, attribute, popSize = 50,
                                      desiredConfidence = 0.9, infiniteReplacement = T)
@@ -66,5 +62,15 @@ test_that("simple random processes data with two or more entries", {
 
 })
 
+test_that("simple random accepts and processes vectors and dataframes equally", {
+
+  dataframe <- summarize_simple_random(trainingData, attribute, popSize = 50,
+                                       desiredConfidence = 0.9, infiniteReplacement = T)
+  vector <- summarize_simple_random(c(120, 140, 160, 110, 100, 90), popSize = 50,
+                                    desiredConfidence = 0.9, infiniteReplacement = T)
+
+  expect_equal(dataframe, vector)
+
+})
 
 

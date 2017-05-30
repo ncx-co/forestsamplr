@@ -4,17 +4,18 @@
 \alias{summarize_systematic}
 \title{Summarize systematic sample}
 \usage{
-summarize_systematic(trainingData, attribute, popSize = NA,
+summarize_systematic(trainingData, attribute = "vector", popSize = NA,
   desiredConfidence = 0.9)
 }
 \arguments{
-\item{trainingData}{dataframe containing observations of variable of
-interest.}
+\item{trainingData}{dataframe or vector containing observations of
+variable of interest. Variable of interest must already be expanded
+to the level of interest (e.g. stand-level).}
 
-\item{attribute}{character name of attribute to be summarized. Attribute
-must already be expanded to the level of interest (e.g. stand-level).}
+\item{attribute}{character name of attribute to be summarized.
+Must be defined if data is input as a dataframe.}
 
-\item{popSize}{numeric population size. Assumes popN is not known.}
+\item{popSize}{numeric population size. Defaults to NA (unknown popSize).}
 
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
