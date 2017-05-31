@@ -24,7 +24,7 @@ Summarizes strata- and population-level statistics for
 stratified sample data. The calculations are derived from Chapter 5 in
 Gregoire and Valentine's (2008) Sampling Strategies for Natural Resources
 and the Environment. The variance terms refer to the variance of the mean,
-hence the \code{n} terms in the deonminators.
+hence the \code{n} terms in the denominators.
 }
 \examples{
 \dontrun{
