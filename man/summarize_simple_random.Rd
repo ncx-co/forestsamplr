@@ -17,8 +17,7 @@ Must be defined if data is input as a dataframe.}
 
 \item{infiniteReplacement}{logical true if sample was done with replacement
 or from an infite population. False if sampled without replacement,
-from a finite population. Assumes without replacement, from a finite
-population.}
+from a finite population. Defaults to False.}
 
 \item{trainingData}{dataframe or vector containing observations of
 variable of interest. Variable of interest must already be expanded
