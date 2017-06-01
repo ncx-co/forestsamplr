@@ -11,10 +11,14 @@
 #' @import dplyr
 #' @examples
 #' \dontrun{
-#' cluster = data.frame(clusterID = c(1, 2, 3, 4, 5),
+#' cluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
 #'                      clusterElements = c(4, 2, 9, 4, 10),
 #'                      sumAttr = c(1000, 1250, 950, 900, 1005),
 #'                      isUsed = c(T, T, F, T, T))
+#'
+#' plot <- data.frame(clusterID = c(1, 1, 2, 2, 3),
+#'                     attr = c(1000, 1250, 950, 900, 1005),
+#'                     isUsed = c(T, T, T, T, T))
 #' }
 #' @export
 
@@ -26,16 +30,38 @@
 
 
 
-summarize_cluster <- function(cluster) {
+summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel = data.frame(c(NA), c(NA)), attribute = 'attr') { # other IDs are not generallized.
 
+  if (!any(is.na(plotLevel))) { # calculates cluster values from plot data
 
-#  # give the variable of interest a generic name
-#  attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))
-#  trainingData$attr <- attrTemp
+    if (attribute %in% colnames(plotLevel)) {
+      # give the variable of interest a generic name
+      attrTemp <- unlist(plotLevel %>% dplyr::select(one_of(attribute))) # repeated below for 'cluster'
+      plotLevel$attr <- attrTemp
+    }
 
+    attrSum <- aggregate(plotLevel$attr, by = list(Category = plotLevel$clusterID), FUN = sum) # sum attributes by cluster
 
-  if(any(is.na(cluster))) {
-    stop("NA values are present in the input data.")
+    clusterT <- distinct(plotLevel, clusterID, .keep_all = TRUE) # maintain T/F isUsed for each cluster
+    elements <- count(plotLevel, "clusterID") # tally of elements in each cluster
+
+    # attach the sum of attributes and tally of elements to unique cluster
+    # produce table with key values
+    cluster <- merge(clusterT, attrSum, by.x = "clusterID", by.y = "Category", all = TRUE) %>%
+      merge(elements, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
+      select(clusterID = clusterID, clusterElements = freq, isUsed = isUsed, sumAttr = x)
+
+  } else if (!any(is.na(clusterLevel))) { # generalizes cluster attribute
+
+    if (attribute %in% colnames(clusterLevel)) {
+      # give the variable of interest a generic name
+      attrTemp <- unlist(clusterLevel %>% dplyr::select(one_of(attribute))) # repeated above for 'plot'
+      clusterLevel$attr <- attrTemp
+      cluster <- clusterLevel
+    }
+
+  } else {
+    stop("Data input without NA values is required.")
   }
 
   if (as.integer(anyDuplicated(cluster$clusterID)) == 1) {
@@ -46,16 +72,10 @@ summarize_cluster <- function(cluster) {
     stop("Must have multiple clusters. Consider other analysis.")
   }
 
-  # notes on variables:
-  # m(i) is the number of elements in a cluster
-  # m___ is the sum of elements for a specified set of clusters
-  # n___ is the number of clusters in a specified set of clusters
-  # bar indicates an average value
-
   # basic values: sample-level
   sampValues <- cluster[cluster$isUsed,] %>%
     mutate(nSamp = n()) %>% # num clusters
-    mutate(mSampBar = sum(clusterElements) / nSamp)
+    mutate(mSampBar = sum(clusterElements) / nSamp) # avg num elements in a cluster
 
 
   # basic values: population-level
