@@ -31,14 +31,12 @@
 
 #wish list:
 #Allow for different confidence levels
-#could return stand-level statistics, as well
-
 
 
 summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel = data.frame(c(NA), c(NA)), attribute = 'attr') {
   # other column headers are not generallized within the function
-
-  if (!any(is.na(plotLevel))) { # calculates cluster values from plot data
+test = !any(is.na(plotLevel))
+  if (test) { # calculates cluster values from plot data
 
     if (attribute %in% colnames(plotLevel)) {
       # give the variable of interest a generic name
@@ -63,8 +61,9 @@ summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel
       # give the variable of interest a generic name
       attrTemp <- unlist(clusterLevel %>% dplyr::select(one_of(attribute))) # repeated above for 'plot'
       clusterLevel$attr <- attrTemp
-      cluster <- clusterLevel
     }
+
+    cluster <- clusterLevel
 
   } else {
     stop("Data input without NA values is required.")
@@ -89,7 +88,7 @@ summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel
   summarize(mPop = sum(clusterElements),
             nPop = n(), # num clusters
             mPopBar = mPop / nPop)
-  if (is.na(popValues$mPopBar)) { # if Mbar (pop) is unknown, approximate it with mbar (samp)
+  if (is.na(popValues$mPopBar) | popValues$mPopBar == 0) { # if Mbar (pop) is unknown, approximate it with mbar (samp)
     popValues$mPopBar <- sum(sampValues$mSampBar[1]) / sum(sampValues$mSampBar[1])
   }
 
@@ -98,22 +97,27 @@ summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel
     mutate(yBar = sum(sumAttr) / sum(clusterElements)) %>%
     mutate(ySETempNum = (sumAttr - yBar * clusterElements) ^ 2) %>%
     mutate(ySE = sqrt(((popValues$nPop - nSamp) / (popValues$nPop * nSamp * (popValues$mPopBar ^ 2)))
-                      * ySETempNum / (nSamp - 1))) %>%
+                      * (sum(ySETempNum) / (nSamp - 1)))) %>%
     mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
     mutate(lowCL = yBar - 2 * ySE)
 
 
-  clusterSummary <- select(finalCalc,
-                           clusterID = clusterID,
-                           clusterElements = clusterElements,
-                           totalAttrubite = sumAttr,
-                           standardError = ySE,
-                           upperLimitCI = highCL,
-                           lowerLimitCI = lowCL
-                           )
+  clusterSummary <- merge(
+                          merge(
+                                summarize(sampValues,
+                                          nSamp = nSamp[[1]],
+                                          mSampBar = mSampBar[[1]]),
+                                popValues
+                                ),
+                          summarize(finalCalc,
+                                    standardError = ySE[[1]],
+                                    upperLimitCI = highCL[[1]],
+                                    lowerLimitCI = lowCL[[1]])
+                          )
 
 
-  # return dataframe of cluster-level statistics
+
+  # return dataframe of stand-level statistics
   return(clusterSummary)
 
 }
