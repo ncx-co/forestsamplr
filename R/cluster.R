@@ -3,34 +3,40 @@
 #' cluster sample data. The calculations are derived from Chapter 3 in
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean.
-#' @param cluster dataframe containing observations of variable of
-#' interest.
+#' @param clusterLevel dataframe containing observations of variable of
+#' interest by cluster. Attribute is the total for the cluster.
+#' @param plotLevel dataframe containing observations of the variable
+#' of interest by plot. Attribute is the total for each individual
+#' plot (cluster element).
+#' @param attriute character name of attribute to be summarized.
+#' Defaults to 'attr'.
 #' @return dataframe of cluster-level statistics including clusterID,
 #' standard error, and confidence interval limits.
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples
 #' \dontrun{
-#' cluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
+#' clusterLevel <- data.frame(clusterID = c(1, 2, 3, 4, 5),
 #'                      clusterElements = c(4, 2, 9, 4, 10),
 #'                      sumAttr = c(1000, 1250, 950, 900, 1005),
 #'                      isUsed = c(T, T, F, T, T))
 #'
-#' plot <- data.frame(clusterID = c(1, 1, 2, 2, 3),
-#'                     attr = c(1000, 1250, 950, 900, 1005),
-#'                     isUsed = c(T, T, T, T, T))
+#' plotLevel <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
+#'                     attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
+#'                     1000, 1250, 950, 900),
+#'                     isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 #' }
 #' @export
 
 
-#edge cases:
-#Allow for plots to be entered
+#wish list:
 #Allow for different confidence levels
 #could return stand-level statistics, as well
 
 
 
-summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel = data.frame(c(NA), c(NA)), attribute = 'attr') { # other IDs are not generallized.
+summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel = data.frame(c(NA), c(NA)), attribute = 'attr') {
+  # other column headers are not generallized within the function
 
   if (!any(is.na(plotLevel))) { # calculates cluster values from plot data
 
@@ -43,13 +49,13 @@ summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel
     attrSum <- aggregate(plotLevel$attr, by = list(Category = plotLevel$clusterID), FUN = sum) # sum attributes by cluster
 
     clusterT <- distinct(plotLevel, clusterID, .keep_all = TRUE) # maintain T/F isUsed for each cluster
-    elements <- count(plotLevel, "clusterID") # tally of elements in each cluster
+    elements <- count(plotLevel, clusterID) # tally of elements in each cluster
 
     # attach the sum of attributes and tally of elements to unique cluster
     # produce table with key values
     cluster <- merge(clusterT, attrSum, by.x = "clusterID", by.y = "Category", all = TRUE) %>%
       merge(elements, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
-      select(clusterID = clusterID, clusterElements = freq, isUsed = isUsed, sumAttr = x)
+      select(clusterID = clusterID, clusterElements = n, isUsed = isUsed, sumAttr = x)
 
   } else if (!any(is.na(clusterLevel))) { # generalizes cluster attribute
 
