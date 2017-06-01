@@ -3,11 +3,10 @@
 #' cluster sample data. The calculations are derived from Chapter 3 in
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean.
-#' @param clusterLevel dataframe containing observations of variable of
-#' interest by cluster. Attribute is the total for the cluster.
-#' @param plotLevel dataframe containing observations of the variable
-#' of interest by plot. Attribute is the total for each individual
-#' plot (cluster element).
+#' @param data dataframe containing observations of variable of
+#' interest for either cluster-level of plot-level data.
+#' @param plot logical true if parameter data is plot-level, false if
+#' parameter data is cluster-level. Default is True.
 #' @param attriute character name of attribute to be summarized.
 #' Defaults to 'attr'.
 #' @return dataframe of cluster-level statistics including clusterID,
@@ -16,12 +15,12 @@
 #' @import dplyr
 #' @examples
 #' \dontrun{
-#' clusterLevel <- data.frame(clusterID = c(1, 2, 3, 4, 5),
+#' data <- data.frame(clusterID = c(1, 2, 3, 4, 5),
 #'                      clusterElements = c(4, 2, 9, 4, 10),
 #'                      sumAttr = c(1000, 1250, 950, 900, 1005),
 #'                      isUsed = c(T, T, F, T, T))
 #'
-#' plotLevel <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
+#' data <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
 #'                     attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
 #'                     1000, 1250, 950, 900),
 #'                     isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
@@ -31,43 +30,46 @@
 
 #wish list:
 #Allow for different confidence levels
+#test to see if 'attrbute = NA' concept works
 
 
-summarize_cluster <- function(clusterLevel = data.frame(c(NA), c(NA)), plotLevel = data.frame(c(NA), c(NA)), attribute = 'attr') {
+summarize_cluster <- function(data, plot = TRUE, attribute = NA) { # attribute = 'attr',
   # other column headers are not generallized within the function
-test = !any(is.na(plotLevel))
-  if (test) { # calculates cluster values from plot data
 
-    if (attribute %in% colnames(plotLevel)) {
-      # give the variable of interest a generic name
-      attrTemp <- unlist(plotLevel %>% dplyr::select(one_of(attribute))) # repeated below for 'cluster'
-      plotLevel$attr <- attrTemp
-    }
-
-    attrSum <- aggregate(plotLevel$attr, by = list(Category = plotLevel$clusterID), FUN = sum) # sum attributes by cluster
-
-    clusterT <- distinct(plotLevel, clusterID, .keep_all = TRUE) # maintain T/F isUsed for each cluster
-    elements <- count(plotLevel, clusterID) # tally of elements in each cluster
-
-    # attach the sum of attributes and tally of elements to unique cluster
-    # produce table with key values
-    cluster <- merge(clusterT, attrSum, by.x = "clusterID", by.y = "Category", all = TRUE) %>%
-      merge(elements, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
-      select(clusterID = clusterID, clusterElements = n, isUsed = isUsed, sumAttr = x)
-
-  } else if (!any(is.na(clusterLevel))) { # generalizes cluster attribute
-
-    if (attribute %in% colnames(clusterLevel)) {
-      # give the variable of interest a generic name
-      attrTemp <- unlist(clusterLevel %>% dplyr::select(one_of(attribute))) # repeated above for 'plot'
-      clusterLevel$attr <- attrTemp
-    }
-
-    cluster <- clusterLevel
-
-  } else {
+  if (any(is.na(data))) {
     stop("Data input without NA values is required.")
   }
+
+  if (!is.na(attribute) && (attribute %in% colnames(data))) {
+    attrTemp <- unlist(data %>% dplyr::select(one_of(attribute)))
+    if (plot) {
+      data$attr <- attrTemp
+    } else {
+      data$sumAttr <- attrTemp
+    }
+  }
+
+
+if (plot) {
+
+  # calculates cluster values from plot data
+  attrSum <- aggregate(data$attr, by = list(Category = data$clusterID), FUN = sum) # sum attributes by cluster
+
+  clusterT <- distinct(data, clusterID, .keep_all = TRUE) # maintain T/F isUsed for each cluster
+  elements <- count(data, clusterID) # tally of elements in each cluster
+
+  # attach the sum of attributes and tally of elements to unique cluster
+  # produce table with key values
+  cluster <- merge(clusterT, attrSum, by.x = "clusterID", by.y = "Category", all = TRUE) %>%
+    merge(elements, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
+    select(clusterID = clusterID, clusterElements = n, isUsed = isUsed, sumAttr = x)
+
+} else {
+
+  #reassigns data as cluster, if input data is already totalled by cluster
+  cluster <- data
+
+}
 
   if (as.integer(anyDuplicated(cluster$clusterID)) == 1) {
     stop("Data cannot have repeated clusterID.")
@@ -82,7 +84,6 @@ test = !any(is.na(plotLevel))
     mutate(nSamp = n()) %>% # num clusters
     mutate(mSampBar = sum(clusterElements) / nSamp) # avg num elements in a cluster
 
-
   # basic values: population-level
   popValues <- cluster %>%
   summarize(mPop = sum(clusterElements),
@@ -92,7 +93,6 @@ test = !any(is.na(plotLevel))
     popValues$mPopBar <- sum(sampValues$mSampBar[1]) / sum(sampValues$mSampBar[1])
   }
 
-
   finalCalc <- sampValues %>%
     mutate(yBar = sum(sumAttr) / sum(clusterElements)) %>%
     mutate(ySETempNum = (sumAttr - yBar * clusterElements) ^ 2) %>%
@@ -100,7 +100,6 @@ test = !any(is.na(plotLevel))
                       * (sum(ySETempNum) / (nSamp - 1)))) %>%
     mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
     mutate(lowCL = yBar - 2 * ySE)
-
 
   clusterSummary <- merge(
                           merge(
