@@ -4,15 +4,20 @@
 \alias{summarize_cluster}
 \title{Summarize cluster sample}
 \usage{
-summarize_cluster(cluster)
+summarize_cluster(data, plot = TRUE, attribute = NA)
 }
 \arguments{
-\item{cluster}{dataframe containing observations of variable of
-interest.}
+\item{data}{dataframe containing observations of variable of
+interest for either cluster-level of plot-level data.}
+
+\item{plot}{logical true if parameter data is plot-level, false if
+parameter data is cluster-level. Default is True.}
+
+\item{attriute}{character name of attribute to be summarized.}
 }
 \value{
-dataframe of cluster-level statistics including clusterID,
-standard error, and confidence interval limits.
+dataframe of stand-level statistics including
+standard error and confidence interval limits.
 }
 \description{
 Summarizes population-level statistics for
@@ -22,10 +27,15 @@ variance terms refer to the variance of the mean.
 }
 \examples{
 \dontrun{
-cluster = data.frame(clusterID = c(1, 2, 3, 4, 5),
+data <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                      clusterElements = c(4, 2, 9, 4, 10),
                      sumAttr = c(1000, 1250, 950, 900, 1005),
                      isUsed = c(T, T, F, T, T))
+
+data <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
+                    attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
+                    1000, 1250, 950, 900),
+                    isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 }
 }
 \author{

@@ -8,9 +8,8 @@
 #' @param plot logical true if parameter data is plot-level, false if
 #' parameter data is cluster-level. Default is True.
 #' @param attriute character name of attribute to be summarized.
-#' Defaults to 'attr'.
-#' @return dataframe of cluster-level statistics including clusterID,
-#' standard error, and confidence interval limits.
+#' @return dataframe of stand-level statistics including
+#' standard error and confidence interval limits.
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples
@@ -28,12 +27,7 @@
 #' @export
 
 
-#wish list:
-#Allow for different confidence levels
-#test to see if 'attrbute = NA' concept works
-
-
-summarize_cluster <- function(data, plot = TRUE, attribute = NA) { # attribute = 'attr',
+summarize_cluster <- function(data, plot = TRUE, attribute = NA) {
   # other column headers are not generallized within the function
 
   if (any(is.na(data))) {
@@ -55,7 +49,7 @@ if (plot) {
   # calculates cluster values from plot data
   attrSum <- aggregate(data$attr, by = list(Category = data$clusterID), FUN = sum) # sum attributes by cluster
 
-  clusterT <- distinct(data, clusterID, .keep_all = TRUE) # maintain T/F isUsed for each cluster
+  clusterT <- distinct(data, clusterID, .keep_all = TRUE) # maintain isUsed for each cluster
   elements <- count(data, clusterID) # tally of elements in each cluster
 
   # attach the sum of attributes and tally of elements to unique cluster
@@ -66,7 +60,7 @@ if (plot) {
 
 } else {
 
-  #reassigns data as cluster, if input data is already totalled by cluster
+  # reassigns data as cluster, if input data is cluster-level data
   cluster <- data
 
 }
@@ -89,15 +83,15 @@ if (plot) {
   summarize(mPop = sum(clusterElements),
             nPop = n(), # num clusters
             mPopBar = mPop / nPop)
-  if (is.na(popValues$mPopBar) | popValues$mPopBar == 0) { # if Mbar (pop) is unknown, approximate it with mbar (samp)
-    popValues$mPopBar <- sum(sampValues$mSampBar[1]) / sum(sampValues$mSampBar[1])
+  if (is.na(popValues$mPopBar) | popValues$mPopBar == sampValues$mSampBar[[1]]) { # if Mbar (pop) is unknown, approximate it with mbar (samp)
+    popValues$mPopBar <- sum(sampValues$mSampBar[[1]])
   }
 
   finalCalc <- sampValues %>%
     mutate(yBar = sum(sumAttr) / sum(clusterElements)) %>%
     mutate(ySETempNum = (sumAttr - yBar * clusterElements) ^ 2) %>%
-    mutate(ySE = sqrt(((popValues$nPop - nSamp) / (popValues$nPop * nSamp * (popValues$mPopBar ^ 2)))
-                      * (sum(ySETempNum) / (nSamp - 1)))) %>%
+    mutate(ySE = sqrt(((popValues$nPop - nSamp[[1]]) / (popValues$nPop * nSamp[[1]] * (popValues$mPopBar ^ 2)))
+                      * (sum(ySETempNum) / (nSamp[[1]] - 1)))) %>%
     mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
     mutate(lowCL = yBar - 2 * ySE)
 
@@ -120,6 +114,4 @@ if (plot) {
   return(clusterSummary)
 
 }
-
-
 

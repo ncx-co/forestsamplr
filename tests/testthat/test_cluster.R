@@ -35,6 +35,10 @@ plotLevelNAMore <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 
                                      1000, 1250, 950, 900),
                             isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T))
 
+plotLevelAttribute <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
+                              kittens = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
+                                       1000, 1250, 950, 900),
+                              isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T))
 
 
 test_that("cluster sample isUsed functions correctly", {
@@ -53,10 +57,17 @@ test_that("cluster sample handles input with no, one, or two clusters correctly"
 
 })
 
-test_that("cluster sample handles input with NA values", {
+test_that("cluster sample handles input data with NA values", {
 
   expect_error(summarize_cluster(plotLevelNAOne, T))
   expect_error(summarize_cluster(plotLevelNAMore, T))
+
+})
+
+test_that("cluster sample handles attribute", {
+
+  expect_equal(summarize_cluster(plotLevelAttribute, T, 'kittens'),
+               summarize_cluster(plotLevelTrue, T))
 
 })
 
