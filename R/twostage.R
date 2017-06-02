@@ -20,25 +20,30 @@
 #'                      sumAttr = c(1000, 1250, 950, 900, 1005),
 #'                      isUsed = c(T, T, F, T, T))
 #'
-#' data <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
-#'                     attr = c(1000, 1250, NA, 900, 1005, 1000, 1250, 950, 900, 1005, NA, 1250, 950, 900, 1005,
-#'                     1000, 1250, NA, 900),
-#'                     isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
+ data <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
+                     attr = c(1000, 1250, NA, 900, 1005, 1000, 1250, 950, 900, 1005, NA, 1250, 950, 900, 1005,
+                     1000, 1250, NA, 900),
+                     isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 #' }
 #' @export
 
 
 summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
-  # other column headers are not generallized within the function
-
 
   if (!is.na(attribute) && (attribute %in% colnames(data))) {
+
     attrTemp <- unlist(data %>% dplyr::select(one_of(attribute)))
+
     if (plot) {
+
       data$attr <- attrTemp
+
     } else {
+
       data$sumAttr <- attrTemp
+
     }
+
   }
 
 
@@ -66,6 +71,7 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
 
 ##########################################################################################################
 
+
   if (as.integer(anyDuplicated(cluster$clusterID)) == 1) {
     stop("Data cannot have repeated clusterID.")
   }
@@ -77,7 +83,8 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
   # basic values: sample-level
   sampValues <- cluster[cluster$isUsed,] %>%
     mutate(nSamp = n()) %>% # num clusters
-    mutate(mSampBar = sum(clusterElements) / nSamp) # avg num elements in a cluster
+    mutate(mSamp = sum(clusterElements)) %>%
+    mutate(mSampBar = mSamp / nSamp) # avg num elements in a cluster
 
   # basic values: population-level
   popValues <- cluster %>%
@@ -87,6 +94,32 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
   if (is.na(popValues$mPopBar) | popValues$mPopBar == sampValues$mSampBar[[1]]) { # if Mbar (pop) is unknown, approximate it with mbar (samp)
     popValues$mPopBar <- sum(sampValues$mSampBar[[1]])
   }
+
+  yij = sum of attributes: all plots in all blocks
+  yj = sum of attributes in all the plots in one block
+  i(yj) = sum for all blocks
+  m - sample plots
+  n = sample blocks
+
+  primaryValues <- data %>%
+    mutate(ySumBlock = sum attr by block
+    mutate(ySqSumBlock = mutate(attrSq <- attr ^ 2) THEN sum by block
+         #convert to df with no repeated blocks
+
+  finalCalc <- sampValues %>%
+
+  # df = clusterID, primary (blocks), secondary tot (plot sum), ySumBlock, ySqSumBlock
+  yBar = sum(ySumBlock) / ( m * n)
+  s2b = ((sum(ySumBlock ^ 2) / m) - (sum(ySumBlock) ^ 2 / (m * n))) / (n - 1)
+  s2w = (sum(ySqSumBlock) - sum(ySumBlock ^ 2) / m) / (n * (m - 1))
+  #if primaries are equal in size, num of elements per cluster is equal:
+  SELargeEqual = sqrt((1 / (m * n)) (s2b * (1 - n / N) + n * s2w / N * (1 - m / M)))
+  #if n is a small fraction of N, SE is simplified to:
+  SEn = sqrt(s2b ^ 2 / (m * n))
+  #when n/N is fairly large, but num of secondaries (m) sampled in
+  #each selected primary is only a fraction of the total secondaries (M) in each primary (n)
+  SEm = sqrt(1 / (m * n) * (s2b * (1 - n / N) + (n * s2w) / N))
+
 
   finalCalc <- sampValues %>%
     mutate(yBar = sum(sumAttr) / sum(clusterElements)) %>%
@@ -113,3 +146,5 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
 
   # return dataframe of stand-level statistics
   return(clusterSummary)
+
+}
