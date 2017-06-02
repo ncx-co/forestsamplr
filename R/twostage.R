@@ -111,41 +111,40 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
 
   finalCalc2 <- data.frame(yBar = tempCalc$yBar[[1]], s2b = tempCalc$s2b[[1]],
                            s2w = tempCalc$s2w[[1]]) %>%
-  #if clusters are equal in size, num of elements per cluster is equal:
-    if (identical(totClusterElements, rep(mean(totClusterElements), length(totClusterElements)))) {
+    mutate(ySE = ifelse(identical(cluster$totClusterElements, mean(cluster$totClusterElements)),
+                        #if clusters are equal in size, num of elements per cluster is equal:
+                        sqrt((1 / (m * n)) * ((s2b * (1 - n / EN) + n * s2w / EN * (1 - m / EM))[[1]])),
 
-      mutate(SELargeEqual = sqrt((1 / (m * n)) * ((s2b * (1 - n / EN) + n * s2w / EN * (1 - m / EM))[[1]])))
+                        ifelse((n / EN < 0.2),
+                               #if n is a small fraction of N, SE is simplified to:
+                               sqrt(s2b ^ 2 / (m * n)),
 
-    } else if (n / EN < 0.2) {
+                               ifelse((m / EM < 0.2),
+                                      #when n/N is fairly large, but num of secondaries (m) sampled in
+                                      #each selected primary is only a fraction of the total secondaries (M) in each primary (n)
+                                      sqrt(1 / (m * n) * (s2b * (1 - n / EN) + (n * s2w) / EN)),
 
-  #if n is a small fraction of N, SE is simplified to:
-      mutate(SEn = sqrt(s2b ^ 2 / (m * n)))
+                                      if (n / EN < m / EM) {
 
-    } else if (m / EM < 0.2) {
+                                        warning("SE is approximated based on available methods and may not be accurate.")
+                                        sqrt(s2b ^ 2 / (m * n))
 
-  #when n/N is fairly large, but num of secondaries (m) sampled in
-  #each selected primary is only a fraction of the total secondaries (M) in each primary (n)
-      mutate(SEm = sqrt(1 / (m * n) * (s2b * (1 - n / EN) + (n * s2w) / EN)))
+                                      } else {
 
-    } else {
+                                        warning("SE is approximated based on available methods and may not be accurate.")
+                                        sqrt(1 / (m * n) * (s2b * (1 - n / EN) + (n * s2w) / EN))
 
-      warning("SE is approximated based on available methods and may not be accurate.")
-      if (n / EN < m / EM) {
+                                      }
+                               )
+                        )
+                 )
+    ) %>%
 
-        mutate(SEn = sqrt(s2b ^ 2 / (m * n)))
+    mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
+    mutate(lowCL = yBar - 2 * ySE)
 
-      } else {
-
-        mutate(SEm = sqrt(1 / (m * n) * (s2b * (1 - n / EN) + (n * s2w) / EN)))
-
-      }
-
-    }
-  #    mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
-  #    mutate(lowCL = yBar - 2 * ySE)
-
-
-clusterSummary <- finalCalc
+    clusterSummary <- finalCalc2 %>%
+      summarize(mean = yBar, standardError = ySE, upperlimitCI = highCL, lowerLimitCI = lowCL) #variance? what are 'variances s2b and s2w'?
 
   # return dataframe of stand-level statistics
   return(clusterSummary)
