@@ -20,15 +20,14 @@
 #'                      isUsed = c(T, T, F, T, T))
 #'
 #' dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
-#'                     attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
-#'                     1000, 1250, 950, 900),
-#'                     isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
+#'                        attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000,
+#'                                 1250, 950, 900, 1005, 1000, 1250, 950, 900),
+#'                        isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 #' }
 #' @export
 
 
 summarize_cluster <- function(data, plot = TRUE, attribute = NA) {
-  # other column headers are not generallized within the function
 
   if (any(is.na(data))) {
     stop("Data input without NA values is required.")
@@ -36,18 +35,25 @@ summarize_cluster <- function(data, plot = TRUE, attribute = NA) {
 
   if (!is.na(attribute) && (attribute %in% colnames(data))) {
     attrTemp <- unlist(data %>% dplyr::select(one_of(attribute)))
-    if (plot) {
-      data$attr <- attrTemp
-    } else {
-      data$sumAttr <- attrTemp
-    }
-  }
 
+    if (plot) {
+
+      data$attr <- attrTemp
+
+    } else {
+
+      data$sumAttr <- attrTemp
+
+    }
+
+  }
 
 if (plot) {
 
   # calculates cluster values from plot data
-  attrSum <- aggregate(data$attr, by = list(Category = data$clusterID), FUN = sum) # sum attributes by cluster
+
+  # sum attributes by cluster
+  attrSum <- aggregate(data$attr, by = list(Category = data$clusterID), FUN = sum)
 
   clusterT <- distinct(data, clusterID, .keep_all = TRUE) # maintain isUsed for each cluster
   elements <- count(data, clusterID) # tally of elements in each cluster
@@ -66,11 +72,15 @@ if (plot) {
 }
 
   if (as.integer(anyDuplicated(cluster$clusterID)) == 1) {
+
     stop("Data cannot have repeated clusterID.")
+
   }
 
   if (length(cluster$clusterID) == 1) {
+
     stop("Must have multiple clusters. Consider other analysis.")
+
   }
 
   # basic values: sample-level
@@ -84,7 +94,9 @@ if (plot) {
             nPop = n(), # num clusters
             mPopBar = mPop / nPop)
   if (is.na(popValues$mPopBar) | popValues$mPopBar == sampValues$mSampBar[[1]]) { # if Mbar (pop) is unknown, approximate it with mbar (samp)
+
     popValues$mPopBar <- sum(sampValues$mSampBar[[1]])
+
   }
 
   finalCalc <- sampValues %>%
@@ -107,8 +119,6 @@ if (plot) {
                                     upperLimitCI = highCL[[1]],
                                     lowerLimitCI = lowCL[[1]])
                           )
-
-
 
   # return dataframe of stand-level statistics
   return(clusterSummary)
