@@ -53,7 +53,9 @@ if (plot) {
   # calculates cluster values from plot data
 
   # sum attributes by cluster
-  attrSum <- aggregate(data$attr, by = list(Category = data$clusterID), FUN = sum)
+  temp <- data %>%
+    mutate(attr = ifelse(is.na(attr), 0, attr))
+  attrSum <- aggregate(temp$attr, by = list(Category = temp$clusterID), FUN = sum)
 
   clusterT <- distinct(data, clusterID, .keep_all = TRUE) # maintain isUsed for each cluster
   elements <- count(data, clusterID) # tally of elements in each cluster
