@@ -50,17 +50,24 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
   if (plot) {
 
     # calculates cluster values from plot data
-    attrSum <- aggregate(data$attr, by = list(Category = data$clusterID), FUN = sum) # sum attributes by cluster
+    data$attr <- ifelse(is.na(data), 0, attr)
+    temp <- data %>%
+      mutate(attr = ifelse(is.na(attr), 0, attr))
+    attrSum <- aggregate(temp$attr, by = list(Category = data$clusterID), FUN = sum) # sum attributes by cluster
 
-    clusterT <- distinct(data, clusterID, .keep_all = TRUE) # maintain isUsed for each cluster
-    totElements <- count(data, clusterID) # tally of elements in each cluster
-    sampElements <- count(data[])
+    clusterUsed <- aggregate(data$isUsed, by = list(Category = data$clusterID), FUN = sum) #see if any secondary is used in any primary/cluster
+    clusterUsed$x <- ifelse(clusterUsed$x > 0, T, F) #convert above to T/F
+
+    totElementsInPrimaryM <- count(data, clusterID) # tally of elements in each cluster
+    sampElementsInPrimarym <- count(data[data$isUsed,], clusterID)
 
     # attach the sum of attributes and tally of elements to unique cluster
     # produce table with key values
-    cluster <- merge(clusterT, attrSum, by.x = "clusterID", by.y = "Category", all = TRUE) %>%
-      merge(elements, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
-      select(clusterID = clusterID, clusterElements = n, isUsed = isUsed, sumAttr = x)
+    cluster <- merge(clusterUsed, attrSum, by.x = "Category", by.y = "Category", all = TRUE) %>%
+      merge(totElementsInPrimaryM, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
+      rename(totClusterElements = n) %>%
+      merge(sampElementsInPrimarym, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
+      select(clusterID = clusterID, totClusterElements = totClusterElements, sampElementsInPrimarym = n, isUsed = isUsed, sumAttr = x) %>%
 
   } else {
 
