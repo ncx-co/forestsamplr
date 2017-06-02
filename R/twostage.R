@@ -9,7 +9,7 @@
 #' parameter data is cluster-level. Default is True.
 #' @param attriute character name of attribute to be summarized.
 #' @return dataframe of stand-level statistics including
-#' standard error and confidence interval limits.
+#' standard error and confidence interval limits. All final values are on a 'per plot' basis.
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples
@@ -50,24 +50,27 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
   if (plot) {
 
     # calculates cluster values from plot data
-    data$attr <- ifelse(is.na(data), 0, attr)
     temp <- data %>%
-      mutate(attr = ifelse(is.na(attr), 0, attr))
-    attrSum <- aggregate(temp$attr, by = list(Category = data$clusterID), FUN = sum) # sum attributes by cluster
+      mutate(attr = ifelse(is.na(attr), 0, attr)) %>%
+      mutate(attrSq = attr ^ 2)
+    attrSum <- aggregate(temp$attr, by = list(Category = temp$clusterID), FUN = sum) # sum attributes by cluster
+    attrSqSum <- aggregate(temp$attrSq, by = list(Category = temp$clusterID), FUN = sum)
 
     clusterUsed <- aggregate(data$isUsed, by = list(Category = data$clusterID), FUN = sum) #see if any secondary is used in any primary/cluster
     clusterUsed$x <- ifelse(clusterUsed$x > 0, T, F) #convert above to T/F
 
-    totElementsInPrimaryM <- count(data, clusterID) # tally of elements in each cluster
-    sampElementsInPrimarym <- count(data[data$isUsed,], clusterID)
+    totElementsInPrimaryM <- count(data, clusterID) # tally of elements for each cluster
+    sampElementsInPrimarym <- count(data[data$isUsed,], clusterID) # tally of elements used for each cluster
 
     # attach the sum of attributes and tally of elements to unique cluster
     # produce table with key values
     cluster <- merge(clusterUsed, attrSum, by.x = "Category", by.y = "Category", all = TRUE) %>%
-      merge(totElementsInPrimaryM, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
-      rename(totClusterElements = n) %>%
+      merge(totElementsInPrimaryM, by.x = "Category", by.y = "clusterID", all = TRUE) %>%
+      rename(totClusterElements = n, clusterID = Category) %>%
       merge(sampElementsInPrimarym, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
-      select(clusterID = clusterID, totClusterElements = totClusterElements, sampElementsInPrimarym = n, isUsed = isUsed, sumAttr = x) %>%
+      select(clusterID = clusterID, totClusterElements = totClusterElements, sampledElements = n, isUsed = x.x, attrSumBlock = x.y) %>%
+      mutate(sampledElements = ifelse(is.na(sampledElements), 0, sampledElements)) %>%
+      mutate(attrSqSumBlock = attrSqSum$x)
 
   } else {
 
@@ -75,8 +78,6 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
     cluster <- data
 
   }
-
-##########################################################################################################
 
 
   if (as.integer(anyDuplicated(cluster$clusterID)) == 1) {
@@ -87,69 +88,64 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
     stop("Must have multiple clusters. Consider other analysis.")
   }
 
-  # basic values: sample-level
-  sampValues <- cluster[cluster$isUsed,] %>%
-    mutate(nSamp = n()) %>% # num clusters
-    mutate(mSamp = sum(clusterElements)) %>%
-    mutate(mSampBar = mSamp / nSamp) # avg num elements in a cluster
 
-  # basic values: population-level
-  popValues <- cluster %>%
-    summarize(mPop = sum(clusterElements),
-              nPop = n(), # num clusters
-              mPopBar = mPop / nPop)
-  if (is.na(popValues$mPopBar) | popValues$mPopBar == sampValues$mSampBar[[1]]) { # if Mbar (pop) is unknown, approximate it with mbar (samp)
-    popValues$mPopBar <- sum(sampValues$mSampBar[[1]])
-  }
+#  cluster = block = primary                                       #delete
+#  yij = sum of attributes: all plots in all blocks
+#  yj = sum of attributes in all the plots in one block
+#  i(yj) = sum for all blocks
+#  m - sample plots
+#  n = sample blocks
 
-  yij = sum of attributes: all plots in all blocks
-  yj = sum of attributes in all the plots in one block
-  i(yj) = sum for all blocks
-  m - sample plots
-  n = sample blocks
 
-  primaryValues <- data %>%
-    mutate(ySumBlock = sum attr by block
-    mutate(ySqSumBlock = mutate(attrSq <- attr ^ 2) THEN sum by block
-         #convert to df with no repeated blocks
+  m <- sum(cluster$isUsed)
+  EM <- length(cluster$isUsed)
+  n <- sum(cluster$sampledElements)
+  EN <- sum(cluster$totClusterElements)
 
-  finalCalc <- sampValues %>%
+  tempCalc <- cluster %>%
 
-  # df = clusterID, primary (blocks), secondary tot (plot sum), ySumBlock, ySqSumBlock
-  yBar = sum(ySumBlock) / ( m * n)
-  s2b = ((sum(ySumBlock ^ 2) / m) - (sum(ySumBlock) ^ 2 / (m * n))) / (n - 1)
-  s2w = (sum(ySqSumBlock) - sum(ySumBlock ^ 2) / m) / (n * (m - 1))
-  #if primaries are equal in size, num of elements per cluster is equal:
-  SELargeEqual = sqrt((1 / (m * n)) (s2b * (1 - n / N) + n * s2w / N * (1 - m / M)))
+  # df = clusterID, primary (blocks), secondary tot (plot sum), attrSumBlock, attrSqSumBlock
+    mutate(yBar = sum(attrSumBlock) / (m * n)) %>%
+    mutate(s2b = ((sum(attrSumBlock ^ 2) / m) - (sum(attrSumBlock) ^ 2 / (m * n))) / (n - 1)) %>%
+    mutate(s2w = (sum(attrSqSumBlock) - sum(attrSumBlock ^ 2) / m) / (n * (m - 1)))
+
+  finalCalc2 <- data.frame(yBar = tempCalc$yBar[[1]], s2b = tempCalc$s2b[[1]],
+                           s2w = tempCalc$s2w[[1]]) %>%
+  #if clusters are equal in size, num of elements per cluster is equal:
+    if (identical(totClusterElements, rep(mean(totClusterElements), length(totClusterElements)))) {
+
+      mutate(SELargeEqual = sqrt((1 / (m * n)) * ((s2b * (1 - n / EN) + n * s2w / EN * (1 - m / EM))[[1]])))
+
+    } else if (n / EN < 0.2) {
+
   #if n is a small fraction of N, SE is simplified to:
-  SEn = sqrt(s2b ^ 2 / (m * n))
+      mutate(SEn = sqrt(s2b ^ 2 / (m * n)))
+
+    } else if (m / EM < 0.2) {
+
   #when n/N is fairly large, but num of secondaries (m) sampled in
   #each selected primary is only a fraction of the total secondaries (M) in each primary (n)
-  SEm = sqrt(1 / (m * n) * (s2b * (1 - n / N) + (n * s2w) / N))
+      mutate(SEm = sqrt(1 / (m * n) * (s2b * (1 - n / EN) + (n * s2w) / EN)))
+
+    } else {
+
+      warning("SE is approximated based on available methods and may not be accurate.")
+      if (n / EN < m / EM) {
+
+        mutate(SEn = sqrt(s2b ^ 2 / (m * n)))
+
+      } else {
+
+        mutate(SEm = sqrt(1 / (m * n) * (s2b * (1 - n / EN) + (n * s2w) / EN)))
+
+      }
+
+    }
+  #    mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
+  #    mutate(lowCL = yBar - 2 * ySE)
 
 
-  finalCalc <- sampValues %>%
-    mutate(yBar = sum(sumAttr) / sum(clusterElements)) %>%
-    mutate(ySETempNum = (sumAttr - yBar * clusterElements) ^ 2) %>%
-    mutate(ySE = sqrt(((popValues$nPop - nSamp[[1]]) / (popValues$nPop * nSamp[[1]] * (popValues$mPopBar ^ 2)))
-                      * (sum(ySETempNum) / (nSamp[[1]] - 1)))) %>%
-    mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
-    mutate(lowCL = yBar - 2 * ySE)
-
-  clusterSummary <- merge(
-    merge(
-      summarize(sampValues,
-                nSamp = nSamp[[1]],
-                mSampBar = mSampBar[[1]]),
-      popValues
-    ),
-    summarize(finalCalc,
-              standardError = ySE[[1]],
-              upperLimitCI = highCL[[1]],
-              lowerLimitCI = lowCL[[1]])
-  )
-
-
+clusterSummary <- finalCalc
 
   # return dataframe of stand-level statistics
   return(clusterSummary)
