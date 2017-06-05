@@ -75,6 +75,12 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
   } else {
 
     # reassigns data as cluster, if input data is cluster-level data
+    # data must include unique ID ('clusterID'), number of cluster elements
+      # in each cluster ('totClusterElements'), number of cluster elements
+      # sampled in each cluster ('sampledElements'), logical true if the
+      # cluster has any sampled elements ('isUsed'), sum of attributes in
+      # each cluster ('attrSumBlock'), squared sum of attributes in each
+      # cluster ('attrSqSumBlock')
     cluster <- data
 
   }
@@ -97,15 +103,15 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA) {
 #  n = sample blocks
 
 
-  m <- sum(cluster$isUsed)
-  EM <- length(cluster$isUsed)
-  n <- sum(cluster$sampledElements)
-  EN <- sum(cluster$totClusterElements)
+  n <- sum(cluster$isUsed)
+  EN <- length(cluster$isUsed)
+  m <- sum(cluster$sampledElements)
+  EM <- sum(cluster$totClusterElements)
 
   tempCalc <- cluster %>%
 
   # df = clusterID, primary (blocks), secondary tot (plot sum), attrSumBlock, attrSqSumBlock
-    mutate(yBar = sum(attrSumBlock) / (m * n)) %>%
+    mutate(yBar = sum(attrSumBlock) / m) %>% # denominator written for clarity: average m per block * n
     mutate(s2b = ((sum(attrSumBlock ^ 2) / m) - (sum(attrSumBlock) ^ 2 / (m * n))) / (n - 1)) %>%
     mutate(s2w = (sum(attrSqSumBlock) - sum(attrSumBlock ^ 2) / m) / (n * (m - 1)))
 
