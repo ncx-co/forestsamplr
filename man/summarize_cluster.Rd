@@ -33,9 +33,9 @@ dataCluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                      isUsed = c(T, T, F, T, T))
 
 dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
-                    attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
-                    1000, 1250, 950, 900),
-                    isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
+                       attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000,
+                                1250, 950, 900, 1005, 1000, 1250, 950, 900),
+                       isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 }
 }
 \author{
