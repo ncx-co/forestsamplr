@@ -35,7 +35,7 @@ test_that("two stage cluster input data functions correctly", {
                                     isUsed = c(T, T, T, T, F),
                                     attrSumCluster = c(1000, 1250, 950, 900, 1005))
 
-  expect_equal(summarize_two_stage(trainingDataCluster, F)$lowerLimitCI, 319.43, tolerance = 0.1)
+  expect_equal(summarize_two_stage(trainingDataCluster, F)$lowerLimitCI, 115.5, tolerance = 0.1)
 
 })
 

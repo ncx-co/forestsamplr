@@ -45,7 +45,7 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
 
     } else {
 
-      data$sumAttr <- attrTemp
+      data$attrSumCluster <- attrTemp
 
     }
 
@@ -103,16 +103,17 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
     stop("Must have multiple clusters. Consider other analysis.")
   }
 
-  basicCalc <- data.frame(n = sum(cluster$isUsed),
-                          EN = length(cluster$isUsed)) %>%
+  basicCalc <- data.frame(n = sum(cluster$isUsed)) %>%
     mutate(m = sum(cluster$sampledElements) / n) %>%
-    mutate(EM = sum(cluster$totClusterElements) / EN)
+    mutate(EN = ifelse(populationClusters != 0, populationClusters, length(cluster$isUsed))) %>%
+    mutate(EM = ifelse(populationElementsPerCluster != 0, populationElementsPerCluster,
+                       sum(cluster$totClusterElements) / EN))
 
-  ifelse(populationClusters != 0, basicCalc$EN = populationClusters)
-  ifelse(populationElementsPerCluster != 0, basicCalc$EM = populationElementsPerCluster)
+ # ifelse(populationClusters != 0, basicCalc$EN = populationClusters)
+ # ifelse(populationElementsPerCluster != 0, basicCalc$EM = populationElementsPerCluster)
 
   tempCalc <- cluster %>%
-    mutate(yBar = sum(attrSumCluster) / basicCalc$m) %>% # denominator written for clarity: average m per cluster * n
+    mutate(yBar = sum(attrSumCluster) / (basicCalc$m * basicCalc$n)) %>% # denominator written for clarity: average m per cluster * n
     mutate(s2b = ((sum(attrSumCluster ^ 2) / (basicCalc$m)) -
                     (sum(attrSumCluster) ^ 2 / (basicCalc$m * basicCalc$n))) / (basicCalc$n - 1)) %>%
     mutate(s2w = (sum(attrSqSumCluster) - sum(attrSumCluster ^ 2) / (basicCalc$m)) / (basicCalc$n * (basicCalc$m - 1)))
