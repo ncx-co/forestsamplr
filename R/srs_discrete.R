@@ -1,0 +1,44 @@
+#' @title Summarize simple random sample for discrete attributes
+#' @description Summarizes population-level statistics for
+#' simple random sample for attribute data. The calculations are
+#' derived from Chapter 3 in Avery and Burkhart's (1967)
+#' Forest Measurements, Fifth Edition. The variance terms refer
+#' to the variance of the mean.
+#' @param data dataframe containing observations of variable of
+#' interest.
+#' @param attribute character name of attribute to be summarized. Attribute
+#' must already be expanded.
+#' @param popTot numeric population size.
+#' @author Karin Wolken
+#' @import dplyr
+#' @examples
+#' \dontrun{
+#' data <- data.frame(alive = c(T, T, F, T, F, F),
+#'   plots = c(1, 2, 3, 4, 5, 6))
+#' attribute = 'alive'
+#' popTot = 50
+#' }
+#' @export
+
+summarize_simple_random_discrete <- function(data, attribute, popTot = NA) {
+
+  attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))
+  trainingData$attr <- attrTemp
+
+  if (is.na(popTot)) {
+    stop("Total number of units is required as input.")
+  }
+
+  calculations = data.frame(sampTot = length(data$alive),
+                            sampAlive = sum(data$alive)) %>%
+    summarize(totalSample = sampTot,
+              alive = sampAlive,
+              totalPopulation = popTot,
+              P = sampAlive / sampTot,
+              SE = sqrt(((P * (1 - P)) / (sampTot - 1)) * (1 - (sampTot / popTot))),
+              lowerLimitCI = P - (2 * SE + 1 / (2 * sampTot)), #95% Confidence Interaval
+              upperLimitCI = P + (2 * SE + 1 / (2 * sampTot)))
+
+  return(calculations)
+
+}
