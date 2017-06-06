@@ -22,8 +22,8 @@
 
 summarize_simple_random_discrete <- function(data, attribute, popTot = NA) {
 
-  attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))
-  trainingData$attr <- attrTemp
+  attrTemp <- unlist(data %>% dplyr::select(one_of(attribute)))
+  data$attr <- attrTemp
 
   if (is.na(popTot)) {
     stop("Total number of units is required as input.")
