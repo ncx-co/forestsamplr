@@ -28,3 +28,4 @@
 
 
 summarize_double_sampling <- function(data, plot = TRUE, attribute = NA) {
+}

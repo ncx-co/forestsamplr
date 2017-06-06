@@ -15,7 +15,7 @@ test_that("srs discrete calculates values correctly", {
 
 })
 
-test_that("srs discrete requires a population total value" {
+test_that("srs discrete requires a population total value", {
 
   expect_error(summarize_simple_random_discrete(data, attribute))
 
