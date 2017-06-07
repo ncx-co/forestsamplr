@@ -10,6 +10,8 @@
 #' Attribute must already be expanded.
 #' @param popTot numeric population size. Equivalent to total 
 #' number of individuals.
+#' @return dataframe of stand-level statistics. Includes standard error and
+#' 95% confidence interval.
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples

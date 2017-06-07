@@ -16,6 +16,10 @@ Attribute must already be expanded.}
 \item{popTot}{numeric population size. Equivalent to total 
 number of individuals.}
 }
+\value{
+dataframe of stand-level statistics. Includes standard error and
+95% confidence interval.
+}
 \description{
 Summarizes population-level statistics for
 simple random sample for attribute data. The calculations are

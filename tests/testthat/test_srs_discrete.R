@@ -1,4 +1,4 @@
-context("Forest sampling statistics calculations: simple random sample for attributes: discrete variables")
+context("Forest sampling statistics calculations: simple random sample for attributes, discrete variables")
 
 data <- data.frame(alive = c(T, T, F, T, F, F),
                    plots = c(1, 2, 3, 4, 5, 6))
