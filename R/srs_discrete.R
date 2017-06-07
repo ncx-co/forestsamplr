@@ -6,15 +6,16 @@
 #' to the variance of the mean.
 #' @param data dataframe containing observations of variable of
 #' interest.
-#' @param attribute character name of attribute to be summarized. Attribute
-#' must already be expanded.
-#' @param popTot numeric population size.
+#' @param attribute character name of attribute to be summarized. 
+#' Attribute must already be expanded.
+#' @param popTot numeric population size. Equivalent to total 
+#' number of individuals.
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples
 #' \dontrun{
 #' data <- data.frame(alive = c(T, T, F, T, F, F),
-#'   plots = c(1, 2, 3, 4, 5, 6))
+#'   tree = c(1, 2, 3, 4, 5, 6))
 #' attribute = 'alive'
 #' popTot = 50
 #' }

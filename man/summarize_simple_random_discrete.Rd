@@ -10,10 +10,11 @@ summarize_simple_random_discrete(data, attribute, popTot = NA)
 \item{data}{dataframe containing observations of variable of
 interest.}
 
-\item{attribute}{character name of attribute to be summarized. Attribute
-must already be expanded.}
+\item{attribute}{character name of attribute to be summarized. 
+Attribute must already be expanded.}
 
-\item{popTot}{numeric population size.}
+\item{popTot}{numeric population size. Equivalent to total 
+number of individuals.}
 }
 \description{
 Summarizes population-level statistics for
@@ -25,7 +26,7 @@ to the variance of the mean.
 \examples{
 \dontrun{
 data <- data.frame(alive = c(T, T, F, T, F, F),
-  plots = c(1, 2, 3, 4, 5, 6))
+  tree = c(1, 2, 3, 4, 5, 6))
 attribute = 'alive'
 popTot = 50
 }

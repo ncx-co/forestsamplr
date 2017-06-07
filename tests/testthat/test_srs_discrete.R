@@ -1,16 +1,14 @@
-context("Forest sampling statistics calculations: simple random sample for attriutes: discrete variables")
+context("Forest sampling statistics calculations: simple random sample for attributes: discrete variables")
 
 data <- data.frame(alive = c(T, T, F, T, F, F),
                    plots = c(1, 2, 3, 4, 5, 6))
 
 attribute <- 'alive'
 
-popTot <- 50
-
 
 test_that("srs discrete calculates values correctly", {
 
-  expect_equal(summarize_simple_random_discrete(data, attribute, popTot)$upperLimitCI,
+  expect_equal(summarize_simple_random_discrete(data, attribute, popTot = 50)$upperLimitCI,
                1.0028, tolerance = 0.001)
 
 })
