@@ -17,7 +17,6 @@ clusterTwo = data.frame(clusterID = c(1, 2), clusterElements = c(4, 2),
                         sumAttr = c(1000, 1250), isUsed = c(T, T))
 
 # test plots
-
 plotLevelFalse <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
                         attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
                                  1000, 1250, 950, 900),
@@ -49,6 +48,7 @@ test_that("cluster sample isUsed functions correctly", {
 
 })
 
+
 test_that("cluster sample handles input with no, one, or two clusters correctly", {
 
   expect_error(summarize_cluster(clusterNone, F))
@@ -57,12 +57,14 @@ test_that("cluster sample handles input with no, one, or two clusters correctly"
 
 })
 
+
 test_that("cluster sample handles input data with NA values", {
 
   expect_error(summarize_cluster(plotLevelNAOne, T))
   expect_error(summarize_cluster(plotLevelNAMore, T))
 
 })
+
 
 test_that("cluster sample handles attribute", {
 

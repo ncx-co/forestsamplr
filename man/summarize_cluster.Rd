@@ -27,15 +27,15 @@ variance terms refer to the variance of the mean.
 }
 \examples{
 \dontrun{
-data <- data.frame(clusterID = c(1, 2, 3, 4, 5),
+dataCluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                      clusterElements = c(4, 2, 9, 4, 10),
                      sumAttr = c(1000, 1250, 950, 900, 1005),
                      isUsed = c(T, T, F, T, T))
 
-data <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
-                    attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
-                    1000, 1250, 950, 900),
-                    isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
+dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
+                       attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000,
+                                1250, 950, 900, 1005, 1000, 1250, 950, 900),
+                       isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 }
 }
 \author{

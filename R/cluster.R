@@ -14,21 +14,20 @@
 #' @import dplyr
 #' @examples
 #' \dontrun{
-#' data <- data.frame(clusterID = c(1, 2, 3, 4, 5),
+#' dataCluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
 #'                      clusterElements = c(4, 2, 9, 4, 10),
 #'                      sumAttr = c(1000, 1250, 950, 900, 1005),
 #'                      isUsed = c(T, T, F, T, T))
 #'
-#' data <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
-#'                     attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
-#'                     1000, 1250, 950, 900),
-#'                     isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
+#' dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
+#'                        attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000,
+#'                                 1250, 950, 900, 1005, 1000, 1250, 950, 900),
+#'                        isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 #' }
 #' @export
 
 
 summarize_cluster <- function(data, plot = TRUE, attribute = NA) {
-  # other column headers are not generallized within the function
 
   if (any(is.na(data))) {
     stop("Data input without NA values is required.")
@@ -36,26 +35,35 @@ summarize_cluster <- function(data, plot = TRUE, attribute = NA) {
 
   if (!is.na(attribute) && (attribute %in% colnames(data))) {
     attrTemp <- unlist(data %>% dplyr::select(one_of(attribute)))
-    if (plot) {
-      data$attr <- attrTemp
-    } else {
-      data$sumAttr <- attrTemp
-    }
-  }
 
+    if (plot) {
+
+      data$attr <- attrTemp
+
+    } else {
+
+      data$sumAttr <- attrTemp
+
+    }
+
+  }
 
 if (plot) {
 
   # calculates cluster values from plot data
-  attrSum <- aggregate(data$attr, by = list(Category = data$clusterID), FUN = sum) # sum attributes by cluster
+
+  # sum attributes by cluster
+  temp <- data %>%
+    mutate(attr = ifelse(is.na(attr), 0, attr))
+  attrSum <- rename(aggregate(temp$attr, by = list(Category = temp$clusterID), FUN = sum), clusterID = Category)
 
   clusterT <- distinct(data, clusterID, .keep_all = TRUE) # maintain isUsed for each cluster
   elements <- count(data, clusterID) # tally of elements in each cluster
 
   # attach the sum of attributes and tally of elements to unique cluster
   # produce table with key values
-  cluster <- merge(clusterT, attrSum, by.x = "clusterID", by.y = "Category", all = TRUE) %>%
-    merge(elements, by.x = "clusterID", by.y = "clusterID", all = TRUE) %>%
+  cluster <- inner_join(clusterT, attrSum, by.x = "clusterID", by.y = "Category", all = TRUE) %>%
+    inner_join(elements) %>%
     select(clusterID = clusterID, clusterElements = n, isUsed = isUsed, sumAttr = x)
 
 } else {
@@ -66,11 +74,15 @@ if (plot) {
 }
 
   if (as.integer(anyDuplicated(cluster$clusterID)) == 1) {
+
     stop("Data cannot have repeated clusterID.")
+
   }
 
   if (length(cluster$clusterID) == 1) {
+
     stop("Must have multiple clusters. Consider other analysis.")
+
   }
 
   # basic values: sample-level
@@ -83,32 +95,29 @@ if (plot) {
   summarize(mPop = sum(clusterElements),
             nPop = n(), # num clusters
             mPopBar = mPop / nPop)
-  if (is.na(popValues$mPopBar) | popValues$mPopBar == sampValues$mSampBar[[1]]) { # if Mbar (pop) is unknown, approximate it with mbar (samp)
+  if (is.na(popValues$mPopBar) | popValues$mPopBar == sampValues$mSampBar[[1]]) {
+    # if Mbar (pop) is unknown, approximate it with mbar (samp)
+
     popValues$mPopBar <- sum(sampValues$mSampBar[[1]])
+
   }
 
   finalCalc <- sampValues %>%
     mutate(yBar = sum(sumAttr) / sum(clusterElements)) %>%
     mutate(ySETempNum = (sumAttr - yBar * clusterElements) ^ 2) %>%
-    mutate(ySE = sqrt(((popValues$nPop - nSamp[[1]]) / (popValues$nPop * nSamp[[1]] * (popValues$mPopBar ^ 2)))
+    mutate(ySE = sqrt(((popValues$nPop - nSamp[[1]]) /
+                         (popValues$nPop * nSamp[[1]] * (popValues$mPopBar ^ 2)))
                       * (sum(ySETempNum) / (nSamp[[1]] - 1)))) %>%
     mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
     mutate(lowCL = yBar - 2 * ySE)
 
-  clusterSummary <- merge(
-                          merge(
-                                summarize(sampValues,
-                                          nSamp = nSamp[[1]],
-                                          mSampBar = mSampBar[[1]]),
-                                popValues
-                                ),
-                          summarize(finalCalc,
-                                    standardError = ySE[[1]],
-                                    upperLimitCI = highCL[[1]],
-                                    lowerLimitCI = lowCL[[1]])
-                          )
-
-
+  clusterSummary <- summarize(finalCalc,
+                              nSamp = nSamp[[1]],
+                              mSampBar = mSampBar[[1]],
+                              standardError = ySE[[1]],
+                              upperLimitCI = highCL[[1]],
+                              lowerLimitCI = lowCL[[1]]) %>%
+    bind_cols(popValues)
 
   # return dataframe of stand-level statistics
   return(clusterSummary)

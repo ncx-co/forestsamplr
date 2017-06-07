@@ -3,61 +3,71 @@
 #' simple random sample data. The calculations are derived from Chapter 3 in
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean, hence the
-#' \code{n} terms in the deonminators.
-#' @param trainingData dataframe containing observations of variable of
-#' interest.
-#' @param attribute character name of attribute to be summarized. Attribute
-#' must already be expanded.
-#' @param popN numeric population size. Assumes popN is not known.
+#' \code{sampleSize} terms in the denominators.
+#' @param trainingData dataframe or vector containing observations of
+#' variable of interest. Variable of interest must already be expanded
+#' to the level of interest (e.g. stand-level).
+#' @param attribute character name of attribute to be summarized.
+#' Must be defined if data is input as a dataframe.
+#' @param popSize numeric population size. Defaults to NA (unknown popSize).
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
-#' @param infReplacement logical true if sample was done with replacement
+#' @param infiniteReplacement logical true if sample was done with replacement
 #' or from an infite population. False if sampled without replacement,
-#' from a finite population. Assumes without replacement, from a finite
-#' population.
+#' from a finite population. Defaults to False.
+#' @return a dataframe of population mean, variance, standard error, and
+#' high and low confidence limits.
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples
 #' \dontrun{
-#' trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
+#' #trainingDataFrame
+#' data <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
 #'   plots = c(1, 2, 3, 4, 5, 6))
-#' attribute = 'bapa'
-#' desiredConfidence = 0.9
+#' #trainingVector
+#' data <- c(120, 140, 160, 110, 100, 90)
+#' attribute <- 'bapa'
+#' desiredConfidence <- 0.9
 #' }
 #' @export
 
-summarize_simple_random <- function(trainingData, attribute, popN = NA,
-                                    desiredConfidence = 0.9, infReplacement = F) {
+summarize_simple_random <- function(data, attribute = 'vector', popSize = NA,
+                                    desiredConfidence = 0.9, infiniteReplacement = F) {
 
-  # give the variable of interest a generic name
-  attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))
-  trainingData$attr <- attrTemp
+  # converts variable of interest into a vector with a generic name
+  if (attribute == 'vector') {
+    attr <- data
+  } else {
+    # makes sure data is expressed as a numeric vector
+    attr <- as.numeric(as.vector(data %>% dplyr::select(one_of(attribute)))[[1]])
+  }
 
-  n <- length(trainingData$attr)
-  if (!is.na(popN) && popN <= n) {
+  sampleSize <- length(attr)
+  if (!is.na(popSize) && popSize <= sampleSize) {
     stop("Population size must be greater than sample size.")
   }
 
-  if (is.na(infReplacement)) {
-    infReplacement <- FALSE
+  if(any(is.na(attr))) {
+    stop("NA values are present in the input data.")
   }
 
-  test <- (!is.na(popN) && (!infReplacement))
-  simpRandomSummary <- trainingData %>%
-    # set any NA in attribute to 0
-    mutate(attr = ifelse(is.na(attr), 0, attr)) %>%
-    mutate(popMean = mean(attr)) %>%
-    mutate(var = (sum(attr ^ 2) - (sum(attr ^ 2) / n)) / (n - 1)) %>%
-    mutate(se = ifelse(test, sqrt((var / n) * ((popN - n) / popN)),  # without replacement, finite population
-           sqrt(var / n))) %>%  # with replacement, infinite population
-    mutate(highCL = mean(attr) + qt(1 - ((1 - desiredConfidence) / 2), n - 1) * se) %>%  # 2-tailed
-    mutate(lowCL = mean(attr) - qt(1 - ((1 - desiredConfidence) / 2), n - 1) * se) %>%
-    summarize('mean' = popMean[1], 'variance' = var[1], 'standardError' = se[1],
-              'upperLimitCI' = highCL[1], 'lowerLimitCI' = lowCL[1])
+  if (is.na(infiniteReplacement)) {
+    infiniteReplacement <- FALSE
+  }
 
-  # return dataframe of
-  output <- simpRandomSummary
+  test <- (!is.na(popSize) && (!infiniteReplacement))
+  simpRandomSummary <- data.frame(attr) %>%
+    summarize(
+      mean = mean(attr),
+      variance = (sum(attr ^ 2) - (sum(attr ^ 2) / sampleSize)) / (sampleSize - 1),
+      standardError = ifelse(test, sqrt((variance / sampleSize) * ((popSize - sampleSize) / popSize)),
+                  # without replacement, finite population
+                  sqrt(variance / sampleSize)),  # with replacement, infinite population
+      upperLimitCI = mean(attr) + qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1) * standardError,  # 2-tailed
+      lowerLimitCI = mean(attr) - qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1) * standardError
+    )
 
-  return(output)
+  # return dataframe of key values
+  return(simpRandomSummary)
 
 }
 
