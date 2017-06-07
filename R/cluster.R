@@ -4,7 +4,7 @@
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean.
 #' @param data dataframe containing observations of variable of
-#' interest for either cluster-level of plot-level data.
+#' interest for either cluster-level or plot-level data.
 #' @param plot logical true if parameter data is plot-level, false if
 #' parameter data is cluster-level. Default is True.
 #' @param attriute character name of attribute to be summarized.
