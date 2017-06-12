@@ -12,7 +12,7 @@
 #' @param popSize numeric population size. Defaults to NA (unknown popSize).
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param infiniteReplacement logical true if sample was done with replacement
-#' or from an infite population. False if sampled without replacement,
+#' or from an infinite population. False if sampled without replacement,
 #' from a finite population. Defaults to False.
 #' @return a dataframe of population mean, variance, standard error, and
 #' high and low confidence limits.

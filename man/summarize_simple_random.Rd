@@ -16,7 +16,7 @@ Must be defined if data is input as a dataframe.}
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 
 \item{infiniteReplacement}{logical true if sample was done with replacement
-or from an infite population. False if sampled without replacement,
+or from an infinite population. False if sampled without replacement,
 from a finite population. Defaults to False.}
 
 \item{trainingData}{dataframe or vector containing observations of
