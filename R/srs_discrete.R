@@ -5,9 +5,8 @@
 #' Forest Measurements, Fifth Edition. The variance terms refer
 #' to the variance of the mean.
 #' @param data dataframe containing observations of variable of
-#' interest.
-#' @param attribute character name of attribute to be summarized. 
-#' Attribute must already be expanded.
+#' interest. Attribute of interest must already be expanded.
+#' @param attribute character name of attribute to be summarized.
 #' @param popTot numeric population size. Equivalent to total 
 #' number of individuals.
 #' @return dataframe of stand-level statistics. Includes standard error and
