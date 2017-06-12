@@ -8,10 +8,9 @@ summarize_simple_random_discrete(data, attribute = "attr", popTot = NA)
 }
 \arguments{
 \item{data}{dataframe containing observations of variable of
-interest.}
+interest. Attribute of interest must already be expanded.}
 
-\item{attribute}{character name of attribute to be summarized. 
-Attribute must already be expanded.}
+\item{attribute}{character name of attribute to be summarized.}
 
 \item{popTot}{numeric population size. Equivalent to total 
 number of individuals.}
