@@ -58,7 +58,7 @@ summarize_simple_random <- function(data, attribute = 'vector', popSize = NA,
   simpRandomSummary <- data.frame(attr) %>%
     summarize(
       mean = mean(attr),
-      variance = (sum(attr ^ 2) - (sum(attr ^ 2) / sampleSize)) / (sampleSize - 1),
+      variance = (sum(attr ^ 2) - (sum(attr) ^ 2 / sampleSize)) / (sampleSize - 1),
       standardError = ifelse(test, sqrt((variance / sampleSize) * ((popSize - sampleSize) / popSize)),
                   # without replacement, finite population
                   sqrt(variance / sampleSize)),  # with replacement, infinite population
