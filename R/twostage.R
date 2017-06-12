@@ -7,7 +7,7 @@
 #' interest for either cluster-level of plot-level data.
 #' @param plot logical True if parameter data is plot-level, False if
 #' parameter data is cluster-level. Default is True.
-#' @param attriute character name of attribute to be summarized.
+#' @param attribute character name of attribute to be summarized.
 #' @return dataframe of stand-level statistics including
 #' standard error and confidence interval limits. All final values are
 #' on a 'per plot' basis.

@@ -14,7 +14,7 @@ interest for either cluster-level of plot-level data.}
 \item{plot}{logical True if parameter data is plot-level, False if
 parameter data is cluster-level. Default is True.}
 
-\item{attriute}{character name of attribute to be summarized.}
+\item{attribute}{character name of attribute to be summarized.}
 }
 \value{
 dataframe of stand-level statistics including
