@@ -2,17 +2,17 @@
 #' @description Summarizes population-level statistics for
 #' cluster sample for attribute data. The calculations are
 #' derived from Chapter 3 in Avery and Burkhart's (1967)
-#' Forest Measurements, Fifth Edition. The variance terms refer
-#' to the variance of the mean.
-#' @param data dataframe containing observations of variable of
-#' interest. Attribute must already be expanded. Attribute must 
-#' be coded as either TRUE and FALSE or 1 and 0.
+#' Forest Measurements, Fifth Edition. The variance terms 
+#' refer to the variance of the mean.
+#' @param data dataframe containing observations of variable
+#' of interest. Attribute (variable of interest) must be the
+#' proportion alive in the associated plot.
 #' @param attribute character name of attribute to be summarized.
 #' @param plotTot numeric population size. Equivalent to the 
 #' total number of possible plots in the population.
 #' @param desiredConfidence numeric desired confidence level.
-#' @return dataframe of stand-level statistics. Includes standard error and
-#' 95% confidence interval.
+#' @return dataframe of stand-level statistics. Includes 
+#' standard error and confidence interval.
 #' @author Karin Wolken
 #' @import dplyr
 #' @examples
@@ -25,7 +25,6 @@
 #' desiredConfidence = 0.95
 #' }
 #' @export
-
 
 
 

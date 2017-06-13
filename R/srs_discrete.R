@@ -5,8 +5,7 @@
 #' Forest Measurements, Fifth Edition. The variance terms refer
 #' to the variance of the mean.
 #' @param data dataframe containing observations of variable of
-#' interest. Attribute of interest must already be expanded. 
-#' Attribute must be coded as either TRUE and FALSE or 1 and 0.
+#' interest. Attribute must be coded as either TRUE and FALSE or 1 and 0.
 #' @param attribute character name of attribute to be summarized.
 #' @param popTot numeric population size. Equivalent to total 
 #' number of individuals.

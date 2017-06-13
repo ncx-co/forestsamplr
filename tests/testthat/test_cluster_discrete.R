@@ -1,6 +1,6 @@
-context("Forest sampling statistics calculations: cluster sample for attributes: discrete variables")
+context("Forest sampling statistics calculations: cluster sample for attributes, discrete variables")
 
- # dataset from the example for this sampling method in Avery and Burkhart
+ # dataset is from the example for this sampling method in Avery and Burkhart
  data <- data.frame(plots = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 
                     propAlive = c(0.75, 0.80, 0.80, 0.85, 0.70,
                     0.90, 0.70, 0.75, 0.80, 0.65))

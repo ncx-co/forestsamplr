@@ -8,9 +8,9 @@ summarize_cluster_discrete(data, attribute, plotTot = NA,
   desiredConfidence = 0.95)
 }
 \arguments{
-\item{data}{dataframe containing observations of variable of
-interest. Attribute must already be expanded. Attribute must 
-be coded as either TRUE and FALSE or 1 and 0.}
+\item{data}{dataframe containing observations of variable
+of interest. Attribute (variable of interest) must be the
+proportion alive in the associated plot.}
 
 \item{attribute}{character name of attribute to be summarized.}
 
@@ -20,15 +20,15 @@ total number of possible plots in the population.}
 \item{desiredConfidence}{numeric desired confidence level.}
 }
 \value{
-dataframe of stand-level statistics. Includes standard error and
-95% confidence interval.
+dataframe of stand-level statistics. Includes 
+standard error and confidence interval.
 }
 \description{
 Summarizes population-level statistics for
 cluster sample for attribute data. The calculations are
 derived from Chapter 3 in Avery and Burkhart's (1967)
-Forest Measurements, Fifth Edition. The variance terms refer
-to the variance of the mean.
+Forest Measurements, Fifth Edition. The variance terms 
+refer to the variance of the mean.
 }
 \examples{
 \dontrun{
