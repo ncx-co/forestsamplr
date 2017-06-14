@@ -12,7 +12,7 @@
 #' @param popSize numeric population size. Defaults to NA (unknown popSize).
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param infiniteReplacement logical true if sample was done with replacement
-#' or from an infinite population. False if sampled without replacement,
+#' or from an infite population. False if sampled without replacement,
 #' from a finite population. Defaults to False.
 #' @return a dataframe of population mean, variance, standard error, and
 #' high and low confidence limits.
@@ -58,7 +58,7 @@ summarize_simple_random <- function(data, attribute = 'vector', popSize = NA,
   simpRandomSummary <- data.frame(attr) %>%
     summarize(
       mean = mean(attr),
-      variance = (sum(attr ^ 2) - (sum(attr) ^ 2 / sampleSize)) / (sampleSize - 1),
+      variance = (sum(attr ^ 2) - (sum(attr ^ 2) / sampleSize)) / (sampleSize - 1),
       standardError = ifelse(test, sqrt((variance / sampleSize) * ((popSize - sampleSize) / popSize)),
                   # without replacement, finite population
                   sqrt(variance / sampleSize)),  # with replacement, infinite population
