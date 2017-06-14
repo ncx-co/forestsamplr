@@ -34,14 +34,19 @@ dataCluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                           sampledElements = c(2, 2, 2, 2, 2),
                           isUsed = c(T, T, T, T, F),
                           attrSumCluster = c(1000, 1250, 950, 900, 1005))
+summarize_two_stage(dataCluster, F, 'attr')
 
-data <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4,
-                   4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
-                   attr = c(1000, 1250, NA, 900, 1005, 1000,
-                   1250, 950, 900, 1005, NA, 1250, 950, 900,
-                   1005, 1000, 1250, NA, 900),
-                   isUsed = c(T, T, T, T, T, T, T, T, T, T,
-                   T, T, T, T, F, F, F, F, F))
+# realistic data
+dataPlot <- data.framedata.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3,  
+                                           4, 4, 4, 5, 5, 5, 6, 6, 6), 
+                             volume = c(500, 650, 610, 490, 475, 505, 
+                                        940, 825, 915, 210, 185, 170, 
+                                        450, 300, 500, 960, 975, 890),
+                             isUsed = c(T, T, T, T, T, T, T, T, T, T, 
+                                        T, T, T, T, T, T, T, T))
+summarize_two_stage(redData, T, 'volume', populationClusters = 16,
+                    populationElementsPerCluster = 160)
+
 }
 }
 \author{

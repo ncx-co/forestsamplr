@@ -58,3 +58,4 @@ test_that("two stage calculates values correctly", {
                           lowerLimitCI = 398.85), tolerance = 0.1)
 
 })
+

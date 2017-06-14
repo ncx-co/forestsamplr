@@ -87,22 +87,20 @@ if (plot) {
     popValues$mPopBar <- sum(sampValues$mSampBar[[1]])
 
   }
-
-  finalCalc <- sampValues %>%
+  
+  clusterSummary <- sampValues %>%
     mutate(yBar = sum(sumAttr) / sum(clusterElements)) %>%
     mutate(ySETempNum = (sumAttr - yBar * clusterElements) ^ 2) %>%
-    mutate(ySE = sqrt(((popValues$nPop - nSamp[[1]]) /
-                         (popValues$nPop * nSamp[[1]] * (popValues$mPopBar ^ 2)))
-                      * (sum(ySETempNum) / (nSamp[[1]] - 1)))) %>%
+    summarize(ySE = sqrt(((popValues$nPop - nSamp[[1]]) /
+                            (popValues$nPop * nSamp[[1]] * (popValues$mPopBar ^ 2)))
+                         * (sum(ySETempNum) / (nSamp[[1]] - 1))),
+              yBar = mean(yBar),
+              nSamp = mean(nSamp),
+              mSampBar = mean(mSampBar)) %>%
     mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
-    mutate(lowCL = yBar - 2 * ySE)
-
-  clusterSummary <- summarize(finalCalc,
-                              nSamp = nSamp[[1]],
-                              mSampBar = mSampBar[[1]],
-                              standardError = ySE[[1]],
-                              upperLimitCI = highCL[[1]],
-                              lowerLimitCI = lowCL[[1]]) %>%
+    mutate(lowCL = yBar - 2 * ySE) %>%
+    select(standardError = ySE, lowerLimitCI = lowCL, upperLimitCI = highCL, 
+           mean = yBar, nSamp, mSampBar) %>%
     bind_cols(popValues)
 
   # return dataframe of stand-level statistics
