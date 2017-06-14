@@ -26,7 +26,6 @@ test_that("simple random function handles missing values and zeros correctly", {
   expect_equal(sampF, sampReplacementNA)
   expect_error(summarize_simple_random(trainingData, attribute, popSize = 0,
                                        desiredConfidence = 0.9, infiniteReplacement = T))
-<<<<<<< HEAD
 
   expect_equal(sampF, data.frame('mean' = 120, 'variance' = 680, 'standardError' = 9.98,
                                  'upperLimitCI' = 140.12, 'lowerLimitCI' = 99.87), tolerance = 0.1)
@@ -37,18 +36,6 @@ test_that("simple random function handles missing values and zeros correctly", {
 
 test_that("simple random throws errors for data with few or no entries, or missing values", {
 
-=======
-
-  expect_equal(sampF, data.frame('mean' = 120, 'variance' = 14966.67, 'standardError' = 46.85,
-                                 'upperLimitCI' = 214.40, 'lowerLimitCI' = 25.59), tolerance = 0.1)
-
-})
-
-
-
-test_that("simple random throws errors for data with few or no entries, or missing values", {
-
->>>>>>> master
   trainingDataOne <- data.frame('bapa' = c(4), 'plot' = c(10))
   trainingDataThree <- data.frame('bapa' = c(4, 5, NA), 'plot' = c(10, 11, 12))
   trainingDataNone <- data.frame('bapa' = c(NA), 'plot' = c(10))
