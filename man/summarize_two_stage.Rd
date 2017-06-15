@@ -14,7 +14,11 @@ interest for either cluster-level of plot-level data.}
 \item{plot}{logical True if parameter data is plot-level, False if
 parameter data is cluster-level. Default is True.}
 
+<<<<<<< HEAD
 \item{attribute}{character name of attribute to be summarized.}
+=======
+\item{attriute}{character name of attribute to be summarized.}
+>>>>>>> parent of 6e89f0d... Revert "Simple random discrete"
 }
 \value{
 dataframe of stand-level statistics including
@@ -34,6 +38,7 @@ dataCluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                           sampledElements = c(2, 2, 2, 2, 2),
                           isUsed = c(T, T, T, T, F),
                           attrSumCluster = c(1000, 1250, 950, 900, 1005))
+<<<<<<< HEAD
 summarize_two_stage(dataCluster, F, 'attr')
 
 # realistic data
@@ -47,6 +52,16 @@ dataPlot <- data.framedata.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3,
 summarize_two_stage(redData, T, 'volume', populationClusters = 16,
                     populationElementsPerCluster = 160)
 
+=======
+
+data <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4,
+                   4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
+                   attr = c(1000, 1250, NA, 900, 1005, 1000,
+                   1250, 950, 900, 1005, NA, 1250, 950, 900,
+                   1005, 1000, 1250, NA, 900),
+                   isUsed = c(T, T, T, T, T, T, T, T, T, T,
+                   T, T, T, T, F, F, F, F, F))
+>>>>>>> parent of 6e89f0d... Revert "Simple random discrete"
 }
 }
 \author{
