@@ -42,7 +42,7 @@ plotLevelAttribute <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 
 
 test_that("cluster sample isUsed functions correctly", {
 
-  expect_equal(summarize_cluster(clusterFalse, F)[[6]], c(30.51), tolerance = 0.1)
+  expect_equal(summarize_cluster(clusterFalse, F)[[1]], c(30.51), tolerance = 0.1)
   expect_false(identical(summarize_cluster(clusterTrue, F), summarize_cluster(clusterFalse, F)))
   expect_false(identical(summarize_cluster(plotLevelTrue, T), summarize_cluster(plotLevelFalse, T)))
 
