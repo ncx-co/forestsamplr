@@ -8,8 +8,8 @@ summarize_simple_random_discrete(data, attribute = "attr", popTot = NA)
 }
 \arguments{
 \item{data}{dataframe containing observations of variable of
-interest. Attribute of interest must already be expanded. 
-Attribute must be coded as either TRUE and FALSE or 1 and 0.}
+interest. Attribute must be coded as either TRUE and FALSE or
+1 and 0.}
 
 \item{attribute}{character name of attribute to be summarized.}
 
