@@ -5,3 +5,9 @@ A library of functions for processing natural resource sample data from a variet
 
 ## Source Repository
 Source-code repository is hosted on GitHub.
+
+## Patrons
+The forest_sampling package was first created by [SILVIATERRA](https://silviaterra.com/bark/index.html), with the intent of building an open source tool for the field of Forestry.
+
+## How to Contribute
+We welcome your contributions! Please take a look at the contribution guidelines [TBD].
