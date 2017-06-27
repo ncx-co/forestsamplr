@@ -1,7 +1,10 @@
 Package: forestSampling
 Title: Standard Forest Sampling Design Workups
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Authors@R: c(
+    person("Rodman", "Henry", role = c("aut", "cre")),
+    person("Wolken", "Karin", role = c("aut"))
+    )
 Description: This package is a library of functions that creates common sampling designs used in Forestry. The functions accept data and other parameters, then produces basic statistics calculated by equations from common Forest Biometrics books.
 Depends:
     R (>= 3.3.1)
