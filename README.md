@@ -1,7 +1,9 @@
 # forest_sampling
 A library of functions for processing natural resource sample data from a variety of sample designs.
 
-![tree-576847_640](https://user-images.githubusercontent.com/28522393/27563071-6a39faa8-5a84-11e7-929a-1c50927c5af3.png)
+<p align="center">
+  <img alt="Pretty Tree" src="https://user-images.githubusercontent.com/28522393/27563071-6a39faa8-5a84-11e7-929a-1c50927c5af3.png" width="400" />
+</p>
 
 ## Source Repository
 Source-code repository is hosted on GitHub, [here](https://github.com/SilviaTerra/forest_sampling).
