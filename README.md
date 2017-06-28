@@ -25,7 +25,7 @@ Download the package:
 Helpful link: [Install R Packages Hosted on GitHub](https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html)
 
 ## Patrons
-The forest_sampling package was first created by [SILVIATERRA](https://silviaterra.com/bark/index.html), with the intent of building an open source tool for the field of Forestry.  
+The forest_sampling package was first created by [SilviaTerra](https://silviaterra.com/bark/index.html), with the intent of building an open source tool for the field of Forestry.  
   
 In collaboration with:  
 * [SAF A1 Working Group](https://www.eforester.org/Main/Community/Join_a_Working_Group/Main/About/Working_Groups.aspx?hkey=415c5b8e-28b9-4376-b23f-ad89a158adc8)
