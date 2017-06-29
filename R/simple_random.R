@@ -4,11 +4,12 @@
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean, hence the
 #' \code{sampleSize} terms in the denominators.
-#' @param trainingData dataframe or vector containing observations of
+#' @param data dataframe or vector containing observations of
 #' variable of interest. Variable of interest must already be expanded
 #' to the level of interest (e.g. stand-level).
 #' @param attribute character name of attribute to be summarized.
 #' Must be defined if data is input as a dataframe.
+#' @param type object type of data, e.g. 'dataframe' or 'vector'
 #' @param popSize numeric population size. Defaults to NA (unknown popSize).
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param infiniteReplacement logical true if sample was done with replacement
@@ -30,11 +31,11 @@
 #' }
 #' @export
 
-summarize_simple_random <- function(data, attribute = 'vector', popSize = NA,
+summarize_simple_random <- function(data, attribute = 'attr', type = 'vector', popSize = NA,
                                     desiredConfidence = 0.9, infiniteReplacement = F) {
 
   # converts variable of interest into a vector with a generic name
-  if (attribute == 'vector') {
+  if (type == 'vector') {
     attr <- data
   } else {
     # makes sure data is expressed as a numeric vector
