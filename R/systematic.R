@@ -28,8 +28,7 @@
 summarize_systematic <- function(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9) {
 
   # return dataframe of key values
-  output <- summarize_simple_random(trainingData, attribute, popSize, desiredConfidence = 0.9, FALSE)
-  summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9, FALSE)
+  output <- summarize_simple_random(data = data, attribute, type, popSize, desiredConfidence = 0.9, FALSE)
   
   
   return(output)
