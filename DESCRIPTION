@@ -1,11 +1,8 @@
 Package: forestSampling
 Title: Standard Forest Sampling Design Workups
 Version: 0.0.0.9000
-Authors@R: c(
-    person("Rodman", "Henry", role = c("aut", "cre")),
-    person("Wolken", "Karin", role = c("aut"))
-    )
-Description: A library of functions that calculates workups for sampling designs commonly used in Forestry.
+Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
 Depends:
     R (>= 3.3.1)
 License: What license is it under?

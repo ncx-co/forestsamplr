@@ -15,7 +15,7 @@ to the level of interest (e.g. stand-level).}
 \item{attribute}{character name of attribute to be summarized.
 Must be defined if data is input as a dataframe.}
 
-\item{type}{object type of data, e.g. 'dataframe' or 'vector'}
+\item{type}{object type of data, e.g. 'dataframe' or 'vector'.}
 
 \item{popSize}{numeric population size. Defaults to NA (unknown popSize).}
 
