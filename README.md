@@ -10,12 +10,12 @@ Source-code repository is hosted on GitHub, [here](https://github.com/SilviaTerr
 
 ## How to Contribute
 We welcome your contributions! This package is a work in progress, and expansion is welcome.  
-Please take a look at the contribution guidelines [TBD].  
+Please take a look at the [contribution guidelines](https://github.com/SilviaTerra/forest_sampling/wiki/Contribution-Guidelines).  
   
 Wish-list areas include:  
 * Data
 * Additional functions for workups
-* Changes for usability
+* Edits for easier function use
 
 ## How to Download from GitHub
 
