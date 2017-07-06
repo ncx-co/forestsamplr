@@ -15,5 +15,6 @@ summary <- data %>%
   mutate(sumTempInclProb = (1 - inclProb) / inclProb) %>%
   mutate(varOfMean = (1 / (nPop ^ 2)) * sum(sumTempYX * sumTempInclProb)) 
 
+#mean and variance are supposed to be the same...
 
 #I guess I don't quite understand "PIk" variable. Difference between p(s) and Pi(subK)?
