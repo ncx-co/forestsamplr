@@ -53,6 +53,7 @@ The following are the basic functions and their associated sampling strategy.
 Function Definition:  
 
 `summarize_cluster(data, plot = TRUE, attribute = NA)`  
+
 `summarize_cluster()` can take in plot data or stand data.  
 
 ```{r include = FALSE}
