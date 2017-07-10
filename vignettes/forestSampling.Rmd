@@ -53,9 +53,8 @@ The following are the basic functions and their associated sampling strategy.
 Function Definition:  
 
 `summarize_cluster(data, plot = TRUE, attribute = NA)`  
-
 `summarize_cluster()` can take in plot data or stand data.  
-  
+
 ```{r include = FALSE}
 plotLevelDataExample <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4,
                                                  5, 5, 5, 5, 5), 
@@ -91,11 +90,9 @@ dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5
 ## Simple Random Sample  
 
 Function Definition:  
-
-`summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, 
-                        desiredConfidence = 0.9, infiniteReplacement = F)`
+`summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9, infiniteReplacement = F)`
   
-summarize_simple_random_discrete(data, attribute = 'attr', popTot = NA)`
+`summarize_simple_random_discrete(data, attribute = 'attr', popTot = NA)`
   
 Simple random sample (SRS) has 3 options:  
 1. SRS of a finite population or sampled without replacement
