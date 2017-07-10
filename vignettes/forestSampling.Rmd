@@ -97,13 +97,13 @@ summarize_simple_random_discrete(data, attribute = 'attr', popTot = NA)
 
 Simple random sample (SRS) has 3 options:  
 1. SRS of a finite population or sampled without replacement
-    * Set 'infiniteReplacement' post to FALSE or do not include the parameter in the function call
+    * Set `infiniteReplacement = FALSE` or do not include the parameter in the function call
     * Data input can be as a vector or dataframe  
 2. SRS of an infinite population or sampled wiht replacement
-    * Set 'infiniteReplacement' post to TRUE
+    * Set `infiniteReplacement = TRUE`
     * Data input can be as a vector or dataframe  
 3. SRS with a bernoulli distribution
-    * TBD: Set 'bernoulli' post to TRUE
+    * TBD: Set `bernoulli = TRUE`
     * Currently, data input can only be as a dataframe
   
 Data inputs:  
@@ -139,9 +139,9 @@ Example: `summarize_simple_random_discrete(data, attribute, popTot = 50)`
 
 Stratified sample currently has two options:
 1. Stratified  
-* Set `post = FALSE`  
+    * Set `post = FALSE`  
 2. Post-Stratified  
-* Set `post = TRUE`  
+    * Set `post = TRUE`  
   
 ```{r include = FALSE}
 summarize_stratified(trainingData, attribute, stratumTab, desiredConfidence = 0.9, post = T)
