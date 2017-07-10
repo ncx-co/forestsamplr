@@ -13,7 +13,8 @@ vignette: >
 # Forest Sampling Package   
   
 The Forest Sampling is a package of functions that calculates workups for sampling designs commonly used in Forestry. It is an open source opportunity for collaboration and transparency.  
-These sampling designs include:  
+  
+These sampling designs include:
 * Simple Random Sampling  
 * Cluster Sampling  
 * Stratified Sampling  
@@ -28,14 +29,14 @@ Variations are included, described in detail [here](insertLinkTo#Functions).
 * In most cases, additional parameters are necessary. Defaults have been provided to help minimize this.  
   
 ## Common parameters, detailed:  
-* `attribute`: assumes target attribute is called `attr`. Set `attribute` to the column header used for the attribute of interest. Not required for vector input.  
+* `attribute`: assumes target attribute is called `attr`. Set `attribute` to the column header used for the variable of interest. Not required for vector input.  
 * `___Tot`: total number of the ___ unit in the sampling design. Commonly the total number of clusters or plots in the sampling frame.  
 * `desiredConfidence`: Percent confidence level (two-sided). Default is set to `0.95`.  
 
 # Functions:  
 The following are the basic functions and their associated sampling strategy  
 summarize_cluster() -- cluster sampling  
-summarize_cluster_discrete() -- cluster sampling with Bernoulli distribution
+summarize_cluster_discrete() -- cluster sampling with Bernoulli distribution  
 summarize_simple_random() -- simple random sampling  
 summarize_simple_random_discrete() -- simple random sampling with the Bernoulli distribution  
 summarize_stratified() -- stratified sampling  
@@ -47,4 +48,20 @@ summarize_cluster() can take in plot data or stand data.
 `plotLevelDataExample <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5), attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900), isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))`  
 > clusterLevelDataExample = data.frame(clusterID = c(1, 2, 3, 4, 5), clusterElements = c(4, 2, 9, 4, 10), sumAttr = c(1000, 1250, 950, 900, 1005), isUsed = c(T, T, F, T, T))
 
+```{r include = FALSE}
+plotLevelDataExample <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4,
+                                                 5, 5, 5, 5, 5), 
+                                   attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950,
+                                            900, 1005, 1000, 1250, 950, 900, 1005, 1000,
+                                            1250, 950, 900), 
+                                   isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F,
+                                              F, F, F, F))
+```
+
+```{r include = FALSE}
+clusterLevelDataExample = data.frame(clusterID = c(1, 2, 3, 4, 5), 
+                                     clusterElements = c(4, 2, 9, 4, 10), 
+                                     sumAttr = c(1000, 1250, 950, 900, 1005), 
+                                     isUsed = c(T, T, F, T, T))
+```
 
