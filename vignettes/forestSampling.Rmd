@@ -35,18 +35,26 @@ Variations are included, described in detail [here](insertLinkTo#Functions).
 
 # Functions:  
 The following are the basic functions and their associated sampling strategy.  
-  
-summarize_cluster() -- cluster sampling  
-summarize_cluster_discrete() -- cluster sampling with Bernoulli distribution  
-summarize_simple_random() -- simple random sampling  
-summarize_simple_random_discrete() -- simple random sampling with the Bernoulli distribution  
-summarize_stratified() -- stratified sampling  
-summarize_systematic() -- systematic sampling  
-summarize_two_stage() -- two-stage sampling  
+
+  Function                           | Sampling Strategy
+-------------------------------------|---------------------------------------------------------
+`summarize_cluster()`                | cluster sampling  
+`summarize_cluster_discrete()`       | cluster sampling with Bernoulli distribution  
+`summarize_simple_random()`          | simple random sampling  
+`summarize_simple_random_discrete()` | simple random sampling with the Bernoulli distribution  
+`summarize_stratified()`             | stratified sampling  
+`summarize_systematic()`             | systematic sampling  
+`summarize_two_stage()`              | two-stage sampling  
   
 ## Cluster Sample:  
 
 ### Normal Distribution:
+
+Function Definition:
+```{r include = FALSE}
+summarize_cluster(data, plot = TRUE, attribute = NA)
+```
+
 summarize_cluster() can take in plot data or stand data.  
   
 ```{r include = FALSE}
@@ -65,13 +73,14 @@ clusterLevelDataExample <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                                      sumAttr = c(1000, 1250, 950, 900, 1005), 
                                      isUsed = c(T, T, F, T, T))
 ```
+  
+### Bernoulli Distribution  
 
+Function Definition:
 ```{r include = FALSE}
-summarize_cluster(data, plot = TRUE, attribute = NA)
+summarize_cluster_discrete(data, attribute, plotTot = NA, desiredConfidence = 0.95)
 ```
-  
-### Bernoulli Distribution
-  
+
 The cluster sample has an option for the Bernoulli distribution. For this distribution, the total number of plots in the sampling frame must be indicated, and data must be input as follows (where attr is the value of the attribute for each plot):  
 
 ```{r include = FALSE}
@@ -80,10 +89,6 @@ dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5
                        attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005,
                                 1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900), 
                        isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
-```
-
-```{r include = FALSE}
-summarize_cluster_discrete(data, attribute, plotTot = NA, desiredConfidence = 0.95)
 ```
 
 ## Simple Random Sample  
@@ -137,17 +142,24 @@ Example: `summarize_simple_random_discrete(data, attribute, popTot = 50)`
   
 ## Stratified Sample:
 
+Function Definition:
+```{r include = FALSE}
+summarize_stratified(trainingData, attribute, stratumTab, desiredConfidence = 0.9, post = T)
+```
+
 Stratified sample currently has two options:
 1. Stratified  
     * Set `post = FALSE`  
 2. Post-Stratified  
     * Set `post = TRUE`  
   
-```{r include = FALSE}
-summarize_stratified(trainingData, attribute, stratumTab, desiredConfidence = 0.9, post = T)
-```
 
 ## Systematic Sample:  
+
+Function Definition:
+```{r include = FALSE}
+summarize_systematic(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9)  
+```
 
 Data input can be either as a vector or dataframe.  
 
@@ -161,12 +173,12 @@ type <- 'dataframe'
 vector <- c(120, 140, 160, 110, 100, 90)
 ```
 
-```{r include = FALSE}
-summarize_systematic(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9)  
-```
-
-
 ## Two-Stage Sample:  
+
+Function Definition:
+```{r include = FALSE}
+summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0)  
+```
 
 Input data can be either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
 
@@ -178,9 +190,7 @@ Example: `summarize_two_stage(redData, T, 'volume', populationClusters = 16, pop
   
 The ‘attribute’ function argument must be included.  
   
-```{r include = FALSE}
-summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0)  
-```
+
 
 
 
