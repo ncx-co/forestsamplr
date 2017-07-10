@@ -25,10 +25,10 @@
 #' }
 #' @export
 
-summarize_systematic <- function(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9) {
+summarize_systematic <- function(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95) {
 
   # return dataframe of key values
-  output <- summarize_simple_random(data = data, attribute, type, popSize, desiredConfidence = 0.9, FALSE)
+  output <- summarize_simple_random(data = data, attribute, type, popSize, desiredConfidence, FALSE)
   
   
   return(output)
