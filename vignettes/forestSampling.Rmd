@@ -86,18 +86,25 @@ dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5
 summarize_cluster_discrete(data, attribute, plotTot = NA, desiredConfidence = 0.95)
 ```
 
-## Simple Random Sample
+## Simple Random Sample  
+
+Function Definition:  
+```{r include = FALSE}
+summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9, infiniteReplacement = F)
+
+summarize_simple_random_discrete(data, attribute = 'attr', popTot = NA)
+```
 
 Simple random sample (SRS) has 3 options:  
 1. SRS of a finite population or sampled without replacement
-  * Set 'infiniteReplacement' post to FALSE or do not include the parameter in the function call
-  * Data input can be as a vector or dataframe  
+    * Set 'infiniteReplacement' post to FALSE or do not include the parameter in the function call
+    * Data input can be as a vector or dataframe  
 2. SRS of an infinite population or sampled wiht replacement
-  * Set 'infiniteReplacement' post to TRUE
-  * Data input can be as a vector or dataframe  
+    * Set 'infiniteReplacement' post to TRUE
+    * Data input can be as a vector or dataframe  
 3. SRS with a bernoulli distribution
-  * TBD: Set 'bernoulli' post to TRUE
-  * Currently, data input can only be as a dataframe
+    * TBD: Set 'bernoulli' post to TRUE
+    * Currently, data input can only be as a dataframe
   
 Data inputs:  
   1. Vector  
@@ -131,9 +138,11 @@ Example: `summarize_simple_random_discrete(data, attribute, popTot = 50)`
 ## Stratified Sample:
 
 Stratified sample currently has two options:
-1. Stratified
-2. Post-Stratified
-
+1. Stratified  
+* Set `post = FALSE`  
+2. Post-Stratified  
+* Set `post = TRUE`  
+  
 ```{r include = FALSE}
 summarize_stratified(trainingData, attribute, stratumTab, desiredConfidence = 0.9, post = T)
 ```
@@ -152,13 +161,14 @@ type <- 'dataframe'
 vector <- c(120, 140, 160, 110, 100, 90)
 ```
 
-`summarize_systematic(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9)`  
-
+```{r include = FALSE}
+summarize_systematic(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9)  
+```
 
 
 ## Two-Stage Sample:  
 
-Input data can be either by plot (plot = TRUE) or the total sum of the attribute for each cluster (plot = FALSE).  
+Input data can be either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
 
 ```{r include = FALSE}
 data = data.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6), volume = c(500, 650, 610, 490, 475, 505, 940, 825, 915, 210, 185, 170, 450, 300, 500, 960, 975, 890), isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T))
@@ -168,8 +178,9 @@ Example: `summarize_two_stage(redData, T, 'volume', populationClusters = 16, pop
   
 The ‘attribute’ function argument must be included.  
   
-`summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0)`  
-
+```{r include = FALSE}
+summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0)  
+```
 
 
 
