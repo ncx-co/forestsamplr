@@ -151,8 +151,8 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
                         )
                  )
     ) %>%
-    mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
-    mutate(lowCL = yBar - 2 * ySE)
+    mutate(highCL = yBar + qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * ySE) %>% # for 95% confidence interval
+    mutate(lowCL = yBar - qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * ySE)
 
   clusterSummary <- finalCalc %>%
     summarize(mean = yBar, varianceB = s2b, varianceW = s2w, standardError = ySE,

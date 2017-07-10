@@ -55,7 +55,7 @@ Function Definition:
 summarize_cluster(data, plot = TRUE, attribute = NA)
 ```
 
-summarize_cluster() can take in plot data or stand data.  
+`summarize_cluster()` can take in plot data or stand data.  
   
 ```{r include = FALSE}
 plotLevelDataExample <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4,

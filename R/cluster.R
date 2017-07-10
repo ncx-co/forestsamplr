@@ -97,8 +97,8 @@ if (plot) {
               yBar = mean(yBar),
               nSamp = mean(nSamp),
               mSampBar = mean(mSampBar)) %>%
-    mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
-    mutate(lowCL = yBar - 2 * ySE) %>%
+    mutate(highCL = yBar + qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * ySE) %>% # for 95% confidence interval
+    mutate(lowCL = yBar - qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * ySE) %>%
     select(standardError = ySE, lowerLimitCI = lowCL, upperLimitCI = highCL, 
            mean = yBar, nSamp, mSampBar) %>%
     bind_cols(popValues)

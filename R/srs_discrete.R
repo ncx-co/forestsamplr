@@ -39,8 +39,8 @@ summarize_simple_random_discrete <- function(data, attribute = 'attr', popTot = 
               totalPopulation = popTot,
               P = sampAttr / sampTot, # proportion 
               SE = sqrt(((P * (1 - P)) / (sampTot - 1)) * (1 - (sampTot / popTot))),
-              lowerLimitCI = P - (2 * SE + 1 / (2 * sampTot)), # 95% confidence interval
-              upperLimitCI = P + (2 * SE + 1 / (2 * sampTot)))
+              lowerLimitCI = P - (qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * SE + 1 / (2 * sampTot)), # 95% confidence interval
+              upperLimitCI = P + (qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * SE + 1 / (2 * sampTot)))
 
   return(calculations)
 
