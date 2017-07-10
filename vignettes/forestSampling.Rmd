@@ -95,7 +95,8 @@ dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5
 
 Function Definition:  
 ```{r include = FALSE}
-summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9, infiniteReplacement = F)
+summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, 
+                        desiredConfidence = 0.9, infiniteReplacement = F)
 
 summarize_simple_random_discrete(data, attribute = 'attr', popTot = NA)
 ```
@@ -152,13 +153,21 @@ Stratified sample currently has two options:
     * Set `post = FALSE`  
 2. Post-Stratified  
     * Set `post = TRUE`  
-  
 
+```{r include = FALSE}
+trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
+                           stratum = c(1, 1, 1, 2, 2, 2))
+stratumTab <- data.frame(stratum = c(1, 2), acres = c(200, 50))
+attribute = 'bapa'
+desiredConfidence = 0.9
+```
+  
 ## Systematic Sample:  
 
 Function Definition:
 ```{r include = FALSE}
-summarize_systematic(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.9)  
+summarize_systematic(data, attribute = 'attr', type = 'vector', popSize = NA, 
+                     desiredConfidence = 0.9)  
 ```
 
 Data input can be either as a vector or dataframe.  
@@ -177,13 +186,17 @@ vector <- c(120, 140, 160, 110, 100, 90)
 
 Function Definition:
 ```{r include = FALSE}
-summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0)  
+summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0,
+                    populationElementsPerCluster = 0)  
 ```
 
 Input data can be either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
 
 ```{r include = FALSE}
-data = data.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6), volume = c(500, 650, 610, 490, 475, 505, 940, 825, 915, 210, 185, 170, 450, 300, 500, 960, 975, 890), isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T))
+data <- data.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6), 
+                   volume = c(500, 650, 610, 490, 475, 505, 940, 825, 915, 210, 185, 170, 450,
+                              300, 500, 960, 975, 890), 
+                   isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T))
 ```
 
 Example: `summarize_two_stage(redData, T, 'volume', populationClusters = 16, populationElementsPerCluster = 160)`  
