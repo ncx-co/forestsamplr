@@ -20,9 +20,9 @@ All functions require data input. For most functions, this data must be a datafr
 In most cases, additional parameters are necessary. Defaults have been provided to help minimize this.  
   
 Common parameters, detailed:  
-* 'Attribute': assumes target attribute is called ‘attr’. Set 'attribute' to the column header used for the attribute of interest. Not required for vector input.  
-* '___Tot': total number of the ___ unit in the sampling design. Commonly the total number of clusters or plots in the sampling frame.  
-* 'desiredConfidence': Percent confidence level (two-sided). Default is set to '0.95'.  
+* 'r attribute': assumes target attribute is called ‘attr’. Set 'attribute' to the column header used for the attribute of interest. Not required for vector input.  
+* 'r ___Tot ' : total number of the ___ unit in the sampling design. Commonly the total number of clusters or plots in the sampling frame.  
+* 'r desiredConfidence': Percent confidence level (two-sided). Default is set to '0.95'.  
 
 
 
