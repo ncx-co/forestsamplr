@@ -19,12 +19,12 @@
 #'                                 1250, 950, 900, 1005, 1000, 1250, 950, 900),
 #'                        isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 #' plot = TRUE
-#' attribute = attr
+#' attribute = 'attr'
 #' }
 #' @export
 
 
-summarize_cluster <- function(data, plot = TRUE, attribute = NA) {
+summarize_cluster <- function(data, plot = TRUE, attribute = NA, desiredConfidence = 0.95) {
 
   # ensure the data entered does not have missing values
   if (any(is.na(data))) {
@@ -74,7 +74,9 @@ if (plot) {
   sampValues <- cluster %>%
     filter(isUsed == T) %>%
     mutate(nSamp = n()) %>% # num clusters
-    mutate(mSampBar = sum(clusterElements) / nSamp) # avg num elements in a cluster
+    mutate(mSampBar = sum(clusterElements) / nSamp) %>% # avg num elements in a cluster
+    mutate(df = sum(clusterElements) - 1)
+  
 
   # basic values: population-level
   popValues <- cluster %>%
@@ -96,9 +98,10 @@ if (plot) {
                          * (sum(ySETempNum) / (nSamp[[1]] - 1))),
               yBar = mean(yBar),
               nSamp = mean(nSamp),
-              mSampBar = mean(mSampBar)) %>%
-    mutate(highCL = yBar + qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * ySE) %>% # for 95% confidence interval
-    mutate(lowCL = yBar - qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * ySE) %>%
+              mSampBar = mean(mSampBar),
+              df = df[[1]]) %>%
+    mutate(highCL = yBar + qt(1 - ((1 - desiredConfidence) / 2), df) * ySE) %>%
+    mutate(lowCL = yBar - qt(1 - ((1 - desiredConfidence) / 2), df) * ySE) %>%
     select(standardError = ySE, lowerLimitCI = lowCL, upperLimitCI = highCL, 
            mean = yBar, nSamp, mSampBar) %>%
     bind_cols(popValues)

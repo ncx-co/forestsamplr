@@ -38,7 +38,7 @@
 
 
 summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
-                                populationClusters = 0, populationElementsPerCluster = 0) {
+                                populationClusters = 0, populationElementsPerCluster = 0, desiredConfidence = 0.95) {
 
   if (!is.na(attribute) && (attribute %in% colnames(data))) {
 
@@ -95,7 +95,7 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
       # each cluster ('attrSumCluster')
     cluster <- data %>%
       mutate(attrSqSumCluster = attrSumCluster ^ 2 )
-
+    
   }
 
 
@@ -119,7 +119,8 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
       yBar = sum(attrSumCluster) / (m * n), 
       s2b = ((sum(attrSumCluster ^ 2) / (m)) -
                       (sum(attrSumCluster) ^ 2 / (m * n))) / (n - 1), 
-      s2w = (sum(attrSqSumCluster) - sum(attrSumCluster ^ 2) / (m)) / (n * (m - 1))
+      s2w = (sum(attrSqSumCluster) - sum(attrSumCluster ^ 2) / (m)) / (n * (m - 1)),
+      df = sum(sampledElementsInCluster) - 1
       ) %>%
     mutate(ySE = ifelse(length(unique(cluster$totClusterElements)) == 1,
                         #if clusters are equal in size, num of elements per cluster is equal:
@@ -151,8 +152,8 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
                         )
                  )
     ) %>%
-    mutate(highCL = yBar + qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * ySE) %>% # for 95% confidence interval
-    mutate(lowCL = yBar - qt(1 - ((1 - desiredConfidence) / 2), length(attr) - 1) * ySE)
+    mutate(highCL = yBar + qt(1 - ((1 - desiredConfidence) / 2), df) * ySE) %>%
+    mutate(lowCL = yBar - qt(1 - ((1 - desiredConfidence) / 2), df) * ySE)
 
   clusterSummary <- finalCalc %>%
     summarize(mean = yBar, varianceB = s2b, varianceW = s2w, standardError = ySE,

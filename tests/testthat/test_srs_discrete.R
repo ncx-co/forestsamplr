@@ -9,7 +9,7 @@ attribute <- 'alive'
 test_that("srs discrete calculates values correctly", {
 
   expect_equal(summarize_simple_random_discrete(data, attribute, popTot = 50)$upperLimitCI,
-               1.0028, tolerance = 0.001)
+               1.4858, tolerance = 0.001)
 
 })
 
