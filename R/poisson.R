@@ -42,6 +42,7 @@ summarize_poisson <- function(data, desiredConfidence = 0.95) {
   overdispersionLimit <- summary$mean * (summary$sampleSize - summary$mean) / 
                          summary$sampleSize
   
+  # Check for overdispersion
   if (var(data) > overdispersionLimit) {
     warning('Variance significantly higher than the mean. The data is influenced
             by overdispersion.')
