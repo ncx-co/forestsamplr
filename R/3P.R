@@ -32,9 +32,10 @@ KZ <- sumEstVBARs / measurements
 sampSize = 0
 treeCount = 0
 BAF = 0
-cvPercent = 50
-data <- VBARS #vector?
-height < FALSE
+cvPercent = 50 # should probably calculate within, if possible
+data <- VBARS #vector, volume to basal area ratio
+height <- FALSE
+trueNetVBAR = 0
 
 
 #if the data input is height, VBAR will be estimated by 2 * tree height
@@ -46,11 +47,14 @@ if (height == TRUE) {
     rename(estimateVBAR = data)
 }
 
-estPlotVol <- treeCount * BAF * avgTreeVBARSforPlot #what is a vbar?
+estPlotVol <- treeCount * BAF * avgTreeVBARSforPlot
 avgVol <- avg(estPlotVol)
 ratio <- trueNetVBAR / estimateVBAR
 netVolume <- avgVol * ratio 
 sePercent <- cvPercent / sqrt(sampSize)
+se <- sePercent * netVolume # multiply SE% by volume to get SE units
+
+
 
 
 
