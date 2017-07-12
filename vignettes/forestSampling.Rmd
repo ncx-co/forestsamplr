@@ -28,7 +28,7 @@ Variations are included, described in detail [here](insertLinkTo#Functions).
 * All functions require data input. For most functions, this data must be a dataframe formatted in the generalized structure. Select functions can act on vectors (`summarize_simple_random` and `summarize_systematic`).  
 * In most cases, additional parameters are necessary. Defaults have been provided to help minimize this.  
   
-## Common parameters, detailed:  
+## Common parameters, usage information:  
 * `attribute`: assumes target attribute is called `attr`. Set `attribute` to the column header used for the variable of interest. Not required for vector input.  
 * `___Tot`: total number of the ___ unit in the sampling design. Commonly the total number of clusters or plots in the sampling frame.  
 * `desiredConfidence`: Percent confidence level (two-sided) expressed as decimal. Default is set to `0.95`.  
@@ -57,7 +57,13 @@ Each sampling unit is represented as a cluster, a group of several plots.
 
 Function Definition:  
 
-`summarize_cluster(data, plot = TRUE, attribute = NA, desiredConfidence = 0.95)`  
+`summarize_cluster(data, plot = TRUE, attribute = NA, desiredConfidence = 0.95)`
+
+ Parameters       | Description
+------------------|--------------------------------------------------------
+data              | dataframe containing observations of variable of interest for either cluster-level or plot-level data.
+plot              | logical true if parameter data is plot-level, false if parameter data is cluster-level. Default is True.
+attribute         | character name of attribute to be summarized.
 
 `summarize_cluster()` can take in plot data or stand data.  
 
@@ -83,7 +89,15 @@ clusterLevelDataExample <- data.frame(clusterID = c(1, 2, 3, 4, 5),
 Function Definition:  
 
 `summarize_cluster_discrete(data, attribute, plotTot = NA, desiredConfidence = 0.95)`
-  
+
+ Parameter        | Description
+------------------|--------------------------------------------------------
+data              | dataframe containing observations of variable of interest. Attribute (variable of interest) must be the proportion alive in the associated plot.
+attribute         | character name of attribute to be summarized.
+plotTot           | numeric population size. Equivalent to the total number of possible plots in the population.
+desiredConfidence | numeric desired confidence level.
+
+
 The cluster sample has an option for the Bernoulli distribution. For this distribution, the total number of plots in the sampling frame must be indicated, and data must be input as follows (where attr is the value of the attribute for each plot):  
 
 ```{r include = FALSE}
@@ -104,8 +118,23 @@ Sampling Strategy Definition:
 Function Definition:  
 
 `summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`
+
+ Parameter          | Description
+--------------------|--------------------------------------------------------
+data                | dataframe or vector containing observations of variable of interest. Variable of interest must already be expanded to the level of interest (e.g. stand-level).
+attribute           | character name of attribute to be summarized. Must be defined if data is input as a dataframe.
+type                | object type of data, e.g. 'dataframe' or 'vector'.
+popSize             | numeric population size. Defaults to NA (unknown popSize).
+desiredConfidence   | numeric desired confidence level (e.g. 0.9).
+infiniteReplacement | logical true if sample was done with replacement or from an infinite population. False if sampled without replacement, from a finite population. Defaults to False.
   
 `summarize_simple_random_discrete(data, attribute = 'attr', popTot = NA)`
+
+ Parameter          | Description
+--------------------|--------------------------------------------------------
+data                | dataframe containing observations of variable of interest. Attribute must be coded as either TRUE and FALSE or 1 and 0.
+attribute           | character name of attribute to be summarized.
+popTot              | numeric population size. Equivalent to total number of individuals.
   
 Simple random sample (SRS) has 3 options:  
 1. SRS of a finite population or sampled without replacement
@@ -158,6 +187,14 @@ Function Definition:
 
 `summarize_stratified(trainingData, attribute, stratumTab, desiredConfidence = 0.95, post = T)`
   
+ Parameter          | Description
+--------------------|-----------------------------------------------------
+trainingData        | dataframe containing observations of variable of interest, and stratum assignment for each plot
+attribute           | character name of attribute to be summarized
+stratumTab          | dataframe containing acreages for each stratum
+desiredConfidence   | numeric desired confidence level (e.g. 0.9)
+post                | logical true if post-stratification was used
+  
 Stratified sample currently has two options:
 1. Stratified  
     * Set `post = FALSE`  
@@ -183,6 +220,14 @@ Function Definition:
 
 `summarize_systematic(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95)`  
 
+ Parameter        | Description
+------------------|-----------------------------------------
+data              | dataframe or vector containing observations of variable of interest. Variable of interest must already be expanded to the level of interest (e.g. stand-level).
+attribute         | character name of attribute to be summarized. Must be defined if data is input as a dataframe.
+type              | object type of data, e.g. 'dataframe' or 'vector'.
+popSize           | numeric population size. Defaults to NA (unknown popSize).
+desiredConfidence | numeric desired confidence level (e.g. 0.9).
+
 Data input can be either as a vector or dataframe.  
 
 ```{r include = FALSE}
@@ -205,6 +250,12 @@ A variation of cluster sampling. A simple random sample of clusters is selected,
 Function Definition:  
 
 `summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0, desiredConfidence = 0.95)`
+
+ Parameter          | Description
+--------------------|---------------------------------
+data                | dataframe containing observations of variable of interest for either cluster-level of plot-level data.
+plot                | logical True if parameter data is plot-level, False if parameter data is cluster-level. Default is True.
+attribute           | character name of attribute to be summarized.
   
 Input data can be either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
 
