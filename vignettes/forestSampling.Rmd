@@ -49,7 +49,8 @@ The following are the basic functions and their associated sampling strategy.
 ## Cluster Sample:  
 
 Sampling Strategy Definition:  
-  
+
+Each sampling unit is represented as a cluster, a group of several plots.
 
 
 ### Normal Distribution:
@@ -97,6 +98,7 @@ dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5
 
 Sampling Strategy Definition:  
   
+*n* sampling units are selected. Each sampling unit is selected independently from the selection of other sampling units.
 
 
 Function Definition:  
@@ -149,6 +151,7 @@ Example: `summarize_simple_random_discrete(data, attribute, popTot = 50)`
 
 Sampling Strategy Definition:  
   
+A simple random sample is performed on at least two subpopulations of known size. The potential subpopulations are formed from dividing the population.
 
 
 Function Definition:  
@@ -173,6 +176,7 @@ desiredConfidence = 0.9
 
 Sampling Strategy Definition:  
   
+The first sampling unit is arbitrarily established in the field or randomly selected. Subsequent sampling units are placed at uniform intervals through the target area.
 
 
 Function Definition:  
@@ -195,6 +199,7 @@ vector <- c(120, 140, 160, 110, 100, 90)
 
 Sampling Strategy Definition:  
   
+A variation of cluster sampling. A simple random sample of clusters is selected, then a simple random sample of elements within each cluster is selected and sampled.
 
 
 Function Definition:  
@@ -218,8 +223,19 @@ The ‘attribute’ function argument must be included.
 
 Sampling Strategy Definition:
 
+Basic:
+All trees in an are estimated. Select few trees are identified and carefully measured. The estimated values are then corrected through a ratio method.
+
+Point 3P method:
+A point sample, on which 3P selection of individual trees is performed.
+
+Cluster 3P method:
+A point sample, from which an entire cluster of trees is selected.
+
+
 Note: A precurser to 3P sampling was also called Poisson sampling (discussed in Gregoire and Valentine). However, in this package Poisson sampling refers to count data and 3P considers field estimations.
 
 
 ## Poisson:
 
+Assessment of count data that follows the Poisson distribution.
