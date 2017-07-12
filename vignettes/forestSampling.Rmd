@@ -233,9 +233,9 @@ Cluster 3P method:
 A point sample, from which an entire cluster of trees is selected.
 
 
-Note: A precurser to 3P sampling was also called Poisson sampling (discussed in Gregoire and Valentine). However, in this package Poisson sampling refers to count data and 3P considers field estimations.
-
 
 ## Poisson:
 
 Assessment of count data that follows the Poisson distribution.
+
+Note: The term 'Poisson sampling' was also used to refer to a precurser to 3P sampling. This version is discussed in Gregoire and Valentine. However, in this package the clearest distinction is: Poisson sampling analyzes to count data and 3P considers field estimations.
