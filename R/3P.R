@@ -33,7 +33,18 @@ sampSize = 0
 treeCount = 0
 BAF = 0
 cvPercent = 50
-data <- VBARS
+data <- VBARS #vector?
+height < FALSE
+
+
+#if the data input is height, VBAR will be estimated by 2 * tree height
+if (height == TRUE) {
+  origData <- data.frame(data) %>%
+    mutate(estimateVBAR = height * 2)
+} else {
+  origData <- data.frame(data) %>%
+    rename(estimateVBAR = data)
+}
 
 estPlotVol <- treeCount * BAF * avgTreeVBARSforPlot #what is a vbar?
 avgVol <- avg(estPlotVol)
@@ -42,34 +53,6 @@ netVolume <- avgVol * ratio
 sePercent <- cvPercent / sqrt(sampSize)
 
 
-  
-  
-  
-  
-  
-
-bad:
-  
-  Taken from Gregoire and Valentine, pg 68
-
-nPop = 50.0
-
-data = data.frame(attr = c(1, 2, 3, 4), #y variable, value of interest
-                  x = c(4, 5, 6, 7), #x variable, secondary value of interest
-                  inclProb = c(2, 2, 3, 4) #probability of inclusion - ??? see comment in last line
-)
-
-summary <- data %>%
-  mutate(mean = 1 / (PIValue * nPop) * sum(attr)) %>% # for all sample  # muYPiRat
-  mutate(inclProb = mean ^ attr * (exp(1) ^ (- mean)) / factorial(attr)) %>%
-  mutate(sumTempYX = (attr - mean(attr) / mean(x) * x) ^ 2) %>%
-  mutate(sumTempInclProb = (1 - inclProb) / inclProb) %>%
-  mutate(varOfMean = (1 / (nPop ^ 2)) * sum(sumTempYX * sumTempInclProb)) 
-
-#mean and variance are supposed to be the same...
-
-#I guess I don't quite understand "PIk" variable. Difference between p(s) and Pi(subK)?
-____________________ ^nah
 
 
 
