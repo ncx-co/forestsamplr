@@ -11,7 +11,7 @@ Parameters:
   trueNetVBAR = 0
 
 
-summarize_poisson <- function(data, desiredConfidence = 0.95) {
+summarize_threeP <- function(data, ..., desiredConfidence = 0.95) {
   
 
     
