@@ -2,9 +2,11 @@
 
 export(summarize_cluster)
 export(summarize_cluster_discrete)
+export(summarize_poisson)
 export(summarize_simple_random)
 export(summarize_simple_random_discrete)
 export(summarize_stratified)
 export(summarize_systematic)
+export(summarize_threeP)
 export(summarize_two_stage)
 import(dplyr)
