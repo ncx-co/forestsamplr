@@ -38,13 +38,13 @@ The following are the basic functions and their associated sampling strategy.
 
   Function                           | Sampling Strategy
 -------------------------------------|---------------------------------------------------------
-`summarize_cluster()`                | cluster sampling  
-`summarize_cluster_discrete()`       | cluster sampling with Bernoulli distribution  
-`summarize_simple_random()`          | simple random sampling  
-`summarize_simple_random_discrete()` | simple random sampling with the Bernoulli distribution  
+`summarize_all_cluster()`            | cluster sampling
+`summarize_all_simple_random()`      | simple random sampling 
 `summarize_stratified()`             | stratified sampling  
 `summarize_systematic()`             | systematic sampling  
 `summarize_two_stage()`              | two-stage sampling  
+`summarize_threeP()`                 | 3P sampling
+`summarize_poisson()`                | poisson sampling
   
 ## Cluster Sample:  
 
@@ -52,20 +52,30 @@ Sampling Strategy Definition:
 
 Each sampling unit is represented as a cluster, a group of several plots.
 
-
-### Normal Distribution:
-
 Function Definition:  
 
-`summarize_cluster(data, plot = TRUE, attribute = NA, desiredConfidence = 0.95)`
+`summarize_all_cluster(data, attribute = NA, plot = TRUE, plotTot = NA, desiredConfidence = 0.95, bernoulli = F)`
 
- Parameters       | Description
-------------------|--------------------------------------------------------
-data              | dataframe containing observations of variable of interest for either cluster-level or plot-level data.
-plot              | logical true if parameter data is plot-level, false if parameter data is cluster-level. Default is True.
-attribute         | character name of attribute to be summarized.
+Cluster sample has 2 options:  
+1. Cluster sample with a normal distribution
+    * Set `bernoulli = FALSE` or do not include the parameter in the function call  
+    * Ex. `summarize_all_cluster(dataPlot, attribute, plot = TRUE, bernoulli = F)`  
+2. Cluster sample with a bernoulli distribution  
+    * Set `bernoulli = TRUE`  
+    * Ex. `summarize_all_cluster(data, attribute, plotTot = 250, bernoulli = T)`
 
-`summarize_cluster()` can take in plot data or stand data.  
+Parameter          |   Option:  | Description
+-------------------|------------|-------------------------------------------------------------------------
+data               |    1, 2    | dataframe containing observations of variable of interest for either cluster-level or plot-level data.
+plot               |      1     | logical true if parameter data is plot-level, false if parameter data is cluster-level. Default is True.
+attribute          |    1, 2    | character name of attribute to be summarized.
+plotTot            |      2     | numeric population size. Equivalent to the total number of possible plots in the population.
+desiredConfidence  |    1, 2    | numeric desired confidence level (e.g. 0.9).
+bernoulli          |    1, 2    | boolean TRUE if data fitting the Bernoulli distribution is used.
+  
+Data input:
+  
+Option 1 can take in plot data or stand data.  
 
 ```{r include = FALSE}
 plotLevelDataExample <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4,
@@ -83,22 +93,8 @@ clusterLevelDataExample <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                                       sumAttr = c(1000, 1250, 950, 900, 1005), 
                                       isUsed = c(T, T, F, T, T))
 ```
-  
-### Bernoulli Distribution  
 
-Function Definition:  
-
-`summarize_cluster_discrete(data, attribute, plotTot = NA, desiredConfidence = 0.95)`
-
- Parameter        | Description
-------------------|--------------------------------------------------------
-data              | dataframe containing observations of variable of interest. Attribute (variable of interest) must be the proportion alive in the associated plot.
-attribute         | character name of attribute to be summarized.
-plotTot           | numeric population size. Equivalent to the total number of possible plots in the population.
-desiredConfidence | numeric desired confidence level.
-
-
-The cluster sample has an option for the Bernoulli distribution. For this distribution, the total number of plots in the sampling frame must be indicated, and data must be input as follows (where attr is the value of the attribute for each plot):  
+Option 2 is the option for the Bernoulli distribution. For this distribution, the total number of plots in the sampling frame must be indicated, and data must be input as follows (where attr is the value of the attribute for each plot):  
 
 ```{r include = FALSE}
 dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5,
@@ -117,7 +113,7 @@ Sampling Strategy Definition:
 
 Function Definition:  
 
-`summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`
+`summarize_all_srs(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F, bernoulli = F)`
 
 Simple random sample (SRS) has 3 options:  
 1. SRS of a finite population or sampled without replacement
@@ -140,20 +136,19 @@ data                |       3     | dataframe containing observations of variabl
 attribute           |   1, 2, 3   | character name of attribute to be summarized. Must be defined if data is input as a dataframe.
 type                |     1, 2    | object type of data, e.g. 'dataframe' or 'vector'.
 popSize             |   1, 2, 3   | numeric population size. Defaults to NA (unknown popSize).
-desiredConfidence   |     1, 2    | numeric desired confidence level (e.g. 0.9).
+desiredConfidence   |   1, 2, 3   | numeric desired confidence level (e.g. 0.9).
 infiniteReplacement |     1, 2    | logical true if sample was done with replacement or from an infinite population. False if sampled without replacement, from a finite population. Defaults to False.
-bernoulli           |      3      | boolean TRUE if data fitting the Bernoulli distribution is used.
+bernoulli           |   1, 2, 3   | boolean TRUE if data fitting the Bernoulli distribution is used.
   
   
-Data inputs:  
+Data input:  
+  
   1. Vector  
 
 ```{r include = FALSE}
 data <- c(120, 140, 160, 110, 100, 90)
 type <- 'vector'
 ```
-  
-Example: `summarize_simple_random(data, type, popSize = 50)`  
   
   2. Dataframe
 
@@ -163,16 +158,12 @@ attribute <- 'bapa'
 type <- 'dataframe'
 ```
 
-Example: `summarize_simple_random(data, attribute, type, popSize = 50)`
-
   3. For Bernoulli Distribution  
   
 ```{r include = FALSE}
 data <- data.frame(alive = c(T, T, F, T, F, F), plots = c(1, 2, 3, 4, 5, 6))
 attribute <- 'alive'
 ```
-
-Example: `summarize_simple_random_discrete(data, attribute, popTot = 50)`  
   
 ## Stratified Sample:
 
