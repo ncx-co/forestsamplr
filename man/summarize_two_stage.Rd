@@ -5,7 +5,8 @@
 \title{Summarize two-stage sample}
 \usage{
 summarize_two_stage(data, plot = TRUE, attribute = NA,
-  populationClusters = 0, populationElementsPerCluster = 0)
+  populationClusters = 0, populationElementsPerCluster = 0,
+  desiredConfidence = 0.95)
 }
 \arguments{
 \item{data}{dataframe containing observations of variable of

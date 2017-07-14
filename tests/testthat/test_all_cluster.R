@@ -2,10 +2,6 @@ context("Forest sampling statistics calculations: all cluster samples")
 
 desiredConfidence = 0.95
 
-# test clusters
-clusterFalse = data.frame(clusterID = c(1, 2, 3, 4, 5), clusterElements = c(4, 2, 9, 4, 10),
-                          sumAttr = c(1000, 1250, 950, 900, 1005), isUsed = c(T, T, F, T, T))
-
 dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5),
                        attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000,
                                 1250, 950, 900, 1005, 1000, 1250, 950, 900),
