@@ -52,7 +52,12 @@ summarize_threeP <- function(data, sampSize, treeCount, BAF, cvPercent, trueNetV
               ratio = trueNetVBAR / mean(estimateVBAR),
               netVolume = avgVol * ratio,
               sePercent = cvPercent / sqrt(sampSize),
-              se = sePercent * netVolume) # 'multiply SE% by volume to get SE units'
+              se = sePercent * netVolume, # 'multiply SE% by volume to get SE units'
+              lowerBoundCI = avgVol - qnorm(1 - (1 - desiredConfidence) / 2)
+                  * sqrt(avgVol / sampSize[[1]]),
+              upperBoundCI = avgVol + qnorm(1 - (1 - desiredConfidence) / 2) 
+                  * sqrt(avgVol / sampSize[[1]])
+    )
     
     return(fullData)
 
