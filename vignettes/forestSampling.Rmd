@@ -119,33 +119,31 @@ Function Definition:
 
 `summarize_simple_random(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`
 
- Parameter          | Description
---------------------|--------------------------------------------------------
-data                | dataframe or vector containing observations of variable of interest. Variable of interest must already be expanded to the level of interest (e.g. stand-level).
-attribute           | character name of attribute to be summarized. Must be defined if data is input as a dataframe.
-type                | object type of data, e.g. 'dataframe' or 'vector'.
-popSize             | numeric population size. Defaults to NA (unknown popSize).
-desiredConfidence   | numeric desired confidence level (e.g. 0.9).
-infiniteReplacement | logical true if sample was done with replacement or from an infinite population. False if sampled without replacement, from a finite population. Defaults to False.
-  
-`summarize_simple_random_discrete(data, attribute = 'attr', popTot = NA)`
-
- Parameter          | Description
---------------------|--------------------------------------------------------
-data                | dataframe containing observations of variable of interest. Attribute must be coded as either TRUE and FALSE or 1 and 0.
-attribute           | character name of attribute to be summarized.
-popTot              | numeric population size. Equivalent to total number of individuals.
-  
 Simple random sample (SRS) has 3 options:  
 1. SRS of a finite population or sampled without replacement
-    * Set `infiniteReplacement = FALSE` or do not include the parameter in the function call
+    * Set `infiniteReplacement = FALSE` or do not include the parameter in the function call  
     * Data input can be as a vector or dataframe  
+    * Ex. `summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`  
 2. SRS of an infinite population or sampled wiht replacement
-    * Set `infiniteReplacement = TRUE`
+    * Set `infiniteReplacement = TRUE`  
     * Data input can be as a vector or dataframe  
+    * Ex. `summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = T)`  
 3. SRS with a bernoulli distribution
-    * TBD: Set `bernoulli = TRUE`
-    * Currently, data input can only be as a dataframe
+    * Set `bernoulli = TRUE`
+    * Data input can only be as a dataframe
+    * Ex. `summarize_all_srs(data, attribute, type, popSize = popTot, desiredConfidence = 0.95, infiniteReplacement = F, bernoulli = T)`
+
+ Parameter          |   Option:   | Description
+--------------------|-------------|-------------------------------------------------------------------------
+data                |     1, 2    | dataframe or vector containing observations of variable of interest. Variable of interest must already be expanded to the level of interest (e.g. stand-level).
+data                |       3     | dataframe containing observations of variable of interest. Attribute must be coded as either TRUE and FALSE or 1 and 0.
+attribute           |   1, 2, 3   | character name of attribute to be summarized. Must be defined if data is input as a dataframe.
+type                |     1, 2    | object type of data, e.g. 'dataframe' or 'vector'.
+popSize             |   1, 2, 3   | numeric population size. Defaults to NA (unknown popSize).
+desiredConfidence   |     1, 2    | numeric desired confidence level (e.g. 0.9).
+infiniteReplacement |     1, 2    | logical true if sample was done with replacement or from an infinite population. False if sampled without replacement, from a finite population. Defaults to False.
+bernoulli           |      3      | boolean TRUE if data fitting the Bernoulli distribution is used.
+  
   
 Data inputs:  
   1. Vector  
