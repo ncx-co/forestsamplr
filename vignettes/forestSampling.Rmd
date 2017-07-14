@@ -20,6 +20,7 @@ These sampling designs include:
 * Stratified Sampling  
 * Systematic Sampling  
 * Two-Stage Sampling  
+* 3P Sampling  
 
 Variations are included, described in detail [here](insertLinkTo#Functions).  
   
