@@ -4,8 +4,8 @@
 \alias{summarize_systematic}
 \title{Summarize systematic sample}
 \usage{
-summarize_systematic(trainingData, attribute = "vector", popSize = NA,
-  desiredConfidence = 0.9)
+summarize_systematic(trainingData, attribute = "attr", type = "vector",
+  popSize = NA, desiredConfidence = 0.9)
 }
 \arguments{
 \item{trainingData}{dataframe or vector containing observations of
