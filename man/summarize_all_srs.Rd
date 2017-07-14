@@ -24,6 +24,9 @@ Must be defined if data is input as a dataframe.}
 \item{infiniteReplacement}{logical true if sample was done with replacement
 or from an infinite population. False if sampled without replacement,
 from a finite population. Defaults to False.}
+
+\item{bernoulli}{boolean TRUE if data fitting the Bernoulli 
+distribution is used.}
 }
 \value{
 a dataframe of population mean, variance, standard error, and

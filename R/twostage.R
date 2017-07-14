@@ -8,6 +8,7 @@
 #' @param plot logical True if parameter data is plot-level, False if
 #' parameter data is cluster-level. Default is True.
 #' @param attribute character name of attribute to be summarized.
+#' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @return dataframe of stand-level statistics including
 #' standard error and confidence interval limits. All final values are
 #' on a 'per plot' basis.
@@ -38,7 +39,8 @@
 
 
 summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
-                                populationClusters = 0, populationElementsPerCluster = 0, desiredConfidence = 0.95) {
+                                populationClusters = 0, populationElementsPerCluster = 0,
+                                desiredConfidence = 0.95) {
 
   if (!is.na(attribute) && (attribute %in% colnames(data))) {
 

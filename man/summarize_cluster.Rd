@@ -15,6 +15,8 @@ interest for either cluster-level or plot-level data.}
 parameter data is cluster-level. Default is True.}
 
 \item{attribute}{character name of attribute to be summarized.}
+
+\item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
 \value{
 dataframe of stand-level statistics including

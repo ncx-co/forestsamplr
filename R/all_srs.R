@@ -12,6 +12,8 @@
 #' @param infiniteReplacement logical true if sample was done with replacement
 #' or from an infinite population. False if sampled without replacement,
 #' from a finite population. Defaults to False.
+#' @param bernoulli boolean TRUE if data fitting the Bernoulli 
+#' distribution is used.
 #' @return a dataframe of population mean, variance, standard error, and
 #' high and low confidence limits.
 #' @author Karin Wolken

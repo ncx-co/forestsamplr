@@ -16,6 +16,8 @@ interest. Attribute must be coded as either TRUE and FALSE or
 
 \item{popTot}{numeric population size. Equivalent to total 
 number of individuals.}
+
+\item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
 \value{
 dataframe of stand-level statistics. Includes standard error and

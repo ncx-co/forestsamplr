@@ -8,6 +8,7 @@
 #' @param plot logical true if parameter data is plot-level, false if
 #' parameter data is cluster-level. Default is True.
 #' @param attribute character name of attribute to be summarized.
+#' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @return dataframe of stand-level statistics including
 #' standard error and confidence interval limits.
 #' @author Karin Wolken
