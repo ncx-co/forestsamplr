@@ -1,4 +1,4 @@
-context("Forest sampling statistics calculations: poisson sample")
+context("Forest sampling statistics calculations: 3P sample")
 
 data <- data.frame(plotNum = c(5, 4, 3, 5, 4),
                    VBARS = c(9, 8, 7, 8, 2),

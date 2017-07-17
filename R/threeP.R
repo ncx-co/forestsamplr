@@ -5,17 +5,17 @@
 #' @param sampSize numeric 
 #' @param treeCount numeric
 #' @param BAF numeric basal area factor used for sampling.
-#' @param cvPercent numeric average Coefficient of Vairation 
+#' @param cvPercent numeric average Coefficient of Variation 
 #' expressed as a percent (e.g. 50)
-#' @param data dataframe containing plot number, VBARs, and 
+#' @param data data frame containing plot number, VBARs, and 
 #' treeHeights
-#' @param height boolean indicates that instead of the 
+#' @param height Boolean indicates that instead of the 
 #' data containing treeHeight, it contains estimateVBAR
 #' @param trueNetVBAR numeric measured net VBAR (volume to basal
 #' area ratio)
 #' @param desiredConfidence numeric desired confidence level 
 #' (e.g. 0.9).
-#' @return dataframe of statistics including standard error and 
+#' @return data frame of statistics including standard error and 
 #' confidence interval limits.
 #' @author Karin Wolken
 #' @import dplyr
@@ -46,7 +46,7 @@ summarize_threeP <- function(data, sampSize, treeCount, BAF, cvPercent, trueNetV
     unique()
   
   # merge data and avgVBAR
-  fullData <- full_join(origData, avgVBARS) %>%
+  fullData <- full_join(origData, avgVBAR) %>%
     mutate(estPlotVol = treeCount * BAF * avgTreeVBARSforPlot) %>%
     summarize(avgVol = mean(estPlotVol), 
               ratio = trueNetVBAR / mean(estimateVBAR),

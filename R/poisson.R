@@ -6,7 +6,7 @@
 #' unit (e.g. 6 trees were alive at plot 10 -> c(6)).
 #' @param desiredConfidence numeric desired confidence level 
 #' (e.g. 0.9).
-#' @return dataframe of statistics including standard error and 
+#' @return data frame of statistics including standard error and 
 #' confidence interval limits.
 #' @author Karin Wolken
 #' @import dplyr
@@ -32,10 +32,11 @@ summarize_poisson <- function(data, desiredConfidence = 0.95) {
     summarize(sampleSize = sampleSize[[1]],
               mean = means[[1]],
               lambdaHat = mean,
+              se = sqrt(mean / sampleSize[[1]]),
               lowerBoundCI = lambdaHat - qnorm(1 - (1 - desiredConfidence) / 2)
-                             * sqrt(mean / sampleSize[[1]]),
+                             * se,
               upperBoundCI = lambdaHat + qnorm(1 - (1 - desiredConfidence) / 2) 
-                             * sqrt(mean / sampleSize[[1]])
+                             * se
               )
   
   overdispersionLimit <- summary$mean * (summary$sampleSize - summary$mean) / 
