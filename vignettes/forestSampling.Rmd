@@ -302,13 +302,20 @@ height            | logical TRUE if data input contains height values. Otherwise
 desiredConfidence | numeric desired confidence level (e.g. 0.9)
 
 ### Data Input:
+
+```{r include = FALSE}
+data <- data.frame(plotNum = c(5, 4, 3, 5, 4),
+                   VBARS = c(9, 8, 7, 8, 2),
+                   treeHeight = c(1, 2, 3, 4, 5))
+```
+
+Example: `summarize_threeP(data, sampSize = 5, treeCount = 20, BAF = 10, cvPercent = 50, trueNetVBAR = 100, height = TRUE, desiredConfidence = 0.95)`
   
 ## Poisson:
 
 ### Sampling Strategy Definition:  
   
 An assessment of count data that follows the Poisson distribution.  
-  
   
 Note: The term 'Poisson sampling' was also used to refer to a precursor to 3P sampling. The preliminary 3P version is discussed in Gregoire and Valentine. However, in this package the clearest distinction is that Poisson sampling analyzes to count data and 3P considers field estimations.
   
@@ -322,4 +329,8 @@ data              | vector containing number of instances per desired unit (e.g.
 desiredConfidence | numeric desired confidence level (e.g. 0.9)
 
 ### Data Input:
+
+```{r include = FALSE}
+data <- c(2, 3, 4, 3, 4, 5, 2, 7)
+```
 
