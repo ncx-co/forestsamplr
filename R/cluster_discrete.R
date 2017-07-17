@@ -4,7 +4,7 @@
 #' derived from Chapter 3 in Avery and Burkhart's (1967)
 #' Forest Measurements, Fifth Edition. The variance terms 
 #' refer to the variance of the mean.
-#' @param data dataframe containing observations of variable
+#' @param data data frame containing observations of variable
 #' of interest. Attribute (variable of interest) must be the
 #' proportion alive in the associated plot.
 #' @param attribute character name of attribute to be summarized.
@@ -12,7 +12,7 @@
 #' total number of possible plots in the population.
 #' @param desiredConfidence numeric desired confidence level 
 #' (e.g. 0.9).
-#' @return dataframe of stand-level statistics. Includes 
+#' @return data frame of stand-level statistics. Includes 
 #' standard error and confidence interval.
 #' @author Karin Wolken
 #' @import dplyr

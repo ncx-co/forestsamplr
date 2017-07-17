@@ -8,7 +8,7 @@ summarize_cluster(data, plot = TRUE, attribute = NA,
   desiredConfidence = 0.95)
 }
 \arguments{
-\item{data}{dataframe containing observations of variable of
+\item{data}{data frame containing observations of variable of
 interest for either cluster-level or plot-level data.}
 
 \item{plot}{logical true if parameter data is plot-level, false if
@@ -19,7 +19,7 @@ parameter data is cluster-level. Default is True.}
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
 \value{
-dataframe of stand-level statistics including
+data frame of stand-level statistics including
 standard error and confidence interval limits.
 }
 \description{

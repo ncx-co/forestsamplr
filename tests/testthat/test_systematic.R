@@ -15,7 +15,7 @@ test_that("systematic functions correctly with infiniteReplacement default", {
 
 })
 
-test_that("systematic functions correctly with vector and dataframe input", {
+test_that("systematic functions correctly with vector and data frame input", {
 
 
   dataframe <- summarize_systematic(trainingData, attribute, type, popSize = 50,

@@ -8,12 +8,12 @@ summarize_systematic(data, attribute = "attr", type = "vector",
   popSize = NA, desiredConfidence = 0.95)
 }
 \arguments{
-\item{data}{dataframe or vector containing observations of
+\item{data}{data frame or vector containing observations of
 variable of interest. Variable of interest must already be expanded
 to the level of interest (e.g. stand-level).}
 
 \item{attribute}{character name of attribute to be summarized.
-Must be defined if data is input as a dataframe.}
+Must be defined if data is input as a data frame.}
 
 \item{type}{object type of data, e.g. 'dataframe' or 'vector'.}
 
@@ -22,7 +22,7 @@ Must be defined if data is input as a dataframe.}
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
 \value{
-a dataframe of population mean, variance, standard error, and
+a data frame of population mean, variance, standard error, and
 high and low confidence limits.
 }
 \description{

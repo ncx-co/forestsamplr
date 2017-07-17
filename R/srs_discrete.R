@@ -4,14 +4,14 @@
 #' derived from Chapter 3 in Avery and Burkhart's (1967)
 #' Forest Measurements, Fifth Edition. The variance terms refer
 #' to the variance of the mean.
-#' @param data dataframe containing observations of variable of
+#' @param data data frame containing observations of variable of
 #' interest. Attribute must be coded as either TRUE and FALSE or
 #' 1 and 0.
 #' @param attribute character name of attribute to be summarized.
 #' @param popTot numeric population size. Equivalent to total 
 #' number of individuals.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
-#' @return dataframe of stand-level statistics. Includes standard error and
+#' @return data frame of stand-level statistics. Includes standard error and
 #' 95% confidence interval.
 #' @author Karin Wolken
 #' @import dplyr

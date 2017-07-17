@@ -8,7 +8,7 @@ summarize_cluster_discrete(data, attribute, plotTot = NA,
   desiredConfidence = 0.95)
 }
 \arguments{
-\item{data}{dataframe containing observations of variable
+\item{data}{data frame containing observations of variable
 of interest. Attribute (variable of interest) must be the
 proportion alive in the associated plot.}
 
@@ -21,7 +21,7 @@ total number of possible plots in the population.}
 (e.g. 0.9).}
 }
 \value{
-dataframe of stand-level statistics. Includes 
+data frame of stand-level statistics. Includes 
 standard error and confidence interval.
 }
 \description{

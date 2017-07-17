@@ -8,16 +8,20 @@ summarize_stratified(trainingData, attribute, stratumTab,
   desiredConfidence = 0.95, post = T)
 }
 \arguments{
-\item{trainingData}{dataframe containing observations of variable of
+\item{trainingData}{data frame containing observations of variable of
 interest, and stratum assignment for each plot}
 
 \item{attribute}{character name of attribute to be summarized}
 
-\item{stratumTab}{dataframe containing acreages for each stratum}
+\item{stratumTab}{data frame containing acreages for each stratum}
 
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9)}
 
 \item{post}{logical true if post-stratification was used}
+}
+\value{
+a data frame of population mean, variance, standard error, and
+high and low confidence limits.
 }
 \description{
 Summarizes strata- and population-level statistics for

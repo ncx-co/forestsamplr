@@ -20,7 +20,7 @@ test_that("all srs function handles basic simple random sample", {
 })
 
 
-test_that("all srs function handles simple random sample for discrete attribute, bernoulli", {
+test_that("all srs function handles simple random sample for discrete attribute, Bernoulli", {
   
   data <- data.frame(alive = c(T, T, F, T, F, F),
                      tree = c(1, 2, 3, 4, 5, 6))
