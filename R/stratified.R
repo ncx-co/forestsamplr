@@ -4,12 +4,14 @@
 #' Gregoire and Valentine's (2008) Sampling Strategies for Natural Resources
 #' and the Environment. The variance terms refer to the variance of the mean,
 #' hence the \code{n} terms in the denominators.
-#' @param trainingData dataframe containing observations of variable of
+#' @param trainingData data frame containing observations of variable of
 #' interest, and stratum assignment for each plot
 #' @param attribute character name of attribute to be summarized
-#' @param stratumTab dataframe containing acreages for each stratum
+#' @param stratumTab data frame containing acreages for each stratum
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9)
 #' @param post logical true if post-stratification was used
+#' @return a data frame of population mean, variance, standard error, and
+#' high and low confidence limits.
 #' @author Henry Rodman
 #' @import dplyr
 #' @examples

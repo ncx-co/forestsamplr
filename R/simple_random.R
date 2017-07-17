@@ -4,18 +4,18 @@
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean, hence the
 #' \code{sampleSize} terms in the denominators.
-#' @param data dataframe or vector containing observations of
+#' @param data data frame or vector containing observations of
 #' variable of interest. Variable of interest must already be expanded
 #' to the level of interest (e.g. stand-level).
 #' @param attribute character name of attribute to be summarized.
-#' Must be defined if data is input as a dataframe.
+#' Must be defined if data is input as a data frame.
 #' @param type object type of data, e.g. 'dataframe' or 'vector'.
 #' @param popSize numeric population size. Defaults to NA (unknown popSize).
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param infiniteReplacement logical true if sample was done with replacement
 #' or from an infinite population. False if sampled without replacement,
 #' from a finite population. Defaults to False.
-#' @return a dataframe of population mean, variance, standard error, and
+#' @return a data frame of population mean, variance, standard error, and
 #' high and low confidence limits.
 #' @author Karin Wolken
 #' @import dplyr
@@ -67,7 +67,7 @@ summarize_simple_random <- function(data, attribute = 'attr', type = 'vector', p
       lowerLimitCI = mean(attr) - qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1) * standardError
     )
 
-  # return dataframe of key values
+  # return data frame of key values
   return(simpRandomSummary)
 
 }

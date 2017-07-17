@@ -13,7 +13,7 @@
 #' @param populationElementsPerCluster numeric total number of
 #' elements in the population.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
-#' @return dataframe of stand-level statistics including
+#' @return data frame of stand-level statistics including
 #' standard error and confidence interval limits. All final values are
 #' on a 'per plot' basis.
 #' @author Karin Wolken
@@ -165,7 +165,7 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
     summarize(mean = yBar, varianceB = s2b, varianceW = s2w, standardError = ySE,
               upperLimitCI = highCL, lowerLimitCI = lowCL)
 
-  # return dataframe of stand-level statistics
+  # return data frame of stand-level statistics
   return(clusterSummary)
 
 }
