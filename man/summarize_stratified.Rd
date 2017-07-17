@@ -5,7 +5,7 @@
 \title{Summarize stratified sample}
 \usage{
 summarize_stratified(trainingData, attribute, stratumTab,
-  desiredConfidence = 0.9, post = T)
+  desiredConfidence = 0.95, post = T)
 }
 \arguments{
 \item{trainingData}{dataframe containing observations of variable of

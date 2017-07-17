@@ -23,7 +23,7 @@
 #' @export
 
 summarize_stratified <- function(trainingData, attribute,
-		stratumTab, desiredConfidence = 0.9, post = T) {
+		stratumTab, desiredConfidence = 0.95, post = T) {
 
 	# give the variable of interest a generic name
 	attrTemp <- unlist(trainingData %>% dplyr::select(one_of(attribute)))

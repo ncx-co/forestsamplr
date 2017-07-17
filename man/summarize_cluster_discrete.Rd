@@ -17,7 +17,8 @@ proportion alive in the associated plot.}
 \item{plotTot}{numeric population size. Equivalent to the 
 total number of possible plots in the population.}
 
-\item{desiredConfidence}{numeric desired confidence level.}
+\item{desiredConfidence}{numeric desired confidence level 
+(e.g. 0.9).}
 }
 \value{
 dataframe of stand-level statistics. Includes 

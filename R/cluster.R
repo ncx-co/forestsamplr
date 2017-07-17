@@ -3,12 +3,13 @@
 #' cluster sample data. The calculations are derived from Chapter 3 in
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean.
-#' @param data dataframe containing observations of variable of
+#' @param data data frame containing observations of variable of
 #' interest for either cluster-level or plot-level data.
 #' @param plot logical true if parameter data is plot-level, false if
 #' parameter data is cluster-level. Default is True.
 #' @param attribute character name of attribute to be summarized.
-#' @return dataframe of stand-level statistics including
+#' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
+#' @return data frame of stand-level statistics including
 #' standard error and confidence interval limits.
 #' @author Karin Wolken
 #' @import dplyr
@@ -19,12 +20,12 @@
 #'                                 1250, 950, 900, 1005, 1000, 1250, 950, 900),
 #'                        isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
 #' plot = TRUE
-#' attribute = attr
+#' attribute = 'attr'
 #' }
 #' @export
 
 
-summarize_cluster <- function(data, plot = TRUE, attribute = NA) {
+summarize_cluster <- function(data, plot = TRUE, attribute = NA, desiredConfidence = 0.95) {
 
   # ensure the data entered does not have missing values
   if (any(is.na(data))) {
@@ -74,7 +75,9 @@ if (plot) {
   sampValues <- cluster %>%
     filter(isUsed == T) %>%
     mutate(nSamp = n()) %>% # num clusters
-    mutate(mSampBar = sum(clusterElements) / nSamp) # avg num elements in a cluster
+    mutate(mSampBar = sum(clusterElements) / nSamp) %>% # avg num elements in a cluster
+    mutate(df = sum(clusterElements) - 1)
+  
 
   # basic values: population-level
   popValues <- cluster %>%
@@ -96,14 +99,15 @@ if (plot) {
                          * (sum(ySETempNum) / (nSamp[[1]] - 1))),
               yBar = mean(yBar),
               nSamp = mean(nSamp),
-              mSampBar = mean(mSampBar)) %>%
-    mutate(highCL = yBar + 2 * ySE) %>% # for 95% confidence interval
-    mutate(lowCL = yBar - 2 * ySE) %>%
+              mSampBar = mean(mSampBar),
+              df = df[[1]]) %>%
+    mutate(highCL = yBar + qt(1 - ((1 - desiredConfidence) / 2), df) * ySE) %>%
+    mutate(lowCL = yBar - qt(1 - ((1 - desiredConfidence) / 2), df) * ySE) %>%
     select(standardError = ySE, lowerLimitCI = lowCL, upperLimitCI = highCL, 
            mean = yBar, nSamp, mSampBar) %>%
     bind_cols(popValues)
 
-  # return dataframe of stand-level statistics
+  # return data frame of stand-level statistics
   return(clusterSummary)
 
 }

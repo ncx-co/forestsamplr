@@ -5,7 +5,7 @@
 \title{Summarize simple random sample}
 \usage{
 summarize_simple_random(data, attribute = "attr", type = "vector",
-  popSize = NA, desiredConfidence = 0.9, infiniteReplacement = F)
+  popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)
 }
 \arguments{
 \item{data}{dataframe or vector containing observations of

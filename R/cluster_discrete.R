@@ -10,7 +10,8 @@
 #' @param attribute character name of attribute to be summarized.
 #' @param plotTot numeric population size. Equivalent to the 
 #' total number of possible plots in the population.
-#' @param desiredConfidence numeric desired confidence level.
+#' @param desiredConfidence numeric desired confidence level 
+#' (e.g. 0.9).
 #' @return dataframe of stand-level statistics. Includes 
 #' standard error and confidence interval.
 #' @author Karin Wolken

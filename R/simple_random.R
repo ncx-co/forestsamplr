@@ -32,7 +32,7 @@
 #' @export
 
 summarize_simple_random <- function(data, attribute = 'attr', type = 'vector', popSize = NA,
-                                    desiredConfidence = 0.9, infiniteReplacement = F) {
+                                    desiredConfidence = 0.95, infiniteReplacement = F) {
 
   # converts variable of interest into a vector with a generic name
   if (type == 'vector') {

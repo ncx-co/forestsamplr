@@ -10,6 +10,7 @@
 #' @param attribute character name of attribute to be summarized.
 #' @param popTot numeric population size. Equivalent to total 
 #' number of individuals.
+#' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @return dataframe of stand-level statistics. Includes standard error and
 #' 95% confidence interval.
 #' @author Karin Wolken
@@ -23,7 +24,8 @@
 #' }
 #' @export
 
-summarize_simple_random_discrete <- function(data, attribute = 'attr', popTot = NA) {
+summarize_simple_random_discrete <- function(data, attribute = 'attr', 
+                                             popTot = NA, desiredConfidence = 0.95) {
 
   attrTemp <- unlist(data %>% dplyr::select(one_of(attribute)))
   data$attr <- attrTemp
@@ -39,8 +41,10 @@ summarize_simple_random_discrete <- function(data, attribute = 'attr', popTot = 
               totalPopulation = popTot,
               P = sampAttr / sampTot, # proportion 
               SE = sqrt(((P * (1 - P)) / (sampTot - 1)) * (1 - (sampTot / popTot))),
-              lowerLimitCI = P - (2 * SE + 1 / (2 * sampTot)), # 95% confidence interval
-              upperLimitCI = P + (2 * SE + 1 / (2 * sampTot)))
+              lowerLimitCI = P - (qt(1 - ((1 - desiredConfidence) / 2), sampAttr - 1)
+                                  * SE + 1 / (2 * sampTot)),
+              upperLimitCI = P + (qt(1 - ((1 - desiredConfidence) / 2), sampAttr - 1) 
+                                  * SE + 1 / (2 * sampTot)))
 
   return(calculations)
 
