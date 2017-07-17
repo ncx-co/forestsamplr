@@ -3,11 +3,15 @@
 #' two-stage sample data. The calculations are derived from Chapter 3 in
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean.
-#' @param data dataframe containing observations of variable of
+#' @param data data frame containing observations of variable of
 #' interest for either cluster-level of plot-level data.
-#' @param plot logical True if parameter data is plot-level, False if
-#' parameter data is cluster-level. Default is True.
+#' @param plot logical TRUE if parameter data is plot-level, FALSE if
+#' parameter data is cluster-level. Default is TRUE.
 #' @param attribute character name of attribute to be summarized.
+#' @param populationClusters numeric total number of clusters in the 
+#' population.
+#' @param populationElementsPerCluster numeric total number of
+#' elements in the population.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @return dataframe of stand-level statistics including
 #' standard error and confidence interval limits. All final values are
@@ -111,9 +115,9 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
 
   n = sum(cluster$isUsed) # number of sampled clusters 
   m = sum(cluster$sampledElements) / n # average number of sampled plots among sampled clusters
-  EN = ifelse(populationClusters != 0, populationClusters, length(cluster$isUsed)) # number of total clusters
+  EN = ifelse(populationClusters != 0, populationClusters, length(cluster$isUsed)) # total number of clusters
   EM = ifelse(populationElementsPerCluster != 0, populationElementsPerCluster,
-            sum(cluster$totClusterElements) / EN) # average number of total plots among all clusters
+            sum(cluster$totClusterElements)) # total number of total plots among all clusters
   
   finalCalc <- cluster %>%
     summarize(
@@ -122,7 +126,7 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
       s2b = ((sum(attrSumCluster ^ 2) / (m)) -
                       (sum(attrSumCluster) ^ 2 / (m * n))) / (n - 1), 
       s2w = (sum(attrSqSumCluster) - sum(attrSumCluster ^ 2) / (m)) / (n * (m - 1)),
-      df = sum(sampledElementsInCluster) - 1
+      df = sum(sampledElements)
       ) %>%
     mutate(ySE = ifelse(length(unique(cluster$totClusterElements)) == 1,
                         #if clusters are equal in size, num of elements per cluster is equal:

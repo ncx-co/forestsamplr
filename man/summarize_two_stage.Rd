@@ -9,13 +9,19 @@ summarize_two_stage(data, plot = TRUE, attribute = NA,
   desiredConfidence = 0.95)
 }
 \arguments{
-\item{data}{dataframe containing observations of variable of
+\item{data}{data frame containing observations of variable of
 interest for either cluster-level of plot-level data.}
 
-\item{plot}{logical True if parameter data is plot-level, False if
-parameter data is cluster-level. Default is True.}
+\item{plot}{logical TRUE if parameter data is plot-level, FALSE if
+parameter data is cluster-level. Default is TRUE.}
 
 \item{attribute}{character name of attribute to be summarized.}
+
+\item{populationClusters}{numeric total number of clusters in the 
+population.}
+
+\item{populationElementsPerCluster}{numeric total number of
+elements in the population.}
 
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
