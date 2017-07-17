@@ -14,6 +14,12 @@ vignette: >
   
 The Forest Sampling is a package of functions that calculates workups for sampling designs commonly used in Forestry. It is an open source opportunity for collaboration and transparency.  
   
+  
+  
+  
+  
+  
+  
 These sampling designs include:  
 * Simple Random Sampling  
 * Cluster Sampling  
@@ -26,7 +32,7 @@ Variations are included, described in detail [here](insertLinkTo#Functions).
   
 # General Information
   
-* All functions require data input. For most functions, this data must be a dataframe formatted in the generalized structure. Select functions can act on vectors (`summarize_simple_random` and `summarize_systematic`).  
+* All functions require data input. For most functions, this data must be a data frame formatted in the generalized structure. Select functions can act on vectors (`summarize_simple_random` and `summarize_systematic`).  
 * In most cases, additional parameters are necessary. Defaults have been provided to help minimize this.  
   
 ## Common parameters, usage information:  
@@ -67,12 +73,12 @@ Cluster sample has 2 options:
 
 Parameter          |   Option:  | Description
 -------------------|------------|-------------------------------------------------------------------------
-data               |    1, 2    | dataframe containing observations of variable of interest for either cluster-level or plot-level data.
+data               |    1, 2    | data frame containing observations of variable of interest for either cluster-level or plot-level data.
 plot               |      1     | logical true if parameter data is plot-level, false if parameter data is cluster-level. Default is True.
 attribute          |    1, 2    | character name of attribute to be summarized.
 plotTot            |      2     | numeric population size. Equivalent to the total number of possible plots in the population.
 desiredConfidence  |    1, 2    | numeric desired confidence level (e.g. 0.9).
-bernoulli          |    1, 2    | boolean TRUE if data fitting the Bernoulli distribution is used.
+bernoulli          |    1, 2    | Boolean TRUE if data fitting the Bernoulli distribution is used.
   
 Data input:
   
@@ -119,27 +125,27 @@ Function Definition:
 Simple random sample (SRS) has 3 options:  
 1. SRS of a finite population or sampled without replacement
     * Set `infiniteReplacement = FALSE` or do not include the parameter in the function call  
-    * Data input can be as a vector or dataframe  
+    * Data input can be as a vector or data frame  
     * Ex. `summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`  
 2. SRS of an infinite population or sampled wiht replacement
     * Set `infiniteReplacement = TRUE`  
-    * Data input can be as a vector or dataframe  
+    * Data input can be as a vector or data frame  
     * Ex. `summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = T)`  
 3. SRS with a bernoulli distribution
     * Set `bernoulli = TRUE`
-    * Data input can only be as a dataframe
+    * Data input can only be as a data frame
     * Ex. `summarize_all_srs(data, attribute, type, popSize = popTot, desiredConfidence = 0.95, infiniteReplacement = F, bernoulli = T)`
 
  Parameter          |   Option:   | Description
 --------------------|-------------|-------------------------------------------------------------------------
-data                |     1, 2    | dataframe or vector containing observations of variable of interest. Variable of interest must already be expanded to the level of interest (e.g. stand-level).
-data                |       3     | dataframe containing observations of variable of interest. Attribute must be coded as either TRUE and FALSE or 1 and 0.
-attribute           |   1, 2, 3   | character name of attribute to be summarized. Must be defined if data is input as a dataframe.
+data                |     1, 2    | data frame or vector containing observations of variable of interest. Variable of interest must already be expanded to the level of interest (e.g. stand-level).
+data                |       3     | data frame containing observations of variable of interest. Attribute must be coded as either TRUE and FALSE or 1 and 0.
+attribute           |   1, 2, 3   | character name of attribute to be summarized. Must be defined if data is input as a data frame.
 type                |     1, 2    | object type of data, e.g. 'dataframe' or 'vector'.
 popSize             |   1, 2, 3   | numeric population size. Defaults to NA (unknown popSize).
 desiredConfidence   |   1, 2, 3   | numeric desired confidence level (e.g. 0.9).
 infiniteReplacement |     1, 2    | logical true if sample was done with replacement or from an infinite population. False if sampled without replacement, from a finite population. Defaults to False.
-bernoulli           |   1, 2, 3   | boolean TRUE if data fitting the Bernoulli distribution is used.
+bernoulli           |   1, 2, 3   | Boolean TRUE if data fitting the Bernoulli distribution is used.
   
   
 Data input:  
@@ -151,7 +157,7 @@ data <- c(120, 140, 160, 110, 100, 90)
 type <- 'vector'
 ```
   
-  2. Dataframe
+  2. Data frame
 
 ```{r include = FALSE}
 data <- data.frame(bapa = c(120, 140, 160, 110, 100, 90), plots = c(1, 2, 3, 4, 5, 6))
@@ -179,9 +185,9 @@ Function Definition:
   
  Parameter          | Description
 --------------------|-----------------------------------------------------
-trainingData        | dataframe containing observations of variable of interest, and stratum assignment for each plot
+trainingData        | data frame containing observations of variable of interest, and stratum assignment for each plot
 attribute           | character name of attribute to be summarized
-stratumTab          | dataframe containing acreages for each stratum
+stratumTab          | data frame containing acreages for each stratum
 desiredConfidence   | numeric desired confidence level (e.g. 0.9)
 post                | logical true if post-stratification was used
   
@@ -212,13 +218,13 @@ Function Definition:
 
  Parameter        | Description
 ------------------|-----------------------------------------
-data              | dataframe or vector containing observations of variable of interest. Variable of interest must already be expanded to the level of interest (e.g. stand-level).
-attribute         | character name of attribute to be summarized. Must be defined if data is input as a dataframe.
+data              | data frame or vector containing observations of variable of interest. Variable of interest must already be expanded to the level of interest (e.g. stand-level).
+attribute         | character name of attribute to be summarized. Must be defined if data is input as a data frame.
 type              | object type of data, e.g. 'dataframe' or 'vector'.
 popSize           | numeric population size. Defaults to NA (unknown popSize).
 desiredConfidence | numeric desired confidence level (e.g. 0.9).
 
-Data input can be either as a vector or dataframe.  
+Data input can be either as a vector or data frame.  
 
 ```{r include = FALSE}
 dataframe <- data.frame(bapa = c(120, 140, 160, 110, 100, 90), plots = c(1, 2, 3, 4, 5, 6))
@@ -243,7 +249,7 @@ Function Definition:
 
  Parameter          | Description
 --------------------|---------------------------------
-data                | dataframe containing observations of variable of interest for either cluster-level of plot-level data.
+data                | data frame containing observations of variable of interest for either cluster-level of plot-level data.
 plot                | logical True if parameter data is plot-level, False if parameter data is cluster-level. Default is True.
 attribute           | character name of attribute to be summarized.
   
