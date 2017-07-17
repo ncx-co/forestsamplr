@@ -36,7 +36,7 @@ Variations are included, described in detail below.
 
 ## Output:
 
-The output of the functions vary, but all produce a data frame containing:
+The output of the functions varies, but all produce a data frame containing:
 * mean
 * variance
 * standard error
@@ -54,7 +54,7 @@ The following are the basic functions and their associated sampling strategy.
 `summarize_systematic()`             | systematic sampling  
 `summarize_two_stage()`              | two-stage sampling  
 `summarize_threeP()`                 | 3P sampling
-`summarize_poisson()`                | poisson sampling
+`summarize_poisson()`                | Poisson sampling
   
 ## Cluster Sample:  
 
@@ -81,7 +81,7 @@ plot               |      1     | logical true if parameter data is plot-level, 
 attribute          |    1, 2    | character name of attribute to be summarized.
 plotTot            |      2     | numeric population size. Equivalent to the total number of possible plots in the population.
 desiredConfidence  |    1, 2    | numeric desired confidence level (e.g. 0.9).
-bernoulli          |    1, 2    | Boolean TRUE if data fitting the Bernoulli distribution is used.
+bernoulli          |    1, 2    | logical TRUE if data fitting the Bernoulli distribution is used.
   
 Data input:
   
@@ -130,7 +130,7 @@ Simple random sample (SRS) has 3 options:
     * Set `infiniteReplacement = FALSE` or do not include the parameter in the function call  
     * Data input can be as a vector or data frame  
     * Ex. `summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`  
-2. SRS of an infinite population or sampled wiht replacement
+2. SRS of an infinite population or sampled with replacement
     * Set `infiniteReplacement = TRUE`  
     * Data input can be as a vector or data frame  
     * Ex. `summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = T)`  
@@ -148,7 +148,7 @@ type                |     1, 2    | object type of data, e.g. 'dataframe' or 've
 popSize             |   1, 2, 3   | numeric population size. Defaults to NA (unknown popSize).
 desiredConfidence   |   1, 2, 3   | numeric desired confidence level (e.g. 0.9).
 infiniteReplacement |     1, 2    | logical true if sample was done with replacement or from an infinite population. False if sampled without replacement, from a finite population. Defaults to False.
-bernoulli           |   1, 2, 3   | Boolean TRUE if data fitting the Bernoulli distribution is used.
+bernoulli           |   1, 2, 3   | logical TRUE if data fitting the Bernoulli distribution is used.
   
   
 Data input:  
@@ -309,4 +309,4 @@ data              | vector containing number of instances per desired unit (e.g.
 desiredConfidence | numeric desired confidence level (e.g. 0.9).
 
 
-Note: The term 'Poisson sampling' was also used to refer to a precurser to 3P sampling. This version is discussed in Gregoire and Valentine. However, in this package the clearest distinction is: Poisson sampling analyzes to count data and 3P considers field estimations.
+Note: The term 'Poisson sampling' was also used to refer to a precursor to 3P sampling. The preliminary 3P version is discussed in Gregoire and Valentine. However, in this package the clearest distinction is that Poisson sampling analyzes to count data and 3P considers field estimations.

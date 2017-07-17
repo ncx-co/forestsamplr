@@ -1,20 +1,20 @@
 #' @title Summarize all simple random sample
 #' @description Summarizes population-level statistics for
 #' simple random sample data.
-#' @param data dataframe or vector containing observations of
+#' @param data data frame or vector containing observations of
 #' variable of interest. Variable of interest must already be expanded
 #' to the level of interest (e.g. stand-level).
 #' @param attribute character name of attribute to be summarized.
-#' Must be defined if data is input as a dataframe.
+#' Must be defined if data is input as a data frame.
 #' @param type object type of data, e.g. 'dataframe' or 'vector'.
 #' @param popSize numeric population size. Defaults to NA (unknown popSize).
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param infiniteReplacement logical true if sample was done with replacement
 #' or from an infinite population. False if sampled without replacement,
 #' from a finite population. Defaults to False.
-#' @param bernoulli boolean TRUE if data fitting the Bernoulli 
+#' @param bernoulli logical TRUE if data fitting the Bernoulli 
 #' distribution is used.
-#' @return a dataframe of population mean, variance, standard error, and
+#' @return a data frame of population mean, variance, standard error, and
 #' high and low confidence limits.
 #' @author Karin Wolken
 #' @import dplyr

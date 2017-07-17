@@ -1,7 +1,7 @@
 #' @title Summarize all cluster sample
 #' @description Summarizes population-level statistics for
 #' cluster sample data.
-#' @param data dataframe containing observations of variable of
+#' @param data data frame containing observations of variable of
 #' interest for either cluster-level or plot-level data.
 #' @param attribute character name of attribute to be summarized.
 #' @param plot logical true if parameter data is plot-level, false if
@@ -9,9 +9,9 @@
 #' @param plotTot numeric population size. Equivalent to the 
 #' total number of possible plots in the population.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
-#' @param bernoulli boolean TRUE if data fitting the Bernoulli 
+#' @param bernoulli logical TRUE if data fitting the Bernoulli 
 #' distribution is used.
-#' @return dataframe of stand-level statistics including
+#' @return data frame of stand-level statistics including
 #' standard error and confidence interval limits.
 #' @author Karin Wolken
 #' @import dplyr

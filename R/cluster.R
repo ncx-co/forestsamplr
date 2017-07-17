@@ -3,13 +3,13 @@
 #' cluster sample data. The calculations are derived from Chapter 3 in
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean.
-#' @param data dataframe containing observations of variable of
+#' @param data data frame containing observations of variable of
 #' interest for either cluster-level or plot-level data.
 #' @param plot logical true if parameter data is plot-level, false if
 #' parameter data is cluster-level. Default is True.
 #' @param attribute character name of attribute to be summarized.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
-#' @return dataframe of stand-level statistics including
+#' @return data frame of stand-level statistics including
 #' standard error and confidence interval limits.
 #' @author Karin Wolken
 #' @import dplyr
@@ -107,7 +107,7 @@ if (plot) {
            mean = yBar, nSamp, mSampBar) %>%
     bind_cols(popValues)
 
-  # return dataframe of stand-level statistics
+  # return data frame of stand-level statistics
   return(clusterSummary)
 
 }
