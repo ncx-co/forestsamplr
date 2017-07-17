@@ -14,12 +14,6 @@ vignette: >
   
 The Forest Sampling is a package of functions that calculates workups for sampling designs commonly used in Forestry. It is an open source opportunity for collaboration and transparency.  
   
-  
-  
-  
-  
-  
-  
 These sampling designs include:  
 * Simple Random Sampling  
 * Cluster Sampling  
@@ -28,7 +22,7 @@ These sampling designs include:
 * Two-Stage Sampling  
 * 3P Sampling  
 
-Variations are included, described in detail [here](insertLinkTo#Functions).  
+Variations are included, described in detail below.  
   
 # General Information
   
@@ -39,6 +33,15 @@ Variations are included, described in detail [here](insertLinkTo#Functions).
 * `attribute`: assumes target attribute is called `attr`. Set `attribute` to the column header used for the variable of interest. Not required for vector input.  
 * `___Tot`: total number of the ___ unit in the sampling design. Commonly the total number of clusters or plots in the sampling frame.  
 * `desiredConfidence`: Percent confidence level (two-sided) expressed as decimal. Default is set to `0.95`.  
+
+## Output:
+
+The output of the functions vary, but all produce a data frame containing:
+* mean
+* variance
+* standard error
+* upper limit for the confidence interval
+* lower limit for the confidence interval
 
 # Functions:  
 The following are the basic functions and their associated sampling strategy.  
