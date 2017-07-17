@@ -247,13 +247,16 @@ Function Definition:
 
 `summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0, desiredConfidence = 0.95)`
 
- Parameter          | Description
---------------------|---------------------------------
-data                | data frame containing observations of variable of interest for either cluster-level of plot-level data.
-plot                | logical True if parameter data is plot-level, False if parameter data is cluster-level. Default is True.
-attribute           | character name of attribute to be summarized.
+ Parameter                   | Data input* | Description
+-----------------------------|-------------|---------------------------------------------
+data                         |    both     | data frame containing observations of variable of interest for either cluster-level of plot-level data.
+plot                         |    both     | logical True if parameter data is plot-level, False if parameter data is cluster-level. Default is True.
+attribute                    |    both     | character name of attribute to be summarized.
+populationClusters           |   cluster   | numeric total number of clusters in the population.
+populationElementsPerCluster |   cluster   | numeric total number of elements in the population.
+desiredConfidence            |   numeric   | desired confidence level (e.g. 0.9).
   
-Input data can be either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
+*Input data can be either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
 
 ```{r include = FALSE}
 data <- data.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6), 
@@ -263,26 +266,44 @@ data <- data.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6,
 ```
 
 Example: `summarize_two_stage(redData, T, 'volume', populationClusters = 16, populationElementsPerCluster = 160)`  
-  
-The ‘attribute’ function argument must be included. 
 
 ## 3P Sample:
 
 Sampling Strategy Definition:
 
-Basic:
-All trees in an are estimated. Select few trees are identified and carefully measured. The estimated values are then corrected through a ratio method.
+All trees in an are estimated. Select few trees are identified and carefully measured. The estimated values are then corrected through a ratio method. This function assumes that this is follows the Point 3P analysis. Variations of Point 3P can include a simple or clustered sample. Difference in analysis of these variations occur before the post-processing assessed in the package. 
+  
+Function Definition:
 
-Point 3P method:
-A point sample, on which 3P selection of individual trees is performed.
+`summarize_threeP(data, sampSize, treeCount, BAF, cvPercent, trueNetVBAR, height = FALSE, desiredConfidence = 0.95)`
+  
+ Parameter        | Description
+------------------|-----------------------------------------------
+data              | data frame containing plot number, VBARs, and treeHeights
+sampSize          | numeric sample size
+treeCount         | numeric total number of trees (tree count)
+BAF               | numeric basal area factor used for sampling
+cvPercent         | numeric average Coefficient of Variation expressed as a percent (e.g. 50)
+trueNetVBAR       | numeric measured net VBAR (volume to basal area ratio)
+height            | logical TRUE if data input contains height values. Otherwise, FALSE assumes data contains estimateVBAR
+desiredConfidence | numeric desired confidence level (e.g. 0.9).
 
-Cluster 3P method:
-A point sample, from which an entire cluster of trees is selected.
 
-
-
+  
 ## Poisson:
 
-Assessment of count data that follows the Poisson distribution.
+Sampling Strategy Definition:  
+  
+An assessment of count data that follows the Poisson distribution.
+  
+Function Definition:  
+
+`summarize_poisson(data, desiredConfidence = 0.95)`  
+
+ Parameter        | Description
+------------------|-----------------------------------------
+data              | vector containing number of instances per desired unit (e.g. 6 trees were alive at plot 10 -> c(6)).
+desiredConfidence | numeric desired confidence level (e.g. 0.9).
+
 
 Note: The term 'Poisson sampling' was also used to refer to a precurser to 3P sampling. This version is discussed in Gregoire and Valentine. However, in this package the clearest distinction is: Poisson sampling analyzes to count data and 3P considers field estimations.
