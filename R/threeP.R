@@ -2,19 +2,17 @@
 #' @description Summarizes population-level statistics for
 #' 3P sample data. The calculations are derived from Kim Iles
 #' 'A Sampler of Inventory Topics', pg 601.
-#' @param sampSize numeric 
-#' @param treeCount numeric
+#' @param data data frame containing plot number, VBARs, and treeHeights.
+#' @param sampSize numeric sample size.
+#' @param treeCount numeric total number of trees (tree count).
 #' @param BAF numeric basal area factor used for sampling.
-#' @param cvPercent numeric average Coefficient of Variation 
-#' expressed as a percent (e.g. 50)
-#' @param data data frame containing plot number, VBARs, and 
-#' treeHeights
-#' @param height Boolean indicates that instead of the 
-#' data containing treeHeight, it contains estimateVBAR
-#' @param trueNetVBAR numeric measured net VBAR (volume to basal
-#' area ratio)
-#' @param desiredConfidence numeric desired confidence level 
-#' (e.g. 0.9).
+#' @param cvPercent numeric average Coefficient of Variation expressed 
+#' as a percent (e.g. 50).
+#' @param trueNetVBAR numeric measured net VBAR (volume to basal area 
+#' ratio).
+#' @param height logical TRUE if data input contains height values. 
+#' Otherwise, FALSE assumes data contains estimateVBAR.
+#' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @return data frame of statistics including standard error and 
 #' confidence interval limits.
 #' @author Karin Wolken
