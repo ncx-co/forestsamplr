@@ -58,13 +58,15 @@ The following are the basic functions and their associated sampling strategy.
   
 ## Cluster Sample:  
 
-Sampling Strategy Definition:  
+### Sampling Strategy Definition:  
 
 Each sampling unit is represented as a cluster, a group of several plots.
 
-Function Definition:  
+### Function Definition:  
 
 `summarize_all_cluster(data, attribute = NA, plot = TRUE, plotTot = NA, desiredConfidence = 0.95, bernoulli = F)`
+
+### Options:
 
 Cluster sample has 2 options:  
 1. Cluster sample with a normal distribution
@@ -83,7 +85,7 @@ plotTot            |      2     | numeric population size, equivalent to the tot
 desiredConfidence  |    1, 2    | numeric desired confidence level (e.g. 0.9)
 bernoulli          |    1, 2    | logical TRUE if data fitting the Bernoulli distribution is used
   
-Data input:
+### Data Input:
   
 Option 1 can take in plot data or stand data.  
 
@@ -116,14 +118,16 @@ dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5
 
 ## Simple Random Sample  
 
-Sampling Strategy Definition:  
+### Sampling Strategy Definition:  
   
 *n* sampling units are selected. Each sampling unit is selected independently from the selection of other sampling units.
 
 
-Function Definition:  
+### Function Definition:  
 
 `summarize_all_srs(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F, bernoulli = F)`
+
+### Options:
 
 Simple random sample (SRS) has 3 options:  
 1. SRS of a finite population or sampled without replacement
@@ -151,7 +155,7 @@ infiniteReplacement |     1, 2    | logical true if sample was done with replace
 bernoulli           |   1, 2, 3   | logical TRUE if data fitting the Bernoulli distribution is used
   
   
-Data input:  
+### Data Input:  
   
   1. Vector  
 
@@ -177,12 +181,12 @@ attribute <- 'alive'
   
 ## Stratified Sample:
 
-Sampling Strategy Definition:  
+### Sampling Strategy Definition:  
   
 A simple random sample is performed on at least two subpopulations of known size. The potential subpopulations are formed from dividing the population.
 
 
-Function Definition:  
+### Function Definition:  
 
 `summarize_stratified(trainingData, attribute, stratumTab, desiredConfidence = 0.95, post = T)`
   
@@ -194,11 +198,15 @@ stratumTab          | data frame containing acreages for each stratum
 desiredConfidence   | numeric desired confidence level (e.g. 0.9)
 post                | logical true if post-stratification was used
   
+### Options:
+  
 Stratified sample currently has two options:
 1. Stratified  
     * Set `post = FALSE`  
 2. Post-Stratified  
     * Set `post = TRUE`  
+
+### Data Input:
 
 ```{r include = FALSE}
 trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
@@ -210,12 +218,11 @@ desiredConfidence = 0.9
   
 ## Systematic Sample:  
 
-Sampling Strategy Definition:  
+### Sampling Strategy Definition:  
   
 The first sampling unit is arbitrarily established in the field or randomly selected. Subsequent sampling units are placed at uniform intervals through the target area.
 
-
-Function Definition:  
+### Function Definition:  
 
 `summarize_systematic(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95)`  
 
@@ -226,6 +233,8 @@ attribute         | character name of attribute to be summarized, must be define
 type              | object type of data, e.g. 'dataframe' or 'vector'
 popSize           | numeric population size, defaults to NA (unknown population size)
 desiredConfidence | numeric desired confidence level (e.g. 0.9)
+
+### Data Input:
 
 Data input can be either as a vector or data frame.  
 
@@ -241,12 +250,11 @@ vector <- c(120, 140, 160, 110, 100, 90)
 
 ## Two-Stage Sample:  
 
-Sampling Strategy Definition:  
+### Sampling Strategy Definition:  
   
 A variation of cluster sampling. A simple random sample of clusters is selected, then a simple random sample of elements within each cluster is selected and sampled.
 
-
-Function Definition:  
+### Function Definition:  
 
 `summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0, desiredConfidence = 0.95)`
 
@@ -258,8 +266,10 @@ attribute                    |    both     | character name of attribute to be s
 populationClusters           |   cluster   | numeric total number of clusters in the population
 populationElementsPerCluster |   cluster   | numeric total number of elements in the population
 desiredConfidence            |   numeric   | desired confidence level (e.g. 0.9)
+
+### Data Input:
   
-*Input data can be either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
+Data can be organized by either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
 
 ```{r include = FALSE}
 data <- data.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6), 
@@ -268,15 +278,15 @@ data <- data.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6,
                    isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T))
 ```
 
-Example: `summarize_two_stage(redData, T, 'volume', populationClusters = 16, populationElementsPerCluster = 160)`  
+Example: `summarize_two_stage(data, T, 'volume', populationClusters = 16, populationElementsPerCluster = 160)`  
 
 ## 3P Sample:
 
-Sampling Strategy Definition:
+### Sampling Strategy Definition:
 
 All trees in an are estimated. Select few trees are identified and carefully measured. The estimated values are then corrected through a ratio method. This function assumes that this is follows the Point 3P analysis. Variations of Point 3P can include a simple or clustered sample. Difference in analysis of these variations occur before the post-processing assessed in the package. 
   
-Function Definition:
+### Function Definition:
 
 `summarize_threeP(data, sampSize, treeCount, BAF, cvPercent, trueNetVBAR, height = FALSE, desiredConfidence = 0.95)`
   
@@ -291,15 +301,18 @@ trueNetVBAR       | numeric measured net VBAR (volume to basal area ratio)
 height            | logical TRUE if data input contains height values. Otherwise, FALSE assumes data contains estimateVBAR
 desiredConfidence | numeric desired confidence level (e.g. 0.9)
 
-
+### Data Input:
   
 ## Poisson:
 
-Sampling Strategy Definition:  
+### Sampling Strategy Definition:  
   
-An assessment of count data that follows the Poisson distribution.
+An assessment of count data that follows the Poisson distribution.  
   
-Function Definition:  
+  
+Note: The term 'Poisson sampling' was also used to refer to a precursor to 3P sampling. The preliminary 3P version is discussed in Gregoire and Valentine. However, in this package the clearest distinction is that Poisson sampling analyzes to count data and 3P considers field estimations.
+  
+### Function Definition:  
 
 `summarize_poisson(data, desiredConfidence = 0.95)`  
 
@@ -308,5 +321,5 @@ Function Definition:
 data              | vector containing number of instances per desired unit (e.g. 6 trees were alive at plot 10 -> c(6))
 desiredConfidence | numeric desired confidence level (e.g. 0.9)
 
+### Data Input:
 
-Note: The term 'Poisson sampling' was also used to refer to a precursor to 3P sampling. The preliminary 3P version is discussed in Gregoire and Valentine. However, in this package the clearest distinction is that Poisson sampling analyzes to count data and 3P considers field estimations.
