@@ -8,7 +8,7 @@ summarize_all_cluster(data, attribute = NA, plot = TRUE, plotTot = NA,
   desiredConfidence = 0.95, bernoulli = F)
 }
 \arguments{
-\item{data}{dataframe containing observations of variable of
+\item{data}{data frame containing observations of variable of
 interest for either cluster-level or plot-level data.}
 
 \item{attribute}{character name of attribute to be summarized.}
@@ -21,11 +21,11 @@ total number of possible plots in the population.}
 
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 
-\item{bernoulli}{boolean TRUE if data fitting the Bernoulli 
+\item{bernoulli}{logical TRUE if data fitting the Bernoulli 
 distribution is used.}
 }
 \value{
-dataframe of stand-level statistics including
+data frame of stand-level statistics including
 standard error and confidence interval limits.
 }
 \description{

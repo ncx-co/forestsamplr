@@ -26,7 +26,7 @@ elements in the population.}
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
 \value{
-dataframe of stand-level statistics including
+data frame of stand-level statistics including
 standard error and confidence interval limits. All final values are
 on a 'per plot' basis.
 }

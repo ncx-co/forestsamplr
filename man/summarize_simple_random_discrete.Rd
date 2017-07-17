@@ -8,7 +8,7 @@ summarize_simple_random_discrete(data, attribute = "attr", popTot = NA,
   desiredConfidence = 0.95)
 }
 \arguments{
-\item{data}{dataframe containing observations of variable of
+\item{data}{data frame containing observations of variable of
 interest. Attribute must be coded as either TRUE and FALSE or
 1 and 0.}
 
@@ -20,7 +20,7 @@ number of individuals.}
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 }
 \value{
-dataframe of stand-level statistics. Includes standard error and
+data frame of stand-level statistics. Includes standard error and
 95% confidence interval.
 }
 \description{
