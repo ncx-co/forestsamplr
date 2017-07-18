@@ -14,7 +14,7 @@ unit (e.g. 6 trees were alive at plot 10 -> c(6)).}
 (e.g. 0.9).}
 }
 \value{
-dataframe of statistics including standard error and 
+data frame of statistics including standard error and 
 confidence interval limits.
 }
 \description{

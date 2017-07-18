@@ -26,17 +26,15 @@ summarize_poisson <- function(data, desiredConfidence = 0.95) {
                           )
   
   summary <- dataFrame %>%
-    mutate(sampleSize = length(frequency)) %>%
     mutate(xi = values * frequency) %>%
-    mutate(means = 1 / sampleSize[1] * sum(xi)) %>%
-    summarize(sampleSize = sampleSize[[1]],
-              mean = means[[1]],
+    summarize(sampleSize = length(data),
+              mean = 1 / sampleSize * sum(xi),
               lambdaHat = mean,
-              se = sqrt(mean / sampleSize[[1]]),
-              lowerBoundCI = lambdaHat - qnorm(1 - (1 - desiredConfidence) / 2)
-                             * se,
-              upperBoundCI = lambdaHat + qnorm(1 - (1 - desiredConfidence) / 2) 
-                             * se
+              se = sqrt(mean / sampleSize),
+              lowerBoundCI = lambdaHat - qnorm(1 - (1 - desiredConfidence)
+                                               / 2) * se,
+              upperBoundCI = lambdaHat + qnorm(1 - (1 - desiredConfidence) 
+                                               / 2) * se
               )
   
   overdispersionLimit <- summary$mean * (summary$sampleSize - summary$mean) / 
