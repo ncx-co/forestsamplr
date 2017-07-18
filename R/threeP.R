@@ -2,7 +2,7 @@
 #' @description Summarizes population-level statistics for
 #' 3P sample data. The calculations are derived from Kim Iles
 #' 'A Sampler of Inventory Topics', pg 601.
-#' @param data data frame containing plot number, VBARs, and treeHeights.
+#' @param data data frame containing key tree- or plot-level information.
 #' @param cvPercent numeric average Coefficient of Variation expressed 
 #' as a percent (e.g. 50).
 #' @param trueNetVBAR numeric measured net VBAR (volume to basal area 
