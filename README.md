@@ -13,9 +13,9 @@ We welcome your contributions! This package is a work in progress, and expansion
 Please take a look at the [contribution guidelines](https://github.com/SilviaTerra/forest_sampling/wiki/Contribution-Guidelines).  
   
 Wish-list areas include:  
-* Data
-* Additional functions for workups
-* Edits for easier function use
+* Test existing functions with data you have access to, suggest feature improvements
+* Add additional functions for sampling design workups
+* Edit existing functions to be more useful in practice
 
 ## How to Download from GitHub
 
@@ -26,7 +26,7 @@ Download the package:
 
 Helpful link: [Install R Packages Hosted on GitHub](https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html)
 
-## Patrons
+## Sponsors
 The forest_sampling package was first created by [SilviaTerra](https://silviaterra.com/bark/index.html), with the intent of building an open source tool for the field of Forestry.  
   
 In collaboration with:  
