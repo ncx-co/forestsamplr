@@ -258,14 +258,14 @@ A variation of cluster sampling. A simple random sample of clusters is selected,
 
 `summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0, desiredConfidence = 0.95)`
 
- Parameter                   | Data input* | Description
+ Parameter                   | Data input  | Description
 -----------------------------|-------------|---------------------------------------------
-data                         |    both     | data frame containing observations of variable of interest for either cluster-level of plot-level data
-plot                         |    both     | logical TRUE if parameter data is plot-level, FALSE if parameter data is cluster-level (default is TRUE)
-attribute                    |    both     | character name of attribute to be summarized
-populationClusters           |   cluster   | numeric total number of clusters in the population
-populationElementsPerCluster |   cluster   | numeric total number of elements in the population
-desiredConfidence            |   numeric   | desired confidence level (e.g. 0.9)
+data                         |    both     | data frame containing observations of variable of interest for either cluster-level of plot-level data
+plot                         |    both     | logical TRUE if parameter data is plot-level, FALSE if parameter data is cluster-level (default is TRUE)
+attribute                    |    both     | character name of attribute to be summarized
+populationClusters           |   cluster   | numeric total number of clusters in the population
+populationElementsPerCluster |   cluster   | numeric total number of elements in the population
+desiredConfidence            |   numeric   | desired confidence level (e.g. 0.9)
 
 ### Data Input:
   
@@ -293,23 +293,60 @@ All trees in an are estimated. Select few trees are identified and carefully mea
  Parameter        | Description
 ------------------|-----------------------------------------------
 data              | data frame containing plot number, VBARs, and treeHeights
-sampSize          | numeric sample size
-treeCount         | numeric total number of trees (tree count)
-BAF               | numeric basal area factor used for sampling
 cvPercent         | numeric average Coefficient of Variation expressed as a percent (e.g. 50)
 trueNetVBAR       | numeric measured net VBAR (volume to basal area ratio)
-height            | logical TRUE if data input contains height values. Otherwise, FALSE assumes data contains estimateVBAR
+height            | logical TRUE if data input contains height values, FALSE assumes data contains estimateVBAR
+plot              | logical TRUE if the input data is averaged by plot, FALSE if data is tree-level
 desiredConfidence | numeric desired confidence level (e.g. 0.9)
+
+### Options:
+  
+3P sample currently has two key options:
+1. height
+    a. Height data is included  
+        * An estimate VBAR will be roughly calculated   
+        * Set `height = TRUE`
+    b. Estimate VBARs are included
+        * An estimate VBAR is included in the input dat
+        * Set `height = FALSE`
+2. plot
+    a. Plot-level Data is Input
+        * Data is set up as plot-level data, defined below
+        * Set `plot = TRUE` 
+    b. Tree-level Data is Input
+        * Data is set up as tree-level data, defined below
+        * Set `plot = FALSE` 
 
 ### Data Input:
 
+1. Height is included, data is plot-level.
 ```{r include = FALSE}
-data <- data.frame(plotNum = c(5, 4, 3, 5, 4),
-                   VBARS = c(9, 8, 7, 8, 2),
-                   treeHeight = c(1, 2, 3, 4, 5))
+ dataHeight <- data.frame(plotNum = c(5, 4, 3, 5, 4),
+                          treeCount = c(4, 5, 6, 3, 4),
+                          BAF = c(10, 10, 10, 10, 10),
+                          avgTreeVBARSperPlot = c(9, 8, 7, 8, 2),
+                          treeHeight = c(1, 2, 3, 4, 5))
 ```
+Example: `summarize_threeP(dataHeight, cvPercent = 50, trueNetVBAR = 10, height = T, plot = T)`
 
-Example: `summarize_threeP(data, sampSize = 5, treeCount = 20, BAF = 10, cvPercent = 50, trueNetVBAR = 100, height = TRUE, desiredConfidence = 0.95)`
+2. estimateVBAR is included (height data is not used, and so is not included), data is plot-level
+```{r include = FALSE}
+ dataEstimateVBAR <- data.frame(plotNum = c(1, 2, 3, 4, 5),
+                                treeCount = c(4, 5, 6, 3, 4),
+                                BAF = c(10, 10, 10, 10, 10),
+                                avgTreeVBARSperPlot = c(9, 8, 7, 8, 2),
+                                estimateVBAR = c(1, 2, 3, 4, 5))
+```
+Example: `summarize_threeP(dataEstimateVBAR, cvPercent = 50, trueNetVBAR = 10, height = F, plot = T)`
+
+3. estimateVBAR is included, data is tree-level.
+```{r include = FALSE}
+ dataNotPlot <- data.frame(plotNum = c(1, 1, 2, 2, 3),
+                           BAF = c(10, 10, 10, 10, 10),
+                           VBAR = c(1, 2, 3, 4, 3),
+                           estimateVBAR = c(1, 2, 3, 4, 5))
+```
+Example: `summarize_threeP(dataNotPlot, cvPercent = 50, trueNetVBAR = 10, height = F, plot = F)`
   
 ## Poisson:
 
