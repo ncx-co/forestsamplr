@@ -12,7 +12,7 @@ vignette: >
 
 # Forest Sampling Package   
   
-The Forest Sampling is a package of functions that calculates workups for sampling designs commonly used in Forestry. It is an open source opportunity for collaboration and transparency.  
+The Forest Sampling is a package of functions that calculates workups for sampling designs commonly used in forestry. It is an open source opportunity for collaboration and transparency.  
   
 These sampling designs include:  
 * Simple Random Sampling  
@@ -36,7 +36,7 @@ Variations are included, described in detail below.
 
 ## Output:
 
-The output of the functions varies, but all produce a data frame containing:
+The outputs of the functions vary, but all produce a data frame containing:
 * mean
 * variance
 * standard error
@@ -76,14 +76,14 @@ Cluster sample has 2 options:
     * Set `bernoulli = TRUE`  
     * Ex. `summarize_all_cluster(data, attribute, plotTot = 250, bernoulli = T)`
 
-Parameter          |   Option:  | Description
--------------------|------------|-------------------------------------------------------------------------
-data               |    1, 2    | data frame containing observations of variable of interest for either cluster-level or plot-level data
-plot               |      1     | logical true if parameter data is plot-level, false if parameter data is cluster-level. Default is True
-attribute          |    1, 2    | character name of attribute to be summarized
-plotTot            |      2     | numeric population size, equivalent to the total number of possible plots in the population
-desiredConfidence  |    1, 2    | numeric desired confidence level (e.g. 0.9)
-bernoulli          |    1, 2    | logical TRUE if data fitting the Bernoulli distribution is used
+Parameter          | Include parameter in option #: | Description
+-------------------|--------------------------------|-------------------------------------------------------------------------
+data               |    1, 2                        | data frame containing observations of variable of interest for either cluster-level or plot-level data
+plot               |      1                         | logical true if parameter data is plot-level, false if parameter data is cluster-level. Default is True
+attribute          |    1, 2                        | character name of attribute to be summarized
+plotTot            |      2                         | numeric population size, equivalent to the total number of possible plots in the population
+desiredConfidence  |    1, 2                        | numeric desired confidence level (e.g. 0.9)
+bernoulli          |    1, 2                        | logical TRUE if data fitting the Bernoulli distribution is used
   
 ### Data Input:
   
@@ -143,16 +143,16 @@ Simple random sample (SRS) has 3 options:
     * Data input can only be as a data frame
     * Ex. `summarize_all_srs(data, attribute, type, popSize = popTot, desiredConfidence = 0.95, infiniteReplacement = F, bernoulli = T)`
 
- Parameter          |   Option:   | Description
---------------------|-------------|-------------------------------------------------------------------------
-data                |     1, 2    | data frame or vector containing observations of variable of interest
-data                |       3     | data frame containing observations of variable of interest (attribute must be coded as either TRUE and FALSE or 1 and 0)
-attribute           |   1, 2, 3   | character name of attribute to be summarized, must be defined if data is input as a data frame
-type                |     1, 2    | object type of data, e.g. 'dataframe' or 'vector'
-popSize             |   1, 2, 3   | numeric population size, defaults to NA (unknown popSize)
-desiredConfidence   |   1, 2, 3   | numeric desired confidence level (e.g. 0.9)
-infiniteReplacement |     1, 2    | logical true if sample was done with replacement or from an infinite population. FALSE if sampled without replacement, from a finite population (defaults to FALSE)
-bernoulli           |   1, 2, 3   | logical TRUE if data fitting the Bernoulli distribution is used
+ Parameter          | Include parameter in option #: | Description
+--------------------|--------------------------------|-------------------------------------------------------------------------
+data                |     1, 2                       | data frame or vector containing observations of variable of interest
+data                |       3                        | data frame containing observations of variable of interest (attribute must be coded as either TRUE and FALSE or 1 and 0)
+attribute           |   1, 2, 3                      | character name of attribute to be summarized, must be defined if data is input as a data frame
+type                |     1, 2                       | object type of data, e.g. 'dataframe' or 'vector'
+popSize             |   1, 2, 3                      | numeric population size, defaults to NA (unknown popSize)
+desiredConfidence   |   1, 2, 3                      | numeric desired confidence level (e.g. 0.9)
+infiniteReplacement |     1, 2                       | logical true if sample was done with replacement or from an infinite population. FALSE if sampled without replacement, from a finite population (defaults to FALSE)
+bernoulli           |   1, 2, 3                      | logical TRUE if data fitting the Bernoulli distribution is used
   
   
 ### Data Input:  
@@ -258,14 +258,22 @@ A variation of cluster sampling. A simple random sample of clusters is selected,
 
 `summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0, desiredConfidence = 0.95)`
 
- Parameter                   | Data input  | Description
------------------------------|-------------|---------------------------------------------
-data                         |    both     | data frame containing observations of variable of interest for either cluster-level of plot-level data
-plot                         |    both     | logical TRUE if parameter data is plot-level, FALSE if parameter data is cluster-level (default is TRUE)
-attribute                    |    both     | character name of attribute to be summarized
-populationClusters           |   cluster   | numeric total number of clusters in the population
-populationElementsPerCluster |   cluster   | numeric total number of elements in the population
-desiredConfidence            |   numeric   | desired confidence level (e.g. 0.9)
+### Options:
+  
+Two-stage sample currently has two data input options:
+1. Plot-level data  
+    * Set `post = FALSE`  
+2. Cluster-level data 
+    * Set `post = TRUE`  
+
+ Parameter                   | Include parameter in option #: | Description
+-----------------------------|--------------------------------|---------------------------------------------
+data                         |       1, 2                     | data frame containing observations of variable of interest for either cluster-level of plot-level data.
+plot                         |      1, 2                      | logical TRUE if parameter data is plot-level, FALSE if parameter data is cluster-level. Default is TRUE.
+attribute                    |     1                          | character name of attribute to be summarized.
+populationClusters           |     1                          | numeric total number of clusters in the population.
+populationElementsPerCluster |      1                         | numeric total number of elements in the population.
+desiredConfidence            |      1, 2                      | numeric desired confidence level (e.g. 0.9).
 
 ### Data Input:
   
