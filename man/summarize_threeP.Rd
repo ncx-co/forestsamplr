@@ -8,7 +8,7 @@ summarize_threeP(data, cvPercent, trueNetVBAR, height = FALSE, plot = FALSE,
   desiredConfidence = 0.95)
 }
 \arguments{
-\item{data}{data frame containing plot number, VBARs, and treeHeights.}
+\item{data}{data frame containing key tree- or plot-level information.}
 
 \item{cvPercent}{numeric average Coefficient of Variation expressed 
 as a percent (e.g. 50).}
