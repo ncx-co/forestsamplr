@@ -4,14 +4,13 @@
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean, hence the
 #' \code{sampleSize} terms in the denominators.
-#' @usage summarize_systematic(data, attribute = 'attr', type = 'vector', 
+#' @usage summarize_systematic(data, attribute = 'attr', 
 #'                             popSize = NA, desiredConfidence = 0.95)
 #' @param data data frame or vector containing observations of
 #' variable of interest. Variable of interest must already be expanded
 #' to the level of interest (e.g. stand-level).
 #' @param attribute character name of attribute to be summarized.
 #' Must be defined if data is input as a data frame.
-#' @param type object type of data, e.g. 'dataframe' or 'vector'.
 #' @param popSize numeric population size. Defaults to NA (unknown popSize).
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @return a data frame of population mean, variance, standard error, and
@@ -37,10 +36,10 @@
 #' }
 #' @export
 
-summarize_systematic <- function(data, attribute = 'attr', type = 'vector', popSize = NA, desiredConfidence = 0.95) {
+summarize_systematic <- function(data, attribute = 'attr', popSize = NA, desiredConfidence = 0.95) {
 
   # return data frame of key values
-  output <- summarize_simple_random(data = data, attribute, type, popSize, desiredConfidence, FALSE)
+  output <- summarize_simple_random(data = data, attribute, popSize, desiredConfidence, FALSE)
   
   
   return(output)

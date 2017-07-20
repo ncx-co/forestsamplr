@@ -206,6 +206,8 @@ Stratified sample currently has two options:
 
 ### Data Input:
 
+Note: The stratum columns MUST be named 'stratum' and the string you set to equal `attribute`.
+
 ```{r include = FALSE}
 trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
                            stratum = c(1, 1, 1, 2, 2, 2))

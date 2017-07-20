@@ -3,17 +3,17 @@
 #' cluster sample data. This function has two options: (1) 
 #' Cluster sample with a normal distribution and (2) Cluster 
 #' sample with a bernoulli distribution.
-#' @usage summarize_all_cluster(data, attribute = NA, plot = TRUE, 
+#' @usage summarize_all_cluster(data, attribute = NA, element = TRUE, 
 #'                              plotTot = NA, 
 #'                              desiredConfidence = 0.95,
 #'                              bernoulli = F)
 #' @param data data frame containing observations of variable of
 #' interest for either cluster-level or plot-level data.
 #' @param attribute character name of attribute to be summarized.
-#' @param plot logical true if parameter data is plot-level, false if
+#' @param element logical true if parameter data is plot-level, false if
 #' parameter data is cluster-level. Default is True.
 #' @param plotTot numeric population size. Equivalent to the 
-#' total number of possible plots in the population.
+#' total number of possible elements in the population.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param bernoulli logical TRUE if data fitting the Bernoulli 
 #' distribution is used.
@@ -49,7 +49,7 @@
 #'                                       sumAttr = c(1000, 1250, 950,
 #'                                                   900, 1005), 
 #'                                       isUsed = c(T, T, F, T, T))
-#' # Set plot = FALSE
+#' # Set element = FALSE
 #' 
 #' 
 #' # Bernoulli data can be expressed as: 
@@ -64,12 +64,12 @@
 #' @export
 
 
-summarize_all_cluster <- function(data, attribute = NA, plot = TRUE, 
+summarize_all_cluster <- function(data, attribute = NA, element = TRUE, 
                                   plotTot = NA, desiredConfidence = 0.95, bernoulli = F) { 
   
   if (bernoulli == F) {
     
-    out <- summarize_cluster(data, plot, attribute, desiredConfidence)
+    out <- summarize_cluster(data, element, attribute, desiredConfidence)
     
   } else {
     

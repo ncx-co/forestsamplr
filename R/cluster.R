@@ -4,9 +4,9 @@
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean.
 #' @param data data frame containing observations of variable of
-#' interest for either cluster-level or plot-level data.
-#' @param plot logical true if parameter data is plot-level, false if
-#' parameter data is cluster-level. Default is True.
+#' interest for either cluster-level or element-level data.
+#' @param element logical true if parameter data is element-level 
+#' (plot-level), false if parameter data is cluster-level. Default is True.
 #' @param attribute character name of attribute to be summarized.
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @return data frame of stand-level statistics including
@@ -19,13 +19,13 @@
 #'                        attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000,
 #'                                 1250, 950, 900, 1005, 1000, 1250, 950, 900),
 #'                        isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
-#' plot = TRUE
+#' element = TRUE
 #' attribute = 'attr'
 #' }
 #' @export
 
 
-summarize_cluster <- function(data, plot = TRUE, attribute = NA, desiredConfidence = 0.95) {
+summarize_cluster <- function(data, element = TRUE, attribute = NA, desiredConfidence = 0.95) {
 
   # ensure the data entered does not have missing values
   if (any(is.na(data))) {
@@ -36,7 +36,7 @@ summarize_cluster <- function(data, plot = TRUE, attribute = NA, desiredConfiden
   if (!is.na(attribute) && (attribute %in% colnames(data))) {
     attrTemp <- unlist(data %>% dplyr::select(one_of(attribute)))
 
-    if (plot) {
+    if (element) {
       # change variable of interest name to attr, unsummarized
       data$attr <- attrTemp
 
@@ -48,9 +48,9 @@ summarize_cluster <- function(data, plot = TRUE, attribute = NA, desiredConfiden
 
   }
 
-if (plot) {
+if (element) {
 
-  # calculates cluster values from plot data
+  # calculates cluster values from element data
 
   cluster <- data %>%
     group_by(clusterID) %>%

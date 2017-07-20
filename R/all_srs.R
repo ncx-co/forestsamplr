@@ -4,7 +4,7 @@
 #' of a finite population or sampled without replacement,
 #' (2) SRS of an infinite population or sampled with replacement,
 #' and (3) SRS with a bernoulli distribution.
-#' @usage summarize_all_srs(data, attribute = 'attr', type = 'vector',
+#' @usage summarize_all_srs(data, attribute = 'attr',
 #'                          popSize = NA, desiredConfidence = 0.95, 
 #'                          infiniteReplacement = F, bernoulli = F)
 #' @param data data frame or vector containing observations of
@@ -12,7 +12,6 @@
 #' to the level of interest (e.g. stand-level).
 #' @param attribute character name of attribute to be summarized.
 #' Must be defined if data is input as a data frame.
-#' @param type object type of data, e.g. 'dataframe' or 'vector'.
 #' @param popSize numeric population size. Defaults to NA (unknown popSize).
 #' @param desiredConfidence numeric desired confidence level (e.g. 0.9).
 #' @param infiniteReplacement logical true if sample was done with replacement
@@ -32,7 +31,6 @@
 #' # Vector data example:
 #' 
 #' data <- c(120, 140, 160, 110, 100, 90)
-#' type <- 'vector'
 #' 
 #' 
 #' # Data frame data example:
@@ -40,7 +38,6 @@
 #' data <- data.frame(bapa = c(120, 140, 160, 110, 100, 90), 
 #'                    plots = c(1, 2, 3, 4, 5, 6))
 #' attribute <- 'bapa'
-#' type <- 'dataframe'
 #' 
 #' 
 #' # Bernoulli data example:
@@ -53,12 +50,12 @@
 #' @export
 
 
-summarize_all_srs <- function(data, attribute = 'attr', type = 'vector', popSize = NA,
+summarize_all_srs <- function(data, attribute = 'attr', popSize = NA,
                               desiredConfidence = 0.95, infiniteReplacement = F, bernoulli = F) { 
   
   if (bernoulli == F) {
     
-    out <- summarize_simple_random(data, attribute, type, popSize, 
+    out <- summarize_simple_random(data, attribute, popSize, 
                                    desiredConfidence, infiniteReplacement)
     
   } else {
