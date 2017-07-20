@@ -64,7 +64,7 @@ Looking at the example function call, she knew it had to look something like thi
 She modified this to match her data's needs, ran the code, and got:
 
 ```{r include = TRUE}
-summarize_all_srs(expanded, attribute = 'bapa', type = 'dataframe', popSize = NA, desiredConfidence = 0.90, infiniteReplacement = F)
+summarize_all_srs(expanded, attribute = 'bapa', popSize = NA, desiredConfidence = 0.90, infiniteReplacement = F)
 ```
 
 The output she got was the calculated mean, variance, standard error, and the upper and lower limits of the 90% confidence interval.
