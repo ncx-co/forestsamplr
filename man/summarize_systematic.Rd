@@ -4,8 +4,8 @@
 \alias{summarize_systematic}
 \title{Summarize systematic sample}
 \usage{
-summarize_systematic(data, attribute = "attr", type = "vector",
-  popSize = NA, desiredConfidence = 0.95)
+summarize_systematic(data, attribute = 'attr', type = 'vector', 
+                            popSize = NA, desiredConfidence = 0.95)
 }
 \arguments{
 \item{data}{data frame or vector containing observations of
@@ -34,10 +34,20 @@ variance terms refer to the variance of the mean, hence the
 }
 \examples{
 \dontrun{
+
+# See Forest Sampling vignette for more details
+
+# Data frame input data can be expressed as:
+
 trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
-  plots = c(1, 2, 3, 4, 5, 6))
+                           plots = c(1, 2, 3, 4, 5, 6))
 attribute = 'bapa'
 desiredConfidence = 0.9
+
+# Vector input data can be expressed as:
+
+vector <- c(120, 140, 160, 110, 100, 90)
+
 }
 }
 \author{

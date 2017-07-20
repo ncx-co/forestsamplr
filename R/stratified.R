@@ -3,7 +3,10 @@
 #' stratified sample data. The calculations are derived from Chapter 5 in
 #' Gregoire and Valentine's (2008) Sampling Strategies for Natural Resources
 #' and the Environment. The variance terms refer to the variance of the mean,
-#' hence the \code{n} terms in the denominators.
+#' hence the \code{n} terms in the denominators. This function has two 
+#' options: (1) stratified and (2) post-stratified.
+#' @usage summarize_stratified(trainingData, attribute, stratumTab, 
+#'                             desiredConfidence = 0.95, post = T)
 #' @param trainingData data frame containing observations of variable of
 #' interest, and stratum assignment for each plot
 #' @param attribute character name of attribute to be summarized
@@ -16,11 +19,17 @@
 #' @import dplyr
 #' @examples
 #' \dontrun{
+#' 
+#' # See Forest Sampling vignette for more details
+#' 
+#' # Data can be expressed as:
+#' 
 #' trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
-#'   stratum = c(1, 1, 1, 2, 2, 2))
+#'                            stratum = c(1, 1, 1, 2, 2, 2))
 #' stratumTab <- data.frame(stratum = c(1, 2), acres = c(200, 50))
 #' attribute = 'bapa'
 #' desiredConfidence = 0.9
+#' 
 #' }
 #' @export
 

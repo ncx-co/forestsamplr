@@ -2,6 +2,7 @@
 #' @description Summarizes population-level statistics for
 #' Poisson sample data. The calculations are derived from open 
 #' resources provided by Penn State Eberly College.
+#' @usage summarize_poisson(data, desiredConfidence = 0.95)
 #' @param data vector containing number of instances per desired 
 #' unit (e.g. 6 trees were alive at plot 10 -> c(6)).
 #' @param desiredConfidence numeric desired confidence level 
@@ -12,7 +13,13 @@
 #' @import dplyr
 #' @examples
 #' \dontrun{
+#' 
+#' # See Forest Sampling vignette for more details
+#' 
+#' # Data can be expressed as:
+#' 
 #' data <- c(2, 3, 4, 3, 4, 5, 2, 7)
+#' 
 #' }
 #' @export
 
