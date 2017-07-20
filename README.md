@@ -14,7 +14,7 @@ Please take a look at the [contribution guidelines](https://github.com/SilviaTer
   
 Wish-list areas include:  
 * Test existing functions with data you have access to, suggest feature improvements
-* Add additional functions for sampling design workups
+* Add additional sampling design workup functions
 * Edit existing functions to be more useful in practice
 
 ## How to Download from GitHub
