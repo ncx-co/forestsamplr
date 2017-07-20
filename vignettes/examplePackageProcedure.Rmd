@@ -58,13 +58,14 @@ Looking at the example function call, she knew it had to look something like thi
 `summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`
 
 She modified this to match her data's needs, ran the code, and got:
+
 ```{r include = TRUE}
 summarize_all_srs(expanded, attribute = 'bapa', type = 'dataframe', popSize = NA, desiredConfidence = 0.90, infiniteReplacement = F)
 ```
 
-The output she got is the calculated mean, variance, standard error, and the upper and lower limits of the 90% confidence interval.
+The output she got was the calculated mean, variance, standard error, and the upper and lower limits of the 90% confidence interval.
   
-She's pretty happy with this output. Then she wonders: what if this data was really from a systematic sample? She creates stratum information and manipulates her data to match a stratum dataset:
+She was pretty happy with this output. Then she wondered: what if this data was really from a systematic sample? She created stratum information and manipulated her data to match a stratum dataset:
 
 ```{r include = TRUE}
 stratumData <- expanded %>%
@@ -74,10 +75,10 @@ stratumData <- expanded %>%
 stratumTab <- data.frame(stratum = c(1, 2), acres = c(200, 50))
 ```
 
-She looked in the Forest Sampling Vignette and figures out the call:
+She looked in the Forest Sampling Vignette and figured out the call:
 
 ```{r include = TRUE}
 summarize_stratified(stratumData, attribute = 'bapa', stratumTab, desiredConfidence = 0.90, post = T)
 ```
 
-She feels accomplished - she now has summary statistics for her data! Congratulations, Wilma!
+She felt accomplished - she now had summary statistics for her data! Congratulations, Wilma!
