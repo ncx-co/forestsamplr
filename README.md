@@ -26,6 +26,15 @@ Download the package:
 
 Helpful link: [Install R Packages Hosted on GitHub](https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html)
 
+## How to Run Tests
+
+After downloading from github, run this:
+
+    library(devtools)
+    build()
+    install()
+    test()
+
 ## Sponsors
 The forest_sampling package was first created by [SilviaTerra](https://silviaterra.com/bark/index.html), with the intent of building an open source tool for the field of Forestry.  
   
