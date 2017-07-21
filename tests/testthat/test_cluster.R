@@ -1,6 +1,5 @@
 context("Forest sampling statistics calculations: cluster sample")
 
-desiredConfidence = 0.95
 
 # test clusters
 clusterFalse = data.frame(clusterID = c(1, 2, 3, 4, 5), clusterElements = c(4, 2, 9, 4, 10),
@@ -44,36 +43,36 @@ plotLevelAttribute <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 
 
 test_that("cluster sample isUsed functions correctly", {
 
-  expect_equal(summarize_cluster(clusterFalse, F, desiredConfidence)[[1]], c(30.51), tolerance = 0.1)
-  expect_false(identical(summarize_cluster(clusterTrue, F, desiredConfidence), 
-                         summarize_cluster(clusterFalse, F, desiredConfidence)))
-  expect_false(identical(summarize_cluster(plotLevelTrue, T, desiredConfidence), 
-                         summarize_cluster(plotLevelFalse, T, desiredConfidence)))
+  expect_equal(summarize_cluster(clusterFalse, F)[[1]], c(30.51), tolerance = 0.1)
+  expect_false(identical(summarize_cluster(clusterTrue, F), 
+                         summarize_cluster(clusterFalse, F)))
+  expect_false(identical(summarize_cluster(plotLevelTrue, T), 
+                         summarize_cluster(plotLevelFalse, T)))
 
 })
 
 
 test_that("cluster sample handles input with no, one, or two clusters correctly", {
 
-  expect_error(summarize_cluster(clusterNone, F, desiredConfidence))
-  expect_error(summarize_cluster(clusterOne, F, desiredConfidence))
-  expect_false(any(is.na(summarize_cluster(clusterTwo, F, desiredConfidence))))
+  expect_error(summarize_cluster(clusterNone, F))
+  expect_error(summarize_cluster(clusterOne, F))
+  expect_false(any(is.na(summarize_cluster(clusterTwo, F))))
 
 })
 
 
 test_that("cluster sample handles input data with NA values", {
 
-  expect_error(summarize_cluster(plotLevelNAOne, T, desiredConfidence))
-  expect_error(summarize_cluster(plotLevelNAMore, T, desiredConfidence))
+  expect_error(summarize_cluster(plotLevelNAOne, T))
+  expect_error(summarize_cluster(plotLevelNAMore, T))
 
 })
 
 
 test_that("cluster sample handles attribute", {
 
-  expect_equal(summarize_cluster(plotLevelAttribute, T, 'kittens', desiredConfidence),
-               summarize_cluster(plotLevelTrue, T, desiredConfidence))
+  expect_equal(summarize_cluster(plotLevelAttribute, T, 'kittens'),
+               summarize_cluster(plotLevelTrue, T))
 
 })
 

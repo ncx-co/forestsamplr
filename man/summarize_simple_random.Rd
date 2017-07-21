@@ -4,8 +4,8 @@
 \alias{summarize_simple_random}
 \title{Summarize simple random sample}
 \usage{
-summarize_simple_random(data, attribute = "attr", type = "vector",
-  popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)
+summarize_simple_random(data, attribute = "attr", popSize = NA,
+  desiredConfidence = 0.95, infiniteReplacement = F)
 }
 \arguments{
 \item{data}{data frame or vector containing observations of
@@ -14,8 +14,6 @@ to the level of interest (e.g. stand-level).}
 
 \item{attribute}{character name of attribute to be summarized.
 Must be defined if data is input as a data frame.}
-
-\item{type}{object type of data, e.g. 'dataframe' or 'vector'.}
 
 \item{popSize}{numeric population size. Defaults to NA (unknown popSize).}
 

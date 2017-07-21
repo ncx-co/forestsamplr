@@ -5,8 +5,9 @@
 \title{Summarize two-stage sample}
 \usage{
 summarize_two_stage(data, plot = TRUE, attribute = NA,
-  populationClusters = 0, populationElementsPerCluster = 0,
-  desiredConfidence = 0.95)
+                           populationClusters = 0,
+                           populationElementsPerCluster = 0,
+                           desiredConfidence = 0.95)
 }
 \arguments{
 \item{data}{data frame containing observations of variable of
@@ -38,21 +39,39 @@ variance terms refer to the variance of the mean.
 }
 \examples{
 \dontrun{
+
+# See Forest Sampling vignette for more details
+
+
+# Data can be input as either clusters or plots.
+
+
+# Cluster level data can be expressed as:
+
 dataCluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                           totClusterElements = c(5, 2, 1, 6, 5),
                           sampledElements = c(2, 2, 2, 2, 2),
                           isUsed = c(T, T, T, T, F),
-                          attrSumCluster = c(1000, 1250, 950, 900, 1005))
+                          attrSumCluster = c(1000, 1250, 950, 
+                                             900, 1005))
+# Example:
 summarize_two_stage(dataCluster, F, 'attr')
 
-# realistic data
-dataPlot <- data.framedata.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3,  
-                                           4, 4, 4, 5, 5, 5, 6, 6, 6), 
-                             volume = c(500, 650, 610, 490, 475, 505, 
-                                        940, 825, 915, 210, 185, 170, 
-                                        450, 300, 500, 960, 975, 890),
-                             isUsed = c(T, T, T, T, T, T, T, T, T, T, 
-                                        T, T, T, T, T, T, T, T))
+
+# Plot level data can be expressed as:
+
+dataPlot <- data.framedata.frame(clusterID = c(1, 1, 1, 2, 2, 2,  
+                                               3, 3, 3, 4, 4, 4,  
+                                               5, 5, 5, 6, 6, 6), 
+                                 volume = c(500, 650, 610, 490,   
+                                            475, 505, 940, 825,  
+                                            915, 210, 185, 170,  
+                                            450, 300, 500, 960, 
+                                            975, 890),
+                                 isUsed = c(T, T, T, T, T, T, T, 
+                                            T, T, T, T, T, T, T,  
+                                            T, T, T, T))
+# Example:
 summarize_two_stage(redData, T, 'volume', populationClusters = 16,
                     populationElementsPerCluster = 160)
 

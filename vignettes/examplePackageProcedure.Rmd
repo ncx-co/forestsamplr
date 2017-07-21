@@ -1,0 +1,88 @@
+---
+title: "Example Procedure for Package Use"
+author: "Karin Wolken"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example Procedure for Package Use}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Morals:   
+  1. Data input must be expanded prior to the function call.
+  2. Data frame input needs to have the same column names as expressed in the example data (except for the attribute of interest, the name of which can be set in the function call).
+  
+The setting:  
+  Wilma Antall wanted to analyze data. She'd spent time and resources carefully planning a survey. She had decided to use the simple random sampling design, because it fit her goals best - to assess the _Euphorbia obesa_ in a long-standing, worldwide study on succulents. (Or, she was scrounging a database and decided to see what statistics this stray database would produce if it were analyzed like a simple random sample.)
+  
+  She wanted to be smart about this. She'd expended a lot of effort collecting the data, managing, and storing it, being careful to have a truely random, unbiased dataset. She wanted to do analyze the data correctly. She also wanted to be transparent, and be sure that other statisticians would support her findings. They would have access to the easily repeatable R code that explicitely stated her steps of analysis - if they had any questions, it would be easy to prove her process. So, she decided to use the Forest Sampling R package.
+
+```{r include = TRUE}
+library(forestSampling)
+```
+
+  She wasn't exactly sure how to start, so she took a few minutes to look at her data.
+  
+Her data may have looked something like this: 
+
+```{r include = TRUE}
+head(simpleRandom, n=10)
+```
+
+But this didn't quite fit the data format she read about in the Forest Sampling Vignette.
+
+Moral 1:
+First, she had to expand her data how she wanted and provide her attribute of interest. She wanted basal area per acre (given the incredibly rare, monstrously tall, secret population she sampled, this was a reasonable attribute to use). So, she ran this little R code:
+
+```{r include = FALSE}
+expanded <- simpleRandom %>%
+  mutate(bapaTree = pi * (DBH / 2) ^ 2 / 144) %>%
+  group_by(plot) %>%
+  summarize(bapa = sum(bapaTree) / sum(BAF))
+```
+
+Moral 2:
+Now, she checked the Forest Sampling Vignette to make sure that her data was on the right track.
+
+```{r include = TRUE}
+head(expanded, n=12)
+```
+
+She was thrilled. Her data had a column she could identify as her attribute of interest in a call similar to `attribute <- 'bapa`. She did jumping jacks for joy. She was now ready to run the package's function.
+
+She looked at the Forest Sampling Vignette. The simple random sample function had three options:
+1. For a finite population or sampled without replacement
+2. For an infinite population or sampled with replacement
+3. For a bernoulli sample
+
+She'd sampled a finite population without replacement, so she decided Option #1 was the best fit.
+
+Looking at the example function call, she knew it had to look something like this:
+`summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`
+
+She modified this to match her data's needs, ran the code, and got:
+
+```{r include = TRUE}
+summarize_all_srs(expanded, attribute = 'bapa', popSize = NA, desiredConfidence = 0.90, infiniteReplacement = F)
+```
+
+The output she got was the calculated mean, variance, standard error, and the upper and lower limits of the 90% confidence interval.
+  
+She was pretty happy with this output. Then she wondered: what if this data was really from a systematic sample? She created stratum information and manipulated her data to match a stratum dataset:
+
+```{r include = TRUE}
+stratumData <- expanded %>%
+  select(-plot) %>%
+  mutate(stratum = rep(c(1, 2), 6))
+
+stratumTab <- data.frame(stratum = c(1, 2), acres = c(200, 50))
+```
+
+She looked in the Forest Sampling Vignette and figured out the call:
+
+```{r include = TRUE}
+summarize_stratified(stratumData, attribute = 'bapa', stratumTab, desiredConfidence = 0.90, post = T)
+```
+
+She felt accomplished - she now had summary statistics for her data! Congratulations, Wilma!

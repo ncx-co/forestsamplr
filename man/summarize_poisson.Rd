@@ -24,7 +24,13 @@ resources provided by Penn State Eberly College.
 }
 \examples{
 \dontrun{
+
+# See Forest Sampling vignette for more details
+
+# Data can be expressed as:
+
 data <- c(2, 3, 4, 3, 4, 5, 2, 7)
+
 }
 }
 \author{

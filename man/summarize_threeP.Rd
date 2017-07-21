@@ -4,11 +4,12 @@
 \alias{summarize_threeP}
 \title{Summarize 3P sample}
 \usage{
-summarize_threeP(data, cvPercent, trueNetVBAR, height = FALSE, plot = FALSE,
-  desiredConfidence = 0.95)
+summarize_threeP(data, sampSize, treeCount, BAF, cvPercent, 
+                        trueNetVBAR, height = FALSE, 
+                        desiredConfidence = 0.95)
 }
 \arguments{
-\item{data}{data frame containing plot number, VBARs, and treeHeights.}
+\item{data}{data frame containing key tree- or plot-level information.}
 
 \item{cvPercent}{numeric average Coefficient of Variation expressed 
 as a percent (e.g. 50).}
@@ -31,29 +32,52 @@ confidence interval limits.
 \description{
 Summarizes population-level statistics for
 3P sample data. The calculations are derived from Kim Iles
-'A Sampler of Inventory Topics', pg 601.
+'A Sampler of Inventory Topics' (2003).
 }
 \examples{
 \dontrun{
+
+# This function has a few options for data input:
+
+
+# 1. Height is included, data is plot-level.
+
 dataHeight <- data.frame(plotNum = c(5, 4, 3, 5, 4),
                          treeCount = c(4, 5, 6, 3, 4),
                          BAF = c(10, 10, 10, 10, 10),
                          avgTreeVBARSperPlot = c(9, 8, 7, 8, 2),
                          treeHeight = c(1, 2, 3, 4, 5))
-summarize_threeP(dataHeight, cvPercent = 50, trueNetVBAR = 10, height = T, plot = T)
+                         
+# Example: 
+summarize_threeP(dataHeight, cvPercent = 50, trueNetVBAR = 10,
+                 height = T, plot = T)
+
+
+# 2. estimateVBAR is included (height data is not used, 
+   and so is not included), data is plot-level.
 
 dataEstimateVBAR <- data.frame(plotNum = c(1, 2, 3, 4, 5),
                                treeCount = c(4, 5, 6, 3, 4),
                                BAF = c(10, 10, 10, 10, 10),
-                               avgTreeVBARSperPlot = c(9, 8, 7, 8, 2),
+                               avgTreeVBARSperPlot = 
+                                              c(9, 8, 7, 8, 2),
                                estimateVBAR = c(1, 2, 3, 4, 5))
-summarize_threeP(dataEstimateVBAR, cvPercent = 50, trueNetVBAR = 10, height = F, plot = T)
-                                    
+
+# Example: 
+summarize_threeP(dataEstimateVBAR, cvPercent = 50, 
+                 trueNetVBAR = 10, height = F, plot = T)
+
+
+# 3. estimateVBAR is included, data is tree-level.
+
 dataNotPlot <- data.frame(plotNum = c(1, 1, 2, 2, 3),
                           BAF = c(10, 10, 10, 10, 10),
                           VBAR = c(1, 2, 3, 4, 3),
                           estimateVBAR = c(1, 2, 3, 4, 5))
-summarize_threeP(dataNotPlot, cvPercent = 50, trueNetVBAR = 10, height = F, plot = F)
+
+# Example:
+summarize_threeP(dataNotPlot, cvPercent = 50, trueNetVBAR = 10, 
+                 height = F, plot = F)
 
 }
 }

@@ -1,24 +1,23 @@
 context("Forest sampling statistics calculations: simple random sample")
 
 trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
-                          plots = c(1, 2, 3, 4, 5, 6))
+                           plots = c(1, 2, 3, 4, 5, 6))
 attribute <- 'bapa'
-type <- 'dataframe'
 
 
 test_that("simple random function handles missing arguments correctly", {
 
-  sampT <- summarize_simple_random(data = trainingData, attribute, type, popSize = 50,
+  sampT <- summarize_simple_random(data = trainingData, attribute, popSize = 50,
                                    desiredConfidence = 0.9, infiniteReplacement = T)
-  sampNA <- summarize_simple_random(data = trainingData, attribute, type, popSize = NA,
+  sampNA <- summarize_simple_random(data = trainingData, attribute, popSize = NA,
                                     desiredConfidence = 0.9, infiniteReplacement = T)
-  sampNoN <- summarize_simple_random(data = trainingData, attribute, type, desiredConfidence = 0.9,
+  sampNoN <- summarize_simple_random(data = trainingData, attribute, desiredConfidence = 0.9,
                                      infiniteReplacement = T)
-  sampNoReplacement <- summarize_simple_random(trainingData, attribute, type, popSize = 50,
+  sampNoReplacement <- summarize_simple_random(trainingData, attribute, popSize = 50,
                                                desiredConfidence = 0.9)
-  sampF <- summarize_simple_random(trainingData, attribute, type, popSize = 50,
+  sampF <- summarize_simple_random(trainingData, attribute, popSize = 50,
                                    desiredConfidence = 0.9, infiniteReplacement = F)
-  sampReplacementNA <- summarize_simple_random(trainingData, attribute, type, popSize = 50,
+  sampReplacementNA <- summarize_simple_random(trainingData, attribute, popSize = 50,
                                                desiredConfidence = 0.9, infiniteReplacement = NA)
 
   expect_equal(sampNA, sampT)
@@ -41,11 +40,11 @@ test_that("simple random throws errors for data with few or no entries, or missi
   trainingDataThree <- data.frame('bapa' = c(4, 5, NA), 'plot' = c(10, 11, 12))
   trainingDataNone <- data.frame('bapa' = c(NA), 'plot' = c(10))
 
-  expect_warning(summarize_simple_random(trainingDataOne, attribute, type, popSize = 50,
+  expect_warning(summarize_simple_random(trainingDataOne, attribute, popSize = 50,
                                          desiredConfidence = 0.9, infiniteReplacement = T))
-  expect_error(summarize_simple_random(trainingDataNone, attribute, type, popSize = 50,
+  expect_error(summarize_simple_random(trainingDataNone, attribute, popSize = 50,
                                          desiredConfidence = 0.9, infiniteReplacement = T))
-  expect_error(summarize_simple_random(trainingDataThree, attribute, type, popSize = 50,
+  expect_error(summarize_simple_random(trainingDataThree, attribute, popSize = 50,
                                        desiredConfidence = 0.9, infiniteReplacement = T))
 
 })
@@ -56,7 +55,7 @@ test_that("simple random processes data with at least two", {
 
   trainingDataTwo <- data.frame('bapa' = c(4, 5), 'plot' = c(10, 11))
 
-  sampTwo <- summarize_simple_random(trainingDataTwo, attribute, type, popSize = 50,
+  sampTwo <- summarize_simple_random(trainingDataTwo, attribute, popSize = 50,
                                      desiredConfidence = 0.9, infiniteReplacement = T)
 
   expect_equal(sampTwo$mean,  mean(trainingDataTwo[[1]]))
@@ -65,9 +64,9 @@ test_that("simple random processes data with at least two", {
 
 test_that("simple random accepts and processes vectors and dataframes equally", {
 
-  dataframe <- summarize_simple_random(trainingData, attribute, type = 'dataframe', popSize = 50,
+  dataframe <- summarize_simple_random(trainingData, attribute, popSize = 50,
                                        desiredConfidence = 0.9, infiniteReplacement = T)
-  vector <- summarize_simple_random(c(120, 140, 160, 110, 100, 90), type = 'vector', popSize = 50,
+  vector <- summarize_simple_random(c(120, 140, 160, 110, 100, 90), popSize = 50,
                                     desiredConfidence = 0.9, infiniteReplacement = T)
 
   expect_equal(dataframe, vector)
