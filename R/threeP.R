@@ -1,7 +1,7 @@
 #' @title Summarize 3P sample
 #' @description Summarizes population-level statistics for
 #' 3P sample data. The calculations are derived from Kim Iles
-#' 'A Sampler of Inventory Topics', pg 601.
+#' 'A Sampler of Inventory Topics' (2003).
 #' @usage summarize_threeP(data, sampSize, treeCount, BAF, cvPercent, 
 #'                         trueNetVBAR, height = FALSE, 
 #'                         desiredConfidence = 0.95)

@@ -287,7 +287,7 @@ Example: `summarize_two_stage(data, plot = T, 'volume', populationClusters = 16,
 
 ### Sampling Strategy Definition:
 
-All trees in an area are estimated. Select few trees are identified and carefully measured. The estimated values are then corrected through a ratio method. This function assumes that this is follows the Point 3P analysis. Variations of Point 3P can include a simple or clustered sample. Difference in analysis of these variations occur before the post-processing assessed in the package. 
+All trees in an area are estimated. Select few trees are identified and carefully measured. The estimated values are then corrected through a ratio method. This function assumes that this is follows the Point 3P analysis. Variations of Point 3P can include a simple or clustered sample. Difference in analysis of these variations occur before the post-processing assessed in the package. A book by Iles (2003) informed the content of this function.
   
 ### Function Definition:
 
@@ -357,7 +357,7 @@ Example: `summarize_threeP(dataNotPlot, cvPercent = 50, trueNetVBAR = 10, height
   
 An assessment of count data that follows the Poisson distribution.  
   
-Note: The term 'Poisson sampling' was also used to refer to a precursor to 3P sampling. The preliminary 3P version is discussed in Gregoire and Valentine. However, in this package the clearest distinction is that Poisson sampling analyzes to count data and 3P considers field estimations.
+Note: The term 'Poisson sampling' was also used to refer to a precursor to 3P sampling (Iles, 2003). The preliminary 3P version is discussed in Gregoire and Valentine's sampling strategies book (2008). However, in this package the clearest distinction is that Poisson sampling analyzes to count data and 3P considers field estimations.
   
 ### Function Definition:  
 
@@ -373,4 +373,14 @@ desiredConfidence | numeric desired confidence level (e.g. 0.9)
 ```{r include = FALSE}
 data <- c(2, 3, 4, 3, 4, 5, 2, 7)
 ```
+
+## Sources Used  
+
+Avery, T. E., & Burkhart, H., E. (1975). _Forest Measurements_ (5th ed.). New York, NY: McGraw-Hill.  
+
+Gregoire, T. G., & Valentine, H. T. (2008). _Sampling Strategies for Natural Resources and the Environment_. Boca Raton, FL: CRC Press.  
+
+Iles, K. (2003). _A Sampler of Inventory Topics_. Canada: Kim Iles & Associates Ltd.
+
+The Pennsylvania State University. (n.d.). _Poisson Sampling_. Retrieved from https://onlinecourses.science.psu.edu/stat504/node/57
 

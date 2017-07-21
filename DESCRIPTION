@@ -3,7 +3,7 @@ Title: Standard Forest Sampling Design Workups
 Version: 0.0.0.9000
 Authors@R: c(
     person("Karin", "Wolken", email = "kmwolken@mtu.edu", role = c("aut", "cre")),
-    person("Henry", "Rodman", role = "aut")
+    person("Henry", "Rodman", email = "henry@silviaterra.com", role = "aut")
     )
 Description: A library of functions that calculates workups for sampling designs commonly used in Forestry.
 Depends:
