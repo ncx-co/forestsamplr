@@ -4,15 +4,15 @@
 \alias{summarize_cluster}
 \title{Summarize cluster sample}
 \usage{
-summarize_cluster(data, plot = TRUE, attribute = NA,
+summarize_cluster(data, element = TRUE, attribute = NA,
   desiredConfidence = 0.95)
 }
 \arguments{
 \item{data}{data frame containing observations of variable of
-interest for either cluster-level or plot-level data.}
+interest for either cluster-level or element-level data.}
 
-\item{plot}{logical true if parameter data is plot-level, false if
-parameter data is cluster-level. Default is True.}
+\item{element}{logical true if parameter data is element-level 
+(plot-level), false if parameter data is cluster-level. Default is True.}
 
 \item{attribute}{character name of attribute to be summarized.}
 
@@ -34,7 +34,7 @@ dataPlot <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4, 5
                        attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950, 900, 1005, 1000,
                                 1250, 950, 900, 1005, 1000, 1250, 950, 900),
                        isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F, F, F, F, F))
-plot = TRUE
+element = TRUE
 attribute = 'attr'
 }
 }

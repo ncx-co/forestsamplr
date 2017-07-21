@@ -4,7 +4,7 @@
 \alias{summarize_all_cluster}
 \title{Summarize all cluster sample}
 \usage{
-summarize_all_cluster(data, attribute = NA, plot = TRUE, 
+summarize_all_cluster(data, attribute = NA, element = TRUE, 
                              plotTot = NA, 
                              desiredConfidence = 0.95,
                              bernoulli = F)
@@ -15,11 +15,11 @@ interest for either cluster-level or plot-level data.}
 
 \item{attribute}{character name of attribute to be summarized.}
 
-\item{plot}{logical true if parameter data is plot-level, false if
+\item{element}{logical true if parameter data is plot-level, false if
 parameter data is cluster-level. Default is True.}
 
 \item{plotTot}{numeric population size. Equivalent to the 
-total number of possible plots in the population.}
+total number of possible elements in the population.}
 
 \item{desiredConfidence}{numeric desired confidence level (e.g. 0.9).}
 
@@ -64,7 +64,7 @@ clusterLevelDataExample <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                                       sumAttr = c(1000, 1250, 950,
                                                   900, 1005), 
                                       isUsed = c(T, T, F, T, T))
-# Set plot = FALSE
+# Set element = FALSE
 
 
 # Bernoulli data can be expressed as: 

@@ -4,7 +4,7 @@
 \alias{summarize_all_srs}
 \title{Summarize all simple random sample}
 \usage{
-summarize_all_srs(data, attribute = 'attr', type = 'vector',
+summarize_all_srs(data, attribute = 'attr',
                          popSize = NA, desiredConfidence = 0.95, 
                          infiniteReplacement = F, bernoulli = F)
 }
@@ -15,8 +15,6 @@ to the level of interest (e.g. stand-level).}
 
 \item{attribute}{character name of attribute to be summarized.
 Must be defined if data is input as a data frame.}
-
-\item{type}{object type of data, e.g. 'dataframe' or 'vector'.}
 
 \item{popSize}{numeric population size. Defaults to NA (unknown popSize).}
 
@@ -48,7 +46,6 @@ and (3) SRS with a bernoulli distribution.
 # Vector data example:
 
 data <- c(120, 140, 160, 110, 100, 90)
-type <- 'vector'
 
 
 # Data frame data example:
@@ -56,7 +53,6 @@ type <- 'vector'
 data <- data.frame(bapa = c(120, 140, 160, 110, 100, 90), 
                    plots = c(1, 2, 3, 4, 5, 6))
 attribute <- 'bapa'
-type <- 'dataframe'
 
 
 # Bernoulli data example:
