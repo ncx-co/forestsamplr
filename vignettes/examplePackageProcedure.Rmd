@@ -20,6 +20,7 @@ The setting:
 
 ```{r include = TRUE}
 library(forestSampling)
+library(dplyr)
 ```
 
   She wasn't exactly sure how to start, so she took a few minutes to look at her data.
