@@ -36,7 +36,7 @@ summarize_simple_random <- function(data, attribute = 'attr', popSize = NA,
   type <- class(data)
   
   # converts variable of interest into a vector with a generic name
-  if (type == 'numeric') {
+  if (any(type == 'numeric')) {
     attr <- data
   } else {
     # makes sure data is expressed as a numeric vector
