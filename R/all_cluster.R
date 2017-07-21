@@ -2,7 +2,7 @@
 #' @description Summarizes population-level statistics for
 #' cluster sample data. This function has two options: (1) 
 #' Cluster sample with a normal distribution and (2) Cluster 
-#' sample with a bernoulli distribution.
+#' sample with a Bernoulli distribution.
 #' @usage summarize_all_cluster(data, attribute = NA, element = TRUE, 
 #'                              plotTot = NA, 
 #'                              desiredConfidence = 0.95,

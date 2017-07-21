@@ -3,7 +3,7 @@
 #' simple random sample data. This function has three options: (1) SRS 
 #' of a finite population or sampled without replacement,
 #' (2) SRS of an infinite population or sampled with replacement,
-#' and (3) SRS with a bernoulli distribution.
+#' and (3) SRS with a Bernoulli distribution.
 #' @usage summarize_all_srs(data, attribute = 'attr',
 #'                          popSize = NA, desiredConfidence = 0.95, 
 #'                          infiniteReplacement = F, bernoulli = F)

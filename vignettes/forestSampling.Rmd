@@ -136,7 +136,7 @@ Simple random sample (SRS) has 3 options:
     * Set `infiniteReplacement = TRUE`  
     * Data input can be as a vector or data frame  
     * Ex. `summarize_all_srs(data, attribute, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = T)`  
-3. SRS with a bernoulli distribution
+3. SRS with a Bernoulli distribution
     * Set `bernoulli = TRUE`
     * Data input can only be as a data frame
     * Ex. `summarize_all_srs(data, attribute, popSize = popTot, desiredConfidence = 0.95, infiniteReplacement = F, bernoulli = T)`
@@ -291,7 +291,7 @@ All trees in an area are estimated. Select few trees are identified and carefull
   
 ### Function Definition:
 
-`summarize_threeP(data, sampSize, treeCount, BAF, cvPercent, trueNetVBAR, height = FALSE, desiredConfidence = 0.95)`
+`summarize_threeP(data, cvPercent, trueNetVBAR, height = FALSE, plot = FALSE, desiredConfidence = 0.95)`
   
  Parameter        | Description
 ------------------|-----------------------------------------------
