@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Morals:   
+Imperatives:   
   1. Data input must be expanded prior to the function call.
   2. Data frame input needs to have the same column names as expressed in the example data (except for the attribute of interest, the name of which can be set in the function call).
   
@@ -33,24 +33,24 @@ head(simpleRandom, n=10)
 
 But this didn't quite fit the data format she read about in the Forest Sampling Vignette.
 
-Moral 1:
-First, she had to expand her data how she wanted and provide her attribute of interest. She wanted basal area per acre (given the incredibly rare, monstrously tall, secret population she sampled, this was a reasonable attribute to use). So, she ran this little R code:
+Imperative 1:
+First, she had to expand her data how she wanted and provide her attribute of interest. She wanted basal area per acre (given the incredibly rare, monstrously tall, secret population she sampled, this was a reasonable attribute to use). So, she ran this little chunk of R code:
 
-```{r include = FALSE}
+```{r, include = TRUE}
 expanded <- simpleRandom %>%
   mutate(bapaTree = pi * (DBH / 2) ^ 2 / 144) %>%
   group_by(plot) %>%
   summarize(bapa = sum(bapaTree) / sum(BAF))
 ```
 
-Moral 2:
+Imperative 2:
 Now, she checked the Forest Sampling Vignette to make sure that her data was on the right track.
 
 ```{r include = TRUE}
 head(expanded, n=12)
 ```
 
-She was thrilled. Her data had a column she could identify as her attribute of interest in a call similar to `attribute <- 'bapa`. She did jumping jacks for joy. She was now ready to run the package's function.
+She was thrilled. Her data had a column she could identify as her attribute of interest in a call similar to `attribute <- 'bapa' `. She did jumping jacks for joy. She was now ready to run the package's function.
 
 She looked at the Forest Sampling Vignette. The simple random sample function had three options:
 1. For a finite population or sampled without replacement
@@ -62,7 +62,7 @@ She'd sampled a finite population without replacement, so she decided Option #1 
 Looking at the example function call, she knew it had to look something like this:
 `summarize_all_srs(data, attribute, type, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`
 
-She modified this to match her data's needs, ran the code, and got:
+She modified this to match her data structure, ran the code, and got:
 
 ```{r include = TRUE}
 summarize_all_srs(expanded, attribute = 'bapa', popSize = NA, desiredConfidence = 0.90, infiniteReplacement = F)
