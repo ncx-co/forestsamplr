@@ -1,0 +1,1212 @@
+---
+title: "Cruise Simulation Report"
+author: SilviaTerra
+output: html_document
+runtime: shiny
+---
+
+# Introduction
+
+In measuring forest attributes, it is often the case that two different estimates of some quantity of interest are produced for the same forested area. For example, for a given stand, a cruise conducted at an intensity of 1 plot per 10 acres might produce a mean basal area estimate of 80 ft^2^ per acre, with a 90% confidence interval of $\pm$ 8 ft^2^ per acre. A follow-up check cruise might then produce an estimate of 70 ft^2^ with a 90% confidence interval of $\pm$ 7 ft^2^ per acre. Each cruise has a point estimate with a 90% CI that is $\pm$ 10% of the point estimate, yet neither point estimate falls within the confidence interval of the other.
+
+In such situations, the question then often arises, "Which estimate is better?". In the case when one of the estimates was produced using a model-based or model-assisted process, there is often also an immediate follow-up question, "Can I trust these methods?" When confronted with this problem, landowners and other stakeholders understandably need a framework by which to understand the ways in which differences in estimates can arise and how to evaluate them in the context of what is reasonable to expect.
+
+To aid in this kind of decision-making and assessment, this report is written with two goals in mind. First, it demonstrates some principles of variation in estimates and confidence intervals that can arise when doing repeated sampling. This is meant simply to demonstrate in a concrete and general way the kinds of differences that you might expect between repeated samples drawn from the same population. Second, it offers a way to compare two sets of real-world estimates by comparing the differences in those estimates to those we might expect to arise from repeated sampling.
+
+When used for either purpose, the simulation tool is built on a simple conceptual framework with five discrete steps.
+
+1. Build a population of stands
+2. Sample the population at a given intensity
+3. Examine the differences that arise in repeated samples
+4. Sample a population at a second intensity
+5. Examine the differences that arise between the first and second sample
+
+This simple simulation framework allows us to do repeated sampling without the great time and expense of measuring real forests. Because we have absolute confidence regarding the population and how the samples arose, we can get a clear look at the differences that arise from repeated sampling, and thereby contextualize results we might see in the real world in that light.
+
+```{r options, echo = F}
+
+knitr::opts_chunk$set(
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE,
+  gganimate = list(
+    nframes = 100,
+    fps = 3
+  )
+)
+
+```
+
+# Step 1: Building an Imaginary Forest
+
+```{r setup, echo = TRUE}
+library(tidyverse)
+library(gganimate)
+library(parallel)
+library(truncnorm)
+```
+
+The first step is to build a simulated population from which we will be drawing samples. There are two different ways you can build this population, either by specifying stand characteristics interactively, or by uploading a .csv file with stand information.
+
+### Creating the population interactively
+
+To specify stand characteristics interactively, use the "Create Data" tab below to provide the stand characteristics.
+
+- Number of stands: the number of stands you want to simulate
+- Minimum stand size: the minimum stand size you want to possibly be generated
+- Maximum stand size: the maximum stand size you want to possibly be generated
+- Minimum measurement: the minimum value you could possibly measure in a stand
+- Maximum measurement: the maximum value you could possibly measure in a stand
+
+Note that the minimum and maximum for stand size and measurement should represent the absolute possible maximum or minimum values that could possibly observed.
+
+When you click "Simulate Forest", a simulation population is generated for the number of stands specified. For details on how this population is generated in terms of distribution and parameter choice, see our SilviaTerra Biometrics Blog post [about simulation](https://biometrics.silviaterra.com/2019/03/01/simulation)
+
+### Uploading stand information
+
+In addition to specifying stands interactively, you can also create stands by uploading a valid .csv file that contains the following fields:
+
+- stand_id: the name of the stand
+- acres: the acreage of the stand
+- mean: the mean measurement of the stand
+- std_dev: the standard deviation of the stand measurements
+
+When you upload stand information, the report generates a forest simulation using a truncated normal distribution using the input parameters specified in the file.
+
+```{r forest_input}
+
+tabsetPanel(
+  id = "forest_tabs",
+  tabPanel(
+    "Create Data",
+    numericInput("n_sim_stands", label = "Number of Stands", value = 8),
+    numericInput("min_acres", label = "Minimum Stand Size", value = 10),
+    numericInput("max_acres", label = "Maximum Stand Size", value = 150),
+    numericInput("min_meas", label = "Minimum Measurement", value = 0),
+    numericInput("max_meas", label = "Maximum Measurement", value = 350),
+    actionButton("specify_stands", "Simulate Forest")
+  ),
+  tabPanel(
+    "Upload Data",
+    fileInput("user_file", label = "Label"),
+    numericInput("min_meas_upload", label = "Minimum Measurement", value = 0),
+    numericInput("max_meas_upload", label = "Maximum Measurement", value = 350),
+    actionButton("upload_stands", "Simulate Forest")
+  )
+)
+
+vals <- reactiveValues()
+vals$user_data <- NULL
+vals$n_sim_stands <- 8
+vals$min_acres <- 10
+vals$max_acres <- 150
+vals$min_meas <- 0
+vals$max_meas <- 350
+vals$stand_acres <- NULL
+vals$forest <- NULL
+vals$diff_quantile <- 0.4
+vals$alpha <- 0.1
+vals$n_sim <- 300
+
+observeEvent(input$specify_stands, {
+  vals$user_data <- NULL
+  vals$n_sim_stands <- input$n_sim_stands
+  vals$user_mean <- NULL
+  vals$user_sd <- NULL
+  vals$min_acres <- input$min_acres
+  vals$max_acres <- input$max_acres
+  vals$min_meas <- input$min_meas
+  vals$max_meas <- input$max_meas
+  vals$stand_acres <- NULL
+})
+
+observeEvent(input$upload_stands, {
+  vals$user_data <- read_csv(input$user_file$datapath)
+  vals$n_sim_stands <- nrow(vals$user_data)
+  vals$user_mean <- vals$user_data$mean
+  vals$user_sd <- vals$user_data$std_dev
+  vals$min_acres <- NULL
+  vals$max_acres <- NULL
+  vals$min_meas <- input$min_meas_upload
+  vals$max_meas <- input$max_meas_upload
+  vals$stand_acres <- vals$user_data$acres
+})
+
+```
+
+```{r make_stand}
+
+simulate_stand_size <- function(n_stands, min_acres, max_acres) {
+  beta_draw <- rbeta(n = n_stands, shape1 = 2, shape2 = 5)
+  beta_draw * (max_acres - min_acres) + min_acres
+}
+
+make_stand_beta <- function(stand_id, acres, min_meas, max_meas) {
+  
+  beta_draw <- rbeta(
+    n = acres * 1e3,
+    shape1 = runif(n = 1, 1, 15),
+    shape2 = runif(n = 1, 15, 20)
+  )
+  
+  samps <- beta_draw * (max_meas - min_meas) + min_meas
+  
+  list(
+    stand_id = stand_id,
+    acres = acres,
+    samps = samps
+  )
+}
+
+make_stand_norm <- function(stand_id, acres, mean, sd, min_meas, max_meas) {
+  
+  samps <- rtruncnorm(
+    n = acres * 1e3,
+    mean = mean,
+    sd = sd,
+    a = min_meas,
+    b = max_meas
+  )
+  
+  list(
+    stand_id = stand_id,
+    acres = acres,
+    samps = samps
+  )
+}
+
+```
+
+```{r make_forest}
+
+observeEvent(input$specify_stands, {
+  
+  vals$stand_acres <- simulate_stand_size(
+    n_stands = vals$n_sim_stands,
+    min_acres = vals$min_acres,
+    max_acres = vals$max_acres
+  )
+  
+  vals$forest <- map2(
+    .x = 1:vals$n_sim_stands, .y = vals$stand_acres, ~ make_stand_beta(
+      stand_id = .x,
+      acres = .y,
+      min_meas = vals$min_meas, 
+      max_meas = vals$max_meas
+    )
+  )
+  
+})
+
+observeEvent(input$upload_stands, {
+  
+  vals$forest <- pmap(
+    .l = list(
+      stand_id = vals$user_data$stand_id,
+      acres = vals$stand_acres,
+      mean = vals$user_mean,
+      sd = vals$user_sd
+    ),
+    .f = make_stand_norm,
+    min_meas = vals$min_meas,
+    max_meas = vals$max_meas
+  )
+  
+})
+
+```
+
+### Generating the population
+
+Based on the inputs that you defined in the panel above, we generated a population for each of the `r reactive(vals$n_sim_stands)` stands. The populations consists of 1000 possible measurements per acre that could be observed for each stand. You can see the distribution of each stand population below, as well as the distribution of all the measurements across all stands. The table shows the population statistics for each stand. 
+
+```{r stand_hist}
+
+get_stand_data <- function(stand) {
+  tibble(
+    stand_id = stand$stand_id,
+    acres = stand$acres,
+    measurement = stand$samps
+  )
+}
+
+forest_dfr <- eventReactive(
+  vals$forest,
+  {
+    map_dfr(vals$forest, get_stand_data)
+  })
+
+renderPlot({
+  
+  ggplot(forest_dfr()) + 
+    geom_density(
+      aes(x = measurement, group = stand_id)
+    ) +
+    theme_bw() +
+    facet_wrap(~ stand_id) +
+    ggtitle("Stand Populations")
+
+})
+
+```
+
+```{r stand_anim, eval = FALSE, include = FALSE}
+
+renderImage({
+  outfile <- tempfile(fileext='.gif')
+
+  p <- ggplot(forest_dfr()) +
+    geom_density(
+      aes(x = measurement, group = stand_id)) +
+    transition_manual(factor(stand_id)) +
+    ggtitle("Stand: {current_frame}") +
+    theme_bw()
+
+  anim_save("outfile.gif", animate(p))
+
+  # Return a list containing the filename
+  list(
+    src = "outfile.gif",
+    contentType = 'image/gif',
+    width = 400,
+    height = 300
+  )
+}, deleteFile = TRUE)
+
+```
+
+```{r forest_hist}
+
+renderPlot({
+  ggplot(forest_dfr()) +
+    geom_histogram(
+      aes(x = measurement), binwidth = 5
+    ) +
+    ggtitle("All Forest Stands") +
+    theme_bw()
+})
+
+```
+
+```{r pop_table}
+
+pop_stats <- eventReactive(
+  vals$forest, {
+    forest_dfr() %>%
+      group_by(stand_id, acres) %>%
+      summarize(
+        mu = mean(measurement),
+        sigma = sd(measurement)
+      )
+  }
+)
+
+renderTable({
+  pop_stats() %>%
+    setNames(c("Stand ID", "Acres", "mu", "sigma"))
+})
+```
+
+## Step 2: Conducting a Cruise
+
+Once we have generated the population of possible measurements for each stand, the next step is to sample each stand population.
+
+### Specify Number of Simulations
+
+Each stand will have a number of samples generated by the value that is specified in the "Number of Simulated Cruises" interface below. The more simulations you generate, the more stable your results will be, but also computation will take longer. In general, 100 simulations or so should be sufficient to generate stable results.
+
+### Pick an $\alpha$, any $\alpha$
+
+You can also adjust the $\alpha$ level that determines the width of the confidence interval around the mean for each simulated cruise. Common levels of $\alpha$ range from 0.8 to 0.95, but in general terms the larger the level of $\alpha$, the wider the confidence interval will be around the estimate of the mean for each simulated cruise.
+
+### Specify Sample Size
+
+Each of the simulation cruises that are generated for each stand will be conducted at the same intensity, but there are three different ways that the sample size for each stand can be determined. 
+
+1. Fixed intensity sample size: acre per plot sample size
+2. Target precision sample size: sample size determined by the variance of the stand and the level of alpha
+3. Custom sample size: sample size that is given by uploading a custom file.
+
+For uploading data, make sure your file has the following fields:
+- stand_id: must match the ids of the file uploaded in the forest generation step above
+- n_plots: the number of simulated sample plots to draw for each stand
+
+### Simulate the Cruise
+
+Once you have specified the number of simulations, alpha, and the number of samples to collect from each stand in each simulation, go ahead and click the "Simulate Cruise" button to actually generate the samples.
+
+```{r sample_input}
+
+vals$n_cruise_plots <- NULL
+
+inputPanel(
+  id = "cruise_sim_settings",
+  numericInput(
+    "n_sim", 
+    label = "Number of Simulated Cruises", 
+    value = 300
+  ),
+  
+  sliderInput(
+    "alpha",
+    label = "alpha", 
+    min = 0.01, 
+    max = 0.5, 
+    value = 0.1
+  ),
+  
+  sliderInput(
+    "diff_quantile", 
+    label = "Difference Quantile", 
+    min = 0.01, 
+    max = 0.99, 
+    value = 0.9
+  ),
+  
+  sliderInput(
+    "incl_rate_test", 
+    label = "Inclusion Rate", 
+    min = 0.01, 
+    max = 0.99, 
+    value = 0.4
+  )
+)
+
+tabsetPanel(
+  id = "cruise_tabs",
+  tabPanel(
+    "Fixed Cruise Intensity",
+    
+    numericInput(
+      "cruise_intensity", 
+      label = "Acres per Plot", 
+      value = 5
+    ),
+    
+    actionButton(
+      "fixed_cruise_button",
+      "Simulate Cruise"
+    )
+  ),
+  
+  tabPanel(
+    "Precision Cruise Intensity",
+    
+    sliderInput(
+      "precision",
+      label = "Precision",
+      min = 0.01,
+      max = 0.2,
+      value = 0.1
+    ),
+    
+    actionButton(
+      "precision_cruise_button",
+      "Simulate Cruise"
+    )
+  ),
+  
+  tabPanel(
+    "Upload Cruise Intensity",
+    
+    fileInput("user_cruise", label = "Stand Sample Sizes"),
+    
+    actionButton("upload_cruise_button", "Simulate Cruise")
+  )
+)
+
+vals$n_cruise_plots <- NULL
+
+observeEvent(input$fixed_cruise_button, {
+  vals$n_sim <- input$n_sim
+  vals$alpha <- input$alpha
+  vals$diff_quantile <- input$diff_quantile
+  vals$incl_rate_test <- input$incl_rate_test
+  
+  vals$n_cruise_plots <- ceiling(vals$stand_acres / input$cruise_intensity)
+})
+
+observeEvent(input$precision_cruise_button, {
+  vals$n_sim <- input$n_sim
+  vals$alpha <- input$alpha
+  vals$diff_quantile <- input$diff_quantile
+  vals$incl_rate_test <- input$incl_rate_test
+  
+  zScore <- qnorm(1 - (vals$alpha / 2))
+  sePct <- input$precision / zScore
+  
+  vals$n_cruise_plots <- pop_stats() %>%
+    mutate(
+      cv = sigma / mu,
+      n_plots = round((cv / sePct) ^ 2)) %>%
+    pull(n_plots)
+  
+})
+
+observeEvent(input$upload_cruise_button, {
+  cruiseUpload <- read_csv(input$user_cruise$datapath)
+  
+  vals$n_sim <- input$n_sim
+  vals$alpha <- input$alpha
+  vals$diff_quantile <- input$diff_quantile
+  vals$incl_rate_test <- input$incl_rate_test
+  
+  vals$n_cruise_plots <- cruiseUpload %>%
+    left_join(pop_stats(), by = "stand_id") %>%
+    pull(n_plots)
+})
+
+```
+
+```{r cruise_functions}
+
+get_sim_stats <- function(sim_df, sim_name, alpha) {
+  sim_df %>%
+    group_by(stand_id, acres) %>%
+    summarize(
+      sim = sim_name,
+      n_plots= n(),
+      mean_measurement = mean(measurement),
+      sd_measurement = sd(measurement),
+      CV = sd_measurement / mean_measurement,
+      CI = (
+        sd_measurement / sqrt(n_plots)
+      ) * qt(1 - alpha / 2, df = n_plots - 1),
+      lower = mean_measurement - CI,
+      upper = mean_measurement + CI
+    )
+}
+
+cruise_comparison <- function(stand, cruise_data, 
+                              pop_stats, cruise_stats, 
+                              alpha, diff_quantile) {
+  
+  stand_mu <- pop_stats %>%
+    filter(stand_id == stand) %>%
+    pull(mu)
+  
+  stand_acres <- pop_stats %>%
+    filter(stand_id == stand) %>%
+    pull(acres)
+  
+  sub <- cruise_stats %>%
+    filter(stand_id == stand) %>%
+    mutate(
+      CI_contains_mu = stand_mu > lower & stand_mu < upper
+    )
+  
+  mat_dim <- nrow(sub)
+  empty_mat <- matrix(nrow = mat_dim, ncol = mat_dim)
+  diff_matrix <- empty_mat
+  incl_matrix <- empty_mat
+  overlap_matrix <- empty_mat
+  # t_test_matrix <- empty_mat
+  
+  for (r in 1:mat_dim) {
+    
+    PE_r <- sub$mean_measurement[r] # point estimate of cruise r
+    PE_vector <- sub$mean_measurement
+    
+    upper_r <- sub$upper[r] # upper CI of cruise r
+    lower_r <- sub$lower[r] # lower CI of cruise r
+    
+    upper <- sub$upper
+    lower <- sub$lower
+    ### TESTS ###
+    
+    # Is the point estimate of cruise r within the CI bounds of cruise c?
+    inclusion_test <- PE_r <= upper & PE_r >= lower
+    
+    # Do the CIs of cruise r overlap with those of cruise c?
+    overlap_test <- upper_r > lower & lower_r < upper
+    
+    # What is the difference in the sample means of cruise r and cruise c?
+    diff <- PE_r - PE_vector
+    
+    ### OUTPUT ###
+    incl_matrix[r, ] <- inclusion_test
+    overlap_matrix[r, ] <- overlap_test
+    diff_matrix[r, ] <- diff
+    
+    # for (c in r:mat_dim) {
+    #   ### DATA ###
+    #   sample_r <- cruise_data[[r]] %>%
+    #     filter(stand_id == stand) %>%
+    #     pull(measurement)
+    #   
+    #   sample_c <- cruise_data[[c]] %>%
+    #     filter(stand_id == stand) %>%
+    #     pull(measurement)
+      
+      ### t_test of a difference between two means; NULL is "not different"
+      # t_test <- t.test(sample_r, sample_c)
+      # t_test_matrix[r, c] <- t_test$p.value
+    # }
+  }
+  
+  # Process tests
+  lower_incl_matrix <- incl_matrix[lower.tri(incl_matrix)]
+  upper_incl_matrix <- incl_matrix[upper.tri(incl_matrix)]
+  incl_num <- sum(lower_incl_matrix, upper_incl_matrix)
+  divisor <- length(lower_incl_matrix) * 2
+  
+  lower_overlap_matrix <- overlap_matrix[lower.tri(overlap_matrix)]
+  upper_overlap_matrix <- overlap_matrix[upper.tri(overlap_matrix)]
+  overlap_num <- sum(lower_overlap_matrix, upper_overlap_matrix)
+  
+  lower_diff_matrix <- diff_matrix[lower.tri(diff_matrix)]
+  # upper_t_matrix <- t_test_matrix[upper.tri(t_test_matrix)]
+  # t_test <- upper_t_matrix < alpha
+  # rejection_rate <- sum(t_test) / length(t_test)
+  
+  # Generate output
+  tibble(
+    stand_id = stand,
+    acres = stand_acres,
+    CI_contains_mu = sum(sub$CI_contains_mu) / mat_dim,
+    PE_inclusion_rate = incl_num / divisor,
+    CI_overlap_rate = overlap_num / divisor,
+    # false_rejection_rate = rejection_rate,
+    abs_diff_quantile = quantile(abs(lower_diff_matrix), diff_quantile),
+    # t_test_p_values = list(upper_t_matrix),
+    sim_diffs = list(lower_diff_matrix)
+  )
+}
+
+```
+
+```{r cruise_simulations}
+
+cruise_stands <- function(stand, n_plots) {
+  tibble(
+    stand_id = stand$stand_id,
+    acres = stand$acres,
+    plot_id = 1 : n_plots,
+    measurement = sample(stand$samps, size = n_plots)
+  )
+}
+
+vals$cruise_data <- NULL
+
+observeEvent(vals$n_cruise_plots, {
+  
+  vals$cruise_data <- map(
+    1:vals$n_sim, ~ map2_dfr(
+      vals$forest,
+      vals$n_cruise_plots,
+      cruise_stands
+    )
+  ) %>% setNames(paste0("sim_", 1:vals$n_sim))
+  
+})
+
+cruise_stats <- eventReactive(vals$cruise_data, {
+  map2_dfr(
+    vals$cruise_data, 
+    names(vals$cruise_data), 
+    get_sim_stats, 
+    alpha = vals$alpha
+  )
+})
+
+```
+
+## Compare Repeated Samples
+
+Now we have the `r reactive(vals$n_sim)` cruises for each stand generated by sampling the stand populations at the specified intensities. From each cruise we now have an estimate of the population mean, $\mu$ as well as a confidence interval around that estimate, the width of which depends on the given level of $\alpha$. By nature of the fact that each cruise is a random sample that came about in each of the `r reactive(vals$n_sim)` simulations, however, the point estimates of $\mu$ and the CIs around those point estimates will vary from cruise to cruise within each stand based on the individual sample mean and variance.
+
+How much do the estimates actually vary over the course of the `r reactive(vals$n_sim)` simulations? We can look at this in a few different ways. First, it is useful just to look at the distribution of point estimates compared to the population mean. That is shown in the figure below, with the grey histogram showing the distribution of the population measurements, the blue histogram showing the distribution of mean estimates, and the dashed line showing the location of $\mu$.
+
+```{r cruise_plot1}
+
+renderPlot({
+  ggplot() +
+    stat_bin(
+      data = forest_dfr(),
+      aes(
+        x = measurement, 
+        y = stat(count / max(count)), 
+        group = stand_id), binwidth = 5
+    ) +
+    stat_bin(
+      data = cruise_stats(),
+      aes(
+        x = mean_measurement,
+        y = stat(count / max(count))), binwidth = 10,
+      fill = "blue", alpha = 0.3
+    ) +
+    geom_vline(
+      data = pop_stats(),
+      aes(xintercept = mu), linetype = "dashed"
+    ) +
+    ylab("Normalized count") +
+    xlab("Distribution of mean estimates") +
+    facet_wrap(~ stand_id) +
+    theme_bw()
+})
+
+```
+
+1. __Does the CI contain $\mu$?__ First, we can see at what rate the confidence intervals from all these cruises actually contain the true mean. If sampling theory works, the rate at which $\mu$ is included in the CIs should asymptotically approach $1 - \alpha$ as the number of simulations goes up.
+2. __What is the CI overlap rate?__ Second, we can ask a related question - at what rate do the confidence intervals from simulated cruises overlap?
+3. __What is the point estimate within CI inclusion rate?__ Third, we can ask at what rate does the point estimate of one cruise fall within the confidence interval of another? 
+
+The actual rates from the simulation are provided for each stand in the table below.
+
+```{r test_eval}
+
+vals$cruise_compare <- NULL
+
+observeEvent(vals$cruise_data, {
+  vals$cruise_compare <- lapply(
+    pop_stats()$stand_id,
+    cruise_comparison,
+    cruise_data = vals$cruise_data,
+    pop_stats = pop_stats(),
+    cruise_stats = cruise_stats(),
+    diff_quantile = vals$diff_quantile,
+    alpha = vals$alpha
+    # parallel not working 
+    # mc.cores = parallel::detectCores()
+  ) %>%
+    bind_rows()
+})
+
+cruise_compare_summary <- eventReactive(
+  vals$cruise_compare, {
+    pop_stats() %>%
+      ungroup() %>%
+      left_join(select(vals$cruise_compare, -acres), by = "stand_id") %>%
+      select(-sim_diffs)
+    # select(-sim_diffs, -t_test_p_values)
+  }
+)
+
+renderTable({
+  cruise_compare_summary()
+})
+
+```
+
+In addition to the rates above, we can also look at a fourth quantity: __What is the expected distribution of the difference in point estimates?__
+
+To look at this, we compute the differences between point estimates for all cruises, take the absolute value, and look at the distribution of the results.
+This distribution of the absolute value of the differences between point estimates provides a sense of how far apart you might expect two point estimates to be if they were computed from samples of the same size drawn from the same population.
+
+```{r cruise_plot2}
+renderPlot({
+  if(is.null(vals$cruise_compare)) {return()}
+  data <- vals$cruise_compare %>%
+    select(stand_id, abs_diff_quantile, sim_diffs) %>%
+    unnest()
+  
+  ggplot(data) +
+    geom_histogram(aes(x = sim_diffs), binwidth = 4) +
+    xlab("Difference between simulated means") +
+    geom_vline(
+      aes(xintercept = abs_diff_quantile), linetype = "dashed", alpha = 0.5
+    ) +
+    geom_vline(
+      aes(xintercept = -abs_diff_quantile), linetype = "dashed", alpha = 0.5
+    ) +
+    theme_bw() +
+    facet_wrap(~ stand_id)
+  
+  ggplot(data) +
+    stat_bin(aes(x = abs(sim_diffs)), binwidth = 5, boundary = 0) +
+    geom_vline(
+      aes(xintercept = abs_diff_quantile), linetype = "dashed", alpha = 0.5
+    ) +
+    xlab("Absolute difference between simulated means") +
+    theme_bw() +
+    facet_wrap(~ stand_id)
+})
+
+```
+
+```{r cruise_plot3, eval=FALSE, include=FALSE}
+
+renderPlot({
+  if(is.null(vals$cruise_compare)) {return()}
+  data <- vals$cruise_compare %>%
+    select(stand_id, t_test_p_values) %>%
+    unnest()
+  
+  ggplot(data) +
+    geom_histogram(aes(x = t_test_p_values), binwidth = 0.04) +
+    xlab("'Difference of two means' t-test p-values") +
+    theme_bw() +
+    facet_wrap( ~ stand_id)
+})
+
+```
+
+---
+## Comparison Cruise
+
+Now we have a pretty good idea of the kind of variation we can expect between cruises of the same intensity. What about cruises of two _different_ intensities? What about comparing estimates that do not come from cruises at all, but provide some measure of precision of the estimate?
+
+We can look at these questions by conducting a second round of simulated cruises that sample at a new intensity and comparing the results to those obtained in the first cruise simulation.
+
+There are four different ways that you can specify the way this second round of cruising is conducted.
+
+1. __Fixed Intensity:__ Cruise at a specified acre per plot intensity in all stands.
+2. __Precision Intensity:__ Cruise at an intensity calculated from the stand variance and your specified $\alpha$.
+3. __Upload Plot Intensity:__ If you have a specific number of plots per stand that you would like to compare, you can upload a .csv file with the following fields:
+
+- `stand_id`: the ID for each stand matching the file uploaded in the first simulation
+- `n_plots`: the number of plots to use for each stand in the second simulation
+
+4. __Upload Comparison Estimates:__ If you have point and precision estimates, but not a specific sample size for each stand, you can upload a .csv file with the following fields
+
+- `stand_id`: the ID for each stand matching the file uploaded in the first simulation
+- `estimate`: the point estimate for each stand
+- `se`: the standard error of the estimate or some other measure of precision that will be used like a standard error to compute sample sizes to apply in the second simulation
+
+Once you have specified the way the second cruise simulation will be conducted, click "Simulate Comparison" to generate the comparison.
+
+```{r compare_button}
+
+tabsetPanel(
+  id = "cruise_tabs",
+  tabPanel(
+    "Compare Fixed Intensity Cruise",
+    
+    numericInput(
+      "comp_intensity", 
+      label = "Acres per Plot", 
+      value = 10
+    ),
+    
+    actionButton(
+      "fixed_comp_button",
+      "Simulate Comparison"
+    )
+  ),
+  
+  tabPanel(
+    "Compare Precision Intensity Cruise",
+    
+    sliderInput(
+      "comp_precision",
+      label = "Precision",
+      min = 0.01,
+      max = 0.2,
+      value = 0.1
+    ),
+    
+    actionButton(
+      "precision_comp_button",
+      "Simulate Comparison"
+    )
+  ),
+  
+  tabPanel(
+    "Upload Plot Intensity",
+    
+    fileInput("user_comp", label = "Comparison Stand Sample Sizes"),
+    
+    actionButton("upload_comp_cruise_button", "Simulate Comparison")
+  ),
+  
+  tabPanel(
+    "Upload Comparison Estimates",
+    
+    fileInput("user_comp_estimates", label = "Comparison Stand Estimates"),
+    
+    actionButton("upload_comp_estimates_button", "Simulate Comparison")
+  )
+  
+)
+
+observeEvent(input$fixed_comp_button, {
+  vals$n_comp_plots <- ceiling(vals$stand_acres / input$comp_intensity)
+  vals$estimates <- NULL
+  vals$est_diff <- NULL
+})
+
+observeEvent(input$precision_comp_button, {
+  comp_zScore <- qnorm(1 - (vals$alpha / 2))
+  comp_sePct <- input$precision / comp_zScore
+  vals$estimates <- NULL
+  vals$est_diff <- NULL
+  
+  vals$n_comp_plots <- pop_stats() %>%
+    mutate(
+      cv = sigma / mu,
+      n_plots = round((cv / comp_sePct) ^ 2)) %>%
+    pull(n_plots)
+  
+})
+
+observeEvent(input$upload_comp_cruise_button, {
+  compUpload <- read_csv(input$user_comp$datapath)
+  vals$estimates <- NULL
+  vals$est_diff <- NULL
+  
+  vals$n_comp_plots <- compUpload %>%
+    left_join(pop_stats(), by = "stand_id") %>%
+    pull(n_plots)
+})
+
+observeEvent(input$upload_comp_estimates_button, {
+  compEstUpload <- read_csv(input$user_comp_estimates$datapath)
+  vals$estimates <- compEstUpload %>%
+    left_join(pop_stats(), by = "stand_id") %>%
+    pull(estimate)
+  
+  vals$n_comp_plots <- compEstUpload %>%
+    left_join(pop_stats(), by = "stand_id") %>%
+    mutate(
+      n_plots = ceiling((sigma / se) ^ 2),
+      n_plots = ifelse(n_plots < 2, 2, n_plots)
+    ) %>%
+    pull(n_plots)
+  
+})
+
+```
+
+```{r comparison_cruise}
+
+comp_data <- eventReactive(
+  vals$n_comp_plots, {
+    map(
+      1:vals$n_sim, 
+      ~ map2_dfr(
+        vals$forest,
+        vals$n_comp_plots,
+        cruise_stands
+      )
+    ) %>%
+      setNames(paste0("sim_", 1:vals$n_sim))
+  }
+)
+
+comp_stats <- eventReactive(
+  comp_data(), {
+    map2_dfr(
+      comp_data(), 
+      names(comp_data()), 
+      get_sim_stats, 
+      alpha = vals$alpha
+    )
+  }
+)
+
+```
+
+```{r valid_compare_function}
+
+validation_comparison <- function(
+  stand, cruise_data, comp_data, 
+  pop_stats, cruise_stats, comp_stats, 
+  alpha, diff_quantile
+) {
+  
+  stand_mu <- pop_stats %>%
+    filter(stand_id == stand) %>%
+    pull(mu)
+  
+  stand_sigma <- pop_stats %>%
+    filter(stand_id == stand) %>%
+    pull(sigma)
+  
+  stand_acres <- pop_stats %>%
+    filter(stand_id == stand) %>%
+    pull(acres)
+  
+  sub_cruise <- cruise_stats %>%
+    filter(stand_id == stand) %>%
+    mutate(
+      CI_contains_mu = stand_mu > lower & stand_mu < upper
+    )
+  
+  sub_comp <- comp_stats %>%
+    filter(stand_id == stand) %>%
+    mutate(
+      CI_contains_mu = stand_mu > lower & stand_mu < upper
+    )
+  
+  mat_dim <- nrow(sub_cruise)
+  empty_mat <- matrix(nrow = mat_dim, ncol = mat_dim)
+  diff_matrix <- empty_mat
+  cruise_incl_matrix <- empty_mat
+  comp_incl_matrix <- empty_mat
+  overlap_matrix <- empty_mat
+  t_test_matrix <- empty_mat
+  
+  for(r in 1:mat_dim) {
+    ### DATA ###
+    PE_cruise <- sub_cruise$mean_measurement[r] # point estimate from cruise
+    PE_comp <- sub_comp$mean_measurement[r] # point estimate from comparison
+    
+    upper_cruise <- sub_cruise$upper # upper CI of cruise
+    lower_cruise <- sub_cruise$lower # lower CI of cruise
+    
+    upper_r <- upper_cruise[r]
+    lower_r <- lower_cruise[r]
+    
+    upper_comp <- sub_comp$upper # upper CI of comparison
+    lower_comp <- sub_comp$lower # lower CI of comparison
+    
+    ### TESTS ###
+    # Is the point estimate of cruise within the CI bounds of comparison?
+    cruise_incl_test <- PE_cruise <= upper_comp & PE_cruise >= lower_comp
+    
+    # Is the point estimate of comparison in the CI bounds of cruise?
+    comp_incl_test <- PE_comp <= upper_cruise & PE_comp <= lower_cruise
+    
+    # Do the CIs of cruise overlap with those of comparison?
+    overlap_test <- upper_r > lower_comp & lower_r < upper_comp
+    
+    # What is the difference in the sample means of cruise and comparison?
+    diff <- PE_cruise - sub_comp$mean_measurement
+    
+    ### OUTPUT ###
+    cruise_incl_matrix[r, ] <- cruise_incl_test
+    comp_incl_matrix[r, ] <- comp_incl_test
+    overlap_matrix[r, ] <- overlap_test
+    diff_matrix[r, ] <- diff
+    
+    # for (c in 1:mat_dim) {
+    #   ### DATA ###
+    #   sample_r <- cruise_data[[r]] %>%
+    #     filter(stand_id == stand) %>%
+    #     pull(measurement)
+    #   
+    #   sample_c <- valid_data[[c]] %>%
+    #     filter(stand_id == stand) %>%
+    #     pull(measurement)
+    #   
+    #   ### t_test of a difference between two means; NULL is "not different"
+    #   t_test <- t.test(sample_r, sample_c)
+    #   t_test_matrix[r, c] <- t_test$p.value
+    # }
+  }
+  
+  # Process tests
+  
+  cruise_mu_test <- sum(sub_cruise$CI_contains_mu) / mat_dim
+  comp_mu_test <- sum(sub_comp$CI_contains_mu) / mat_dim
+  cruise_incl_rate <- sum(cruise_incl_matrix) / length(cruise_incl_matrix)
+  comp_incl_rate <- sum(comp_incl_matrix) / length(comp_incl_matrix)
+  overlap_rate <- sum(overlap_matrix) / length(overlap_matrix)
+  
+  # p_vector <- as.vector(t_test_matrix)
+  diff_vector <- as.vector(diff_matrix)
+  
+  # t_test <- p_vector < alpha
+  # rejection_rate <- sum(t_test) / length(t_test)
+  
+  
+  # Generate output
+  out <- tibble(
+    stand_id = stand,
+    acres = stand_acres,
+    mu = stand_mu,
+    sigma = stand_sigma,
+    cruise_CI_contains_mu = cruise_mu_test,
+    comp_CI_contains_mu = comp_mu_test,
+    cruise_CI_contains_comp_PE = comp_incl_rate,
+    comp_CI_contains_cruise_PE = cruise_incl_rate,
+    CI_overlap_rate = overlap_rate,
+    # false_rejection_rate = rejection_rate,
+    abs_diff_quantile = quantile(abs(diff_vector), diff_quantile),
+    # t_test_p_values = list(p_vector),
+    sim_diffs = list(diff_vector)
+  )
+}
+```
+
+```{r valid_compare}
+valid_compare <- eventReactive(
+  comp_stats(), {
+    
+    map_dfr(
+      pop_stats()$stand_id,
+      validation_comparison,
+      cruise_data = vals$cruise_data,
+      comp_data = comp_data(),
+      pop_stats = pop_stats(),
+      cruise_stats = cruise_stats(),
+      comp_stats = comp_stats(),
+      diff_quantile = vals$diff_quantile,
+      alpha = vals$alpha
+      # parallel not working 
+      # mc.cores = parallel::detectCores()
+    ) %>%
+      mutate(
+        estimate = vals$estimates,
+        abs_diff = abs(mu - estimate),
+        abs_diff_pass = abs_diff < abs_diff_quantile,
+        incl_rate_pass = cruise_CI_contains_comp_PE > input$incl_rate_test
+      )
+  }
+)
+
+valid_compare_summary <- eventReactive(valid_compare(), {
+  valid_compare() %>%
+    select(-sim_diffs) %>%
+    mutate(
+      n_cruise_plots = vals$n_cruise_plots,
+      n_comp_plots = vals$n_comp_plots,
+    )
+  # select(-sim_diffs, -t_test_p_values)
+})
+
+renderTable({
+  valid_compare_summary() %>%
+    select(
+      stand_id, acres, mu, sigma, n_cruise_plots, n_comp_plots,
+      estimate, abs_diff, abs_diff_quantile, abs_diff_pass
+      ) %>%
+    setNames(
+      c(
+        "Stand ID",
+        "Acres",
+        "mu",
+        "sigma",
+        "Cruise Plots",
+        "Comparison Plots",
+        "Estimate",
+        "Absolute Difference",
+        "Absolute Difference Test Quantile",
+        "Difference Test Pass"
+      )
+    )
+}, digits = 0)
+
+renderTable({
+  valid_compare_summary() %>%
+    select(
+      stand_id, 
+      CI_overlap_rate, 
+      cruise_CI_contains_mu, 
+      comp_CI_contains_mu,
+      cruise_CI_contains_comp_PE, 
+      comp_CI_contains_cruise_PE,
+      incl_rate_pass
+    ) %>%
+    setNames(
+      c(
+        "Stand ID",
+        "CI overlap rate",
+        "Cruise CI contains mu",
+        "Comparison CI contains mu",
+        "Cruise CI contains comparison PE",
+        "Comparison CI contains cruise PE",
+        "Inclusion Test Pass"
+      )
+    )
+})
+
+```
+
+```{r table_download}
+inputPanel(
+  textInput("filename", "File Name", "comparison")
+)
+
+downloadHandler(
+  filename = function() {
+    paste(input$filename, ".csv", sep = "")
+  },
+  content = function(file) {
+    write_csv(valid_compare_summary(), file)
+  },
+  outputArgs = list(label = "Download Comparison Table")
+)
+
+```
+
+There are two tables above that summarize these simulations. The first table provides basic information about the stand populations, sample sizes for the cruise and comparison simulations as well as the following simulation summaries:
+
+- What is the comparison estimate?
+- What is the absolute difference between the comparison and $\mu$?
+- What is the `r reactive(vals$diff_quantile)` quantile of the distribution of absolute differences between point estimates from the cruise and the comparison that we might expect to see for two samples drawn from the same population?
+- Is the absolute difference less than the specified  test level of `r reactive(vals$diff_quantile)`?
+
+The second table shows the rate at which the simulated samples overlap in various ways:
+
+- What is the rate at which the CIs from the cruise and the comparison overlap?
+- What is the rate at which the cruise CI contains $\mu$?
+- What is the rate at which the comparison CI contains $\mu$?
+- What is the rate at which the cruise CI contains the PE from the comparison?
+- What is the rate at which the comparison CI contains the PE from the cruise?
+- Is the rate at which the comparison PE falls within the cruise CI greater than the specified test level of `r reactive(vals$incl_rate_test)`?
+
+The tables shown above are available to download as a single file through the download link provided.
+
+The figure below provides a graphical summary of the absolute difference quantile test above. The histogram shows the distribution of the absolute value of differences between point estimates for all possible pairs in the two simulations. This gives a sense of the kind of differences you might reasonably expect to see between two cruises of the given intensities sampling from the same population. The solid line shows the actual difference between the cruise mean (used as mu) and the comparison mean and where that difference falls within that distribution. This gives a picture of how unlikely it is to see such differences among repeated samples.
+
+```{r comp_plots1}
+renderPlot({
+  data <- valid_compare() %>%
+    select(stand_id, abs_diff_quantile, sim_diffs) %>%
+    unnest()
+  
+  diffPlot <- ggplot(data) +
+    stat_bin(aes(x = abs(sim_diffs)), binwidth = 5, boundary = 0) +
+    xlab("Difference between simulated means") +
+    geom_vline(
+      aes(xintercept = abs_diff_quantile), linetype = "dashed", alpha = 0.5
+    ) +
+    theme_bw() +
+    facet_wrap(~ stand_id) + 
+    ggtitle("Difference from Cruise")
+  
+  if (!is.null(vals$estimates)) {
+    diffPlot <- diffPlot +
+      geom_vline(
+        data = valid_compare(),
+        aes(xintercept = abs_diff),
+        colour = "#30363E"
+      )
+  }
+  diffPlot
+})
+
+```
+
+## Interpreting test results
+
+The two different tests assess two different aspects of the estimate comparison. The difference test is a test of the purported accuracy of the comparison estimate, while the inclusion test evaluates the precision of the comparison estimate to some desired level of precision with respect to the first cruise.
+
+### Difference Test
+
+In many ways, the absolute difference quantile computation functions something like a simulated t-test. Seeing the expected distribution of differences between point estimates generated from two samples of the given sizes allows us to ask the question: How likely is it to have observed the differences in point estimates that we see based purely on everyday sampling error? If the difference between the two point estimates falls far to the right tail of that distribution, it may indicate a need to examine the assumptions or data behind one or the other of the two estimates. 
+
+How far to the right tail this value must be in order to indicate an implausible difference (i.e. what the test threshold is) must be a decision that is made based on the context of the estimates and the application of the information to real world decision-making. Again, this decision threshold can be thought of as analogous to picking an appropriate $\alpha$, and similarly should be calibrated to the costs of making good or bad decisions based on the information at hand as well, as the costs for gathering additional information. In simple terms, we can ask ourselves, "How different does this have to look to make it worth investigating more deeply?"
+
+### Inclusion Test
+
+The inclusion test basically asks the question: was the precision of the comparison estimate sufficient such that upon repeated samples the rate of inclusion of the comparison estimate within a cruise CI is above some test rate. One way of looking at this is to ask if the comparison precision is equivalent to a sample of some minimally sufficient size. Or, put even more simply: what is the effective sample size of the estimate, and is it high enough?
+
+The answers to these questions again depend on the applied context for which the estimates are being produced. It is good to remember that, when making comparisons between a high-intensity validation cruise and, for example, a model-based inventory, we should not expect high inclusion rates. This is not due to poor model quality necessarily, but because the reason we produce model-based estimates for stands in the first place is because of the cost and time involved in high-intensity samples of large areas. The inclusion test can provide a metric of how a low effective sample size estimate such as that produced by a model compares against a high intensity sample, but it is important to keep in mind that in practice, the true comparison is often against a sample size of zero. How precise an estimate must be with respect to some other estimate generated from a given sample design is a decision that can only be made in the context of application.
+
+### Drawing Conclusions
+
+If and when differences beyond the test thresholds _are_ observed, how should they be interpreted? There are a few possible sources of such differences, though identifying how, when, and where, and to what magnitude each contributes is usually extremely challenging. In general, differences between estimates can come from the following areas.
+
+- Sampling error: rare events do happen, so it is not impossible that the differences between the two estimates do, in fact, rise from normal variation we might expect to see between samples. There will always be a "false rejection" rate associated with any test.
+- Measurement error: In the simulations above, it is assumed that all measurements are made without error. In reality, this is never the case even though this source of error is almost always ignored, and the amount of measurement error can vary greatly between samples.
+- Data handling error: It is possible that there are errors within the tabulation processes associated with generating the estimates. 
+- Model error: Misspecification, model bias, and high uncertainty are potential sources of error. It is important to note that this is true even of two different so-called "design-based" estimates, and does not exclusively pertain to regression models that incoroporate additional predictors
+
+If it has been accepted that sampling error is not the likely difference between the two estimates, what then? The rest of these possible sources of difference result can indicate that one or both estimates are biased away from the other, or are making inference to different populations. In that case, clearly articulating the assumptions and processes behind data gathering, handling, and analysis should illuminate ways in which differences between the two estimates could be introduced and might indicate a way to correct them. 
+
+```{r comp_plots2, eval = FALSE, include =FALSE}
+
+renderPlot({
+  data <- valid_compare() %>%
+    select(stand_id, t_test_p_values) %>%
+    unnest()
+  
+  ggplot(data) +
+    geom_histogram(aes(x = t_test_p_values), binwidth = 0.04) +
+    xlab("'Difference of two means' t-test p-values") +
+    theme_bw() +
+    facet_wrap( ~ stand_id)
+})
+```
