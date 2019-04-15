@@ -26,7 +26,9 @@ Variations are included, described in detail below.
   
 # General Information
   
-* All functions require data input. For most functions, this data must be a data frame formatted in the generalized structure. Select functions can act on vectors (`summarize_simple_random` and `summarize_systematic`).  
+* All functions require data input. For most functions, this data must be a
+data frame or tibble formatted in the generalized structure. Select functions
+can act on vectors (`summarize_simple_random` and `summarize_systematic`).  
 * In most cases, additional parameters are necessary. Defaults have been provided to help minimize this.  
   
 ## Common parameters, usage information:  
