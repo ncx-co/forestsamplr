@@ -17,3 +17,4 @@ Suggests: testthat,
     rmarkdown
 VignetteBuilder: knitr
 Imports: dplyr
+Requires: dplyr
