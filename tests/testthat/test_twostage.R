@@ -1,7 +1,6 @@
 context("Forest sampling statistics calculations: two stage sample")
 
 test_that("two stage functions correctly with warning", {
-
   expect_equal(
     suppressWarnings(
       summarize_two_stage(
@@ -59,7 +58,6 @@ test_that("two stage cluster input data functions correctly", {
     70.5,
     tolerance = 0.1
   )
-
 })
 
 
@@ -75,11 +73,11 @@ test_that("two stage calculates values correctly", {
       populationClusters = 16,
       populationElementsPerCluster = 160
     ),
-  data.frame(
-    mean = 586.1, varianceB = 250188.9, varianceW = 3869.4,
-    standardError = 93.628, upperLimitCI = 782.81,
-    lowerLimitCI = 389.40
-  ),
-  tolerance = 0.01
+    data.frame(
+      mean = 586.1, varianceB = 250188.9, varianceW = 3869.4,
+      standardError = 93.628, upperLimitCI = 782.81,
+      lowerLimitCI = 389.40
+    ),
+    tolerance = 0.01
   )
 })

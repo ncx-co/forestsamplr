@@ -13,7 +13,8 @@ data <- data.frame(
 test_that("cluster discrete calculates values correctly", {
   expect_equal(
     summarize_cluster_discrete(
-      data, attribute = "propAlive", plotTot = 250
+      data,
+      attribute = "propAlive", plotTot = 250
     )$upperLimitCI,
     0.82275,
     tolerance = 0.001

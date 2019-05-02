@@ -24,15 +24,15 @@
 #' @import dplyr
 #' @examples
 #' \dontrun{
-#'
+#' 
 #' # See Forest Sampling vignette for more details
-#'
-#'
+#' 
+#' 
 #' # Data can be input as either clusters or plots.
-#'
-#'
+#' 
+#' 
 #' # Cluster level data can be expressed as:
-#'
+#' 
 #' dataCluster <- data.frame(
 #'   clusterID = c(1, 2, 3, 4, 5),
 #'   totClusterElements = c(5, 2, 1, 6, 5),
@@ -45,10 +45,10 @@
 #' )
 #' # Example:
 #' summarize_two_stage(dataCluster, F, "attr")
-#'
-#'
+#' 
+#' 
 #' # Plot level data can be expressed as:
-#'
+#' 
 #' dataPlot <- data.framedata.frame(
 #'   clusterID = c(
 #'     1, 1, 1, 2, 2, 2,
@@ -101,15 +101,18 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
 
     # sum attributes by cluster
     attrSum <- aggregate(
-      temp$attr, by = list(clusterID = temp$clusterID), FUN = sum
+      temp$attr,
+      by = list(clusterID = temp$clusterID), FUN = sum
     )
     attrSqSum <- aggregate(
-      temp$attrSq, by = list(clusterID = temp$clusterID), FUN = sum
+      temp$attrSq,
+      by = list(clusterID = temp$clusterID), FUN = sum
     )
 
     # checks if any secondary is used in any primary/cluster
     clusterUsed <- aggregate(
-      data$isUsed, by = list(clusterID = data$clusterID), FUN = sum
+      data$isUsed,
+      by = list(clusterID = data$clusterID), FUN = sum
     )
     clusterUsed$x <- ifelse(clusterUsed$x > 0, T, F) # converts above to T/F
 
@@ -161,7 +164,7 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
     populationClusters,
     length(cluster$isUsed)
   )
-  
+
   EM <- ifelse( # total number of total plots among all clusters
     populationElementsPerCluster != 0,
     populationElementsPerCluster,
@@ -201,10 +204,11 @@ summarize_two_stage <- function(data, plot = TRUE, attribute = NA,
               sqrt(s2b^2 / (m * n))
             } else {
               sqrt(1 / (m * n) * (s2b * (1 - n / EN) + (n * s2w) / EN))
-          }
+            }
+          )
         )
       )
-    )) %>%
+    ) %>%
     mutate(
       tScore = qt(1 - ((1 - desiredConfidence) / 2), df),
       highCL = yBar + tScore * ySE,

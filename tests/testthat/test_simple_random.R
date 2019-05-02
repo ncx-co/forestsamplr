@@ -1,10 +1,10 @@
 context("Forest sampling statistics calculations: simple random sample")
 
-trainingData <- simpleRandom %>% 
+trainingData <- simpleRandom %>%
   group_by(plot) %>%
   summarize(bapa = sum(BAF))
 
-attribute <- 'bapa'
+attribute <- "bapa"
 
 test_that("simple random function handles missing arguments correctly", {
   sampT <- summarize_simple_random(
@@ -36,12 +36,15 @@ test_that("simple random function handles missing arguments correctly", {
   expect_equal(sampNA, sampNoN)
   expect_equal(sampF, sampNoReplacement)
   expect_equal(sampF, sampReplacementNA)
-  expect_error(summarize_simple_random(trainingData, attribute, popSize = 0,
-                                       desiredConfidence = 0.9, infiniteReplacement = T))
+  expect_error(summarize_simple_random(trainingData, attribute,
+    popSize = 0,
+    desiredConfidence = 0.9, infiniteReplacement = T
+  ))
 
-  expect_equal(sampF, data.frame('mean' = 135, 'variance' = 1172, 'standardError' = 8.6,
-                                 'upperLimitCI' = 150.5, 'lowerLimitCI' = 120), tolerance = 1)
-
+  expect_equal(sampF, data.frame(
+    "mean" = 135, "variance" = 1172, "standardError" = 8.6,
+    "upperLimitCI" = 150.5, "lowerLimitCI" = 120
+  ), tolerance = 1)
 })
 
 
@@ -79,11 +82,16 @@ test_that("simple random processes data with at least two", {
 })
 
 test_that("simple random accepts and processes vectors and dataframes equally", {
-
-  dataframe <- summarize_simple_random(trainingData, attribute, popSize = 50,
-                                       desiredConfidence = 0.9, infiniteReplacement = T)
-  vector <- summarize_simple_random(c(140, 140, 180, 140, 180, 120, 
-                                      120, 80, 80, 120, 180, 140), popSize = 50,
-                                    desiredConfidence = 0.9, infiniteReplacement = T)
+  dataframe <- summarize_simple_random(trainingData, attribute,
+    popSize = 50,
+    desiredConfidence = 0.9, infiniteReplacement = T
+  )
+  vector <- summarize_simple_random(c(
+    140, 140, 180, 140, 180, 120,
+    120, 80, 80, 120, 180, 140
+  ),
+  popSize = 50,
+  desiredConfidence = 0.9, infiniteReplacement = T
+  )
   expect_equal(dataframe, vector)
 })

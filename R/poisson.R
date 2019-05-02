@@ -1,6 +1,6 @@
 #' @title Summarize Poisson sample
 #' @description Summarizes population-level statistics for
-#' Poisson-distributed sample data. The calculations are derived from open 
+#' Poisson-distributed sample data. The calculations are derived from open
 #' resources provided by Penn State Eberly College.
 #' @usage summarize_poisson(data, desiredConfidence = 0.95)
 #' @param data vector containing number of instances per desired
@@ -13,11 +13,11 @@
 #' @import dplyr
 #' @examples
 #' \dontrun{
-#'
+#' 
 #' # See Forest Sampling vignette for more details
-#'
+#' 
 #' # Data can be expressed as:
-#'
+#' 
 #' data <- c(2, 3, 4, 3, 4, 5, 2, 7)
 #' }
 #' @export

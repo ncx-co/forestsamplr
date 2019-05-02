@@ -4,10 +4,12 @@ context("Forest sampling statistics calculations: all cluster samples")
 test_that("all cluster function handles simple cluster sample", {
   expect_equal(
     summarize_all_cluster(
-      redData, attribute = "volume", element = TRUE, bernoulli = F
+      redData,
+      attribute = "volume", element = TRUE, bernoulli = F
     ),
     summarize_cluster(
-      redData, attribute = "volume", element = TRUE
+      redData,
+      attribute = "volume", element = TRUE
     ),
     tolerance = 0.1
   )
@@ -25,10 +27,12 @@ test_that("all cluster function handles cluster sample for discrete attribute, b
 
   expect_equal(
     summarize_all_cluster(
-      data, attribute = "propAlive", plotTot = 250, bernoulli = T
+      data,
+      attribute = "propAlive", plotTot = 250, bernoulli = T
     ),
     summarize_cluster_discrete(
-      data, attribute = "propAlive", plotTot = 250
+      data,
+      attribute = "propAlive", plotTot = 250
     ),
     tolerance = 0.01
   )

@@ -96,7 +96,7 @@ summarize_cluster <- function(data, element = TRUE, attribute = NA, desiredConfi
     mutate(ySETempNum = (sumAttr - yBar * clusterElements)^2) %>%
     summarize(
       ySE = sqrt(
-        ((popValues$nPop - nSamp[[1]]) / (popValues$nPop * nSamp[[1]] *  
+        ((popValues$nPop - nSamp[[1]]) / (popValues$nPop * nSamp[[1]] *
           (popValues$mPopBar^2))) * (sum(ySETempNum) / (nSamp[[1]] - 1))
       ),
       yBar = mean(yBar),
