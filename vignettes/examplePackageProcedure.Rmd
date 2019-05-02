@@ -9,14 +9,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Imperatives:   
+Imperatives:
   1. Data input must be expanded prior to the function call.
   2. Data frame input needs to have the same column names as expressed in the example data (except for the attribute of interest, the name of which can be set in the function call).
   
-The setting:  
+The setting:
   Wilma Antall wanted to analyze data. She'd spent time and resources carefully planning a survey. She had decided to use the simple random sampling design, because it fit her goals best - to assess the _Euphorbia obesa_ in a long-standing, worldwide study on succulents. (Or, she was scrounging a database and decided to see what statistics this stray database would produce if it were analyzed like a simple random sample.)
   
-  She wanted to be smart about this. She'd expended a lot of effort collecting the data, managing, and storing it, being careful to have a truly random, unbiased dataset. She wanted to do analyze the data correctly. She also wanted to be transparent, and be sure that other statisticians would support her findings. They would have access to the easily repeatable R code that explicitly stated her steps of analysis - if they had any questions, it would be easy to prove her process. So, she decided to use the Forest Sampling R package.
+  She wanted to be smart about this. She'd expended a lot of effort collecting the data, managing, and storing it, being careful to have a truly random, unbiased dataset. She wanted to analyze the data correctly. She also wanted to be transparent, and be sure that other statisticians would support her findings. They would have access to the easily repeatable R code that explicitly stated her steps of analysis - if they had any questions, it would be easy to prove her process. So, she decided to use the Forest Sampling R package.
 
 ```{r include = TRUE}
 library(forestSampling)
@@ -25,7 +25,7 @@ library(dplyr)
 
   She wasn't exactly sure how to start, so she took a few minutes to look at her data.
   
-Her data may have looked something like this: 
+Her data may have looked something like this:
 
 ```{r include = TRUE}
 head(simpleRandom, n=10)
