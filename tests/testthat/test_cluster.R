@@ -20,7 +20,6 @@ clusterTwo <- data.frame(clusterID = c(1, 2), clusterElements = c(4, 2),
 
 # test plots
 plotLevelFalse <- clusterClean
-
 plotLevelTrue <- clusterClean %>% mutate(isUsed = TRUE)
 
 test_that("cluster sample isUsed functions correctly", {
@@ -35,15 +34,14 @@ test_that("cluster sample isUsed functions correctly", {
 
 
 test_that("cluster sample handles input with no, one, or two clusters correctly", {
-
   expect_error(summarize_cluster(clusterNone, F))
   expect_error(summarize_cluster(clusterOne, F))
   expect_false(any(is.na(summarize_cluster(clusterTwo, F))))
-
 })
 
 
 test_that("cluster sample handles input data with NA values", {
+
 
   expect_error(summarize_cluster(clusterBaData, T))
 
@@ -51,9 +49,7 @@ test_that("cluster sample handles input data with NA values", {
 
 
 test_that("cluster sample handles attribute", {
-
   expect_equal(summarize_cluster(clusterClean, T, 'bapa'),
                summarize_cluster(clusterClean %>% rename(attr = bapa), T))
 
 })
-

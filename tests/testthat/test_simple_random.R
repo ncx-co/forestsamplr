@@ -6,21 +6,31 @@ trainingData <- simpleRandom %>%
 
 attribute <- 'bapa'
 
-
 test_that("simple random function handles missing arguments correctly", {
-
-  sampT <- summarize_simple_random(data = trainingData, attribute, popSize = 50,
-                                   desiredConfidence = 0.9, infiniteReplacement = T)
-  sampNA <- summarize_simple_random(data = trainingData, attribute, popSize = NA,
-                                    desiredConfidence = 0.9, infiniteReplacement = T)
-  sampNoN <- summarize_simple_random(data = trainingData, attribute, desiredConfidence = 0.9,
-                                     infiniteReplacement = T)
-  sampNoReplacement <- summarize_simple_random(trainingData, attribute, popSize = 50,
-                                               desiredConfidence = 0.9)
-  sampF <- summarize_simple_random(trainingData, attribute, popSize = 50,
-                                   desiredConfidence = 0.9, infiniteReplacement = F)
-  sampReplacementNA <- summarize_simple_random(trainingData, attribute, popSize = 50,
-                                               desiredConfidence = 0.9, infiniteReplacement = NA)
+  sampT <- summarize_simple_random(
+    data = trainingData, attribute, popSize = 50,
+    desiredConfidence = 0.9, infiniteReplacement = T
+  )
+  sampNA <- summarize_simple_random(
+    data = trainingData, attribute, popSize = NA,
+    desiredConfidence = 0.9, infiniteReplacement = T
+  )
+  sampNoN <- summarize_simple_random(
+    data = trainingData, attribute, desiredConfidence = 0.9,
+    infiniteReplacement = T
+  )
+  sampNoReplacement <- summarize_simple_random(trainingData, attribute,
+    popSize = 50,
+    desiredConfidence = 0.9
+  )
+  sampF <- summarize_simple_random(trainingData, attribute,
+    popSize = 50,
+    desiredConfidence = 0.9, infiniteReplacement = F
+  )
+  sampReplacementNA <- summarize_simple_random(trainingData, attribute,
+    popSize = 50,
+    desiredConfidence = 0.9, infiniteReplacement = NA
+  )
 
   expect_equal(sampNA, sampT)
   expect_equal(sampNA, sampNoN)
@@ -37,31 +47,35 @@ test_that("simple random function handles missing arguments correctly", {
 
 
 test_that("simple random throws errors for data with few or no entries, or missing values", {
+  trainingDataOne <- data.frame("bapa" = c(4), "plot" = c(10))
+  trainingDataThree <- data.frame("bapa" = c(4, 5, NA), "plot" = c(10, 11, 12))
+  trainingDataNone <- data.frame("bapa" = c(NA), "plot" = c(10))
 
-  trainingDataOne <- data.frame('bapa' = c(4), 'plot' = c(10))
-  trainingDataThree <- data.frame('bapa' = c(4, 5, NA), 'plot' = c(10, 11, 12))
-  trainingDataNone <- data.frame('bapa' = c(NA), 'plot' = c(10))
-
-  expect_warning(summarize_simple_random(trainingDataOne, attribute, popSize = 50,
-                                         desiredConfidence = 0.9, infiniteReplacement = T))
-  expect_error(summarize_simple_random(trainingDataNone, attribute, popSize = 50,
-                                         desiredConfidence = 0.9, infiniteReplacement = T))
-  expect_error(summarize_simple_random(trainingDataThree, attribute, popSize = 50,
-                                       desiredConfidence = 0.9, infiniteReplacement = T))
-
+  expect_warning(summarize_simple_random(trainingDataOne, attribute,
+    popSize = 50,
+    desiredConfidence = 0.9, infiniteReplacement = T
+  ))
+  expect_error(summarize_simple_random(trainingDataNone, attribute,
+    popSize = 50,
+    desiredConfidence = 0.9, infiniteReplacement = T
+  ))
+  expect_error(summarize_simple_random(trainingDataThree, attribute,
+    popSize = 50,
+    desiredConfidence = 0.9, infiniteReplacement = T
+  ))
 })
 
 
 
 test_that("simple random processes data with at least two", {
+  trainingDataTwo <- data.frame("bapa" = c(4, 5), "plot" = c(10, 11))
 
-  trainingDataTwo <- data.frame('bapa' = c(4, 5), 'plot' = c(10, 11))
+  sampTwo <- summarize_simple_random(trainingDataTwo, attribute,
+    popSize = 50,
+    desiredConfidence = 0.9, infiniteReplacement = T
+  )
 
-  sampTwo <- summarize_simple_random(trainingDataTwo, attribute, popSize = 50,
-                                     desiredConfidence = 0.9, infiniteReplacement = T)
-
-  expect_equal(sampTwo$mean,  mean(trainingDataTwo[[1]]))
-
+  expect_equal(sampTwo$mean, mean(trainingDataTwo[[1]]))
 })
 
 test_that("simple random accepts and processes vectors and dataframes equally", {
@@ -71,9 +85,5 @@ test_that("simple random accepts and processes vectors and dataframes equally", 
   vector <- summarize_simple_random(c(140, 140, 180, 140, 180, 120, 
                                       120, 80, 80, 120, 180, 140), popSize = 50,
                                     desiredConfidence = 0.9, infiniteReplacement = T)
-
   expect_equal(dataframe, vector)
-
 })
-
-
