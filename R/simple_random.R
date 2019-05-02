@@ -20,23 +20,24 @@
 #' @import dplyr
 #' @examples
 #' \dontrun{
-#' #trainingDataFrame
-#' data <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
-#'   plots = c(1, 2, 3, 4, 5, 6))
-#' #trainingVector
+#' # trainingDataFrame
+#' data <- data.frame(
+#'   bapa = c(120, 140, 160, 110, 100, 90),
+#'   plots = c(1, 2, 3, 4, 5, 6)
+#' )
+#' # trainingVector
 #' data <- c(120, 140, 160, 110, 100, 90)
-#' attribute <- 'bapa'
+#' attribute <- "bapa"
 #' desiredConfidence <- 0.9
 #' }
 #' @export
 
-summarize_simple_random <- function(data, attribute = 'attr', popSize = NA,
+summarize_simple_random <- function(data, attribute = "attr", popSize = NA,
                                     desiredConfidence = 0.95, infiniteReplacement = F) {
-
   type <- class(data)
-  
+
   # converts variable of interest into a vector with a generic name
-  if (any(type == 'numeric')) {
+  if (any(type == "numeric")) {
     attr <- data
   } else {
     # makes sure data is expressed as a numeric vector
@@ -48,7 +49,7 @@ summarize_simple_random <- function(data, attribute = 'attr', popSize = NA,
     stop("Population size must be greater than sample size.")
   }
 
-  if(any(is.na(attr))) {
+  if (any(is.na(attr))) {
     stop("NA values are present in the input data.")
   }
 
@@ -60,18 +61,19 @@ summarize_simple_random <- function(data, attribute = 'attr', popSize = NA,
   simpRandomSummary <- data.frame(attr) %>%
     summarize(
       mean = mean(attr),
-      variance = (sum(attr ^ 2) - (sum(attr) ^ 2 / sampleSize)) / (sampleSize - 1),
-      standardError = ifelse(test, sqrt((variance / sampleSize) * ((popSize - sampleSize) / popSize)),
-                  # without replacement, finite population
-                  sqrt(variance / sampleSize)),  # with replacement, infinite population
-      upperLimitCI = mean(attr) + qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1) * standardError,  # 2-tailed
-      lowerLimitCI = mean(attr) - qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1) * standardError
-    )
+      variance = (sum(attr^2) - (sum(attr)^2 / sampleSize)) / (sampleSize - 1),
+      standardError = ifelse(
+        test,
+        sqrt((variance / sampleSize) * ((popSize - sampleSize) / popSize)),
+        # without replacement, finite population
+        sqrt(variance / sampleSize)
+      ), # with replacement, infinite population
+      tScore = qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1)
+      upperLimitCI = mean(attr) + tScore * standardError, # 2-tailed
+      lowerLimitCI = mean(attr) - tScore * standardError
+    ) %>%
+    select(-tScore)
 
   # return data frame of key values
   return(simpRandomSummary)
-
 }
-
-
-

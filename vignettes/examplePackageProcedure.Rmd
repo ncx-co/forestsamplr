@@ -28,7 +28,7 @@ library(dplyr)
 Her data may have looked something like this:
 
 ```{r include = TRUE}
-head(simpleRandom, n=10)
+head(simpleRandom, n = 10)
 ```
 
 But this didn't quite fit the data format she read about in the Forest Sampling Vignette.
@@ -38,7 +38,7 @@ First, she had to expand her data how she wanted and provide her attribute of in
 
 ```{r, include = TRUE}
 expanded <- simpleRandom %>%
-  mutate(bapaTree = pi * (DBH / 2) ^ 2 / 144) %>%
+  mutate(bapaTree = pi * (DBH / 2)^2 / 144) %>%
   group_by(plot) %>%
   summarize(bapa = sum(bapaTree) / sum(BAF))
 ```
@@ -47,7 +47,7 @@ Imperative 2:
 Now, she checked the Forest Sampling Vignette to make sure that her data was on the right track.
 
 ```{r include = TRUE}
-head(expanded, n=12)
+head(expanded, n = 12)
 ```
 
 She was thrilled. Her data had a column she could identify as her attribute of interest in a call similar to `attribute <- 'bapa' `. She did jumping jacks for joy. She was now ready to run the package's function.
@@ -65,7 +65,13 @@ Looking at the example function call, she knew it had to look something like thi
 She modified this to match her data structure, ran the code, and got:
 
 ```{r include = TRUE}
-summarize_all_srs(expanded, attribute = 'bapa', popSize = NA, desiredConfidence = 0.90, infiniteReplacement = F)
+summarize_all_srs(
+  expanded,
+  attribute = "bapa",
+  popSize = NA,
+  desiredConfidence = 0.90,
+  infiniteReplacement = F
+)
 ```
 
 The output she got was the calculated mean, variance, standard error, and the upper and lower limits of the 90% confidence interval.
@@ -83,7 +89,13 @@ stratumTab <- data.frame(stratum = c(1, 2), acres = c(200, 50))
 She looked in the Forest Sampling Vignette and figured out the call:
 
 ```{r include = TRUE}
-summarize_stratified(stratumData, attribute = 'bapa', stratumTab, desiredConfidence = 0.90, post = T)
+summarize_stratified(
+  stratumData,
+  attribute = "bapa",
+  stratumTab,
+  desiredConfidence = 0.90,
+  post = T
+)
 ```
 
 She felt accomplished - she now had summary statistics for her data! Congratulations, Wilma!
