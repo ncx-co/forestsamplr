@@ -68,7 +68,7 @@ summarize_simple_random <- function(data, attribute = "attr", popSize = NA,
         # without replacement, finite population
         sqrt(variance / sampleSize)
       ), # with replacement, infinite population
-      tScore = qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1)
+      tScore = qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1),
       upperLimitCI = mean(attr) + tScore * standardError, # 2-tailed
       lowerLimitCI = mean(attr) - tScore * standardError
     ) %>%

@@ -49,7 +49,7 @@ summarize_cluster_discrete <- function(data, attribute, plotTot = NA, desiredCon
       variance = (sum(attrSq) - sum(attr)^2 / sampleSize) / (sampleSize - 1),
       standardError = sqrt((variance / sampleSize) * (1 - sampleSize / plotTot)),
       # 2-tailed
-      tScore = qt(1 - ((1 - desiredConfidence) / 2, sampleSize - 1)),
+      tScore = qt(1 - ((1 - desiredConfidence) / 2), sampleSize - 1),
       upperLimitCI = mean + tScore * standardError,
       lowerLimitCI = mean - tScore * standardError
     ) %>%
