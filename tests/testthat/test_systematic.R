@@ -1,6 +1,6 @@
 context("Forest sampling statistics calculations: systematic sample")
 
-trainingData <- clusterBAData %>%
+trainingData <- clusterBaData %>%
   filter(!is.na(bapa)) %>%
   group_by(clusterID) %>%
   sample_n(1) %>%

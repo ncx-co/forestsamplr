@@ -1,7 +1,9 @@
 context("Forest sampling statistics calculations: simple random sample")
 
-trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
-                           plots = c(1, 2, 3, 4, 5, 6))
+trainingData <- simpleRandom %>% 
+  group_by(plot) %>%
+  summarize(bapa = sum(BAF))
+
 attribute <- 'bapa'
 
 
@@ -27,8 +29,8 @@ test_that("simple random function handles missing arguments correctly", {
   expect_error(summarize_simple_random(trainingData, attribute, popSize = 0,
                                        desiredConfidence = 0.9, infiniteReplacement = T))
 
-  expect_equal(sampF, data.frame('mean' = 120, 'variance' = 680, 'standardError' = 9.98,
-                                 'upperLimitCI' = 140.12, 'lowerLimitCI' = 99.87), tolerance = 0.1)
+  expect_equal(sampF, data.frame('mean' = 135, 'variance' = 1172, 'standardError' = 8.6,
+                                 'upperLimitCI' = 150.5, 'lowerLimitCI' = 120), tolerance = 1)
 
 })
 
@@ -66,7 +68,8 @@ test_that("simple random accepts and processes vectors and dataframes equally", 
 
   dataframe <- summarize_simple_random(trainingData, attribute, popSize = 50,
                                        desiredConfidence = 0.9, infiniteReplacement = T)
-  vector <- summarize_simple_random(c(120, 140, 160, 110, 100, 90), popSize = 50,
+  vector <- summarize_simple_random(c(140, 140, 180, 140, 180, 120, 
+                                      120, 80, 80, 120, 180, 140), popSize = 50,
                                     desiredConfidence = 0.9, infiniteReplacement = T)
 
   expect_equal(dataframe, vector)

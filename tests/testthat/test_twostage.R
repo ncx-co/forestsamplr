@@ -2,7 +2,7 @@ context("Forest sampling statistics calculations: two stage sample")
 
 test_that("two stage functions correctly with warning", {
 
-  expect_equal(suppressWarnings(summarize_two_stage(clusterBAData, TRUE, 'bapa', desiredConfidence = 0.95))$mean, 
+  expect_equal(suppressWarnings(summarize_two_stage(clusterBaData, TRUE, 'bapa', desiredConfidence = 0.95))$mean, 
                1179.64, tolerance = 0.1)
 
 })
@@ -29,14 +29,15 @@ test_that("two stage attribute name functions correctly", {
 
 
 test_that("two stage cluster input data functions correctly", {
-
-  clusterBADataCluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
+   
+  #This is a summary of the clusterBaData object
+  clusterBaDataCluster <- data.frame(clusterID = c(1, 2, 3, 4, 5),
                                     totClusterElements = c(5, 2, 1, 6, 5),
                                     sampledElements = c(2, 2, 2, 2, 2),
                                     isUsed = c(T, T, T, T, F),
                                     attrSumCluster = c(1000, 1250, 950, 900, 1005))
 
-  expect_equal(summarize_two_stage(clusterBADataCluster, F)$lowerLimitCI, 
+  expect_equal(summarize_two_stage(clusterBaDataCluster, F)$lowerLimitCI, 
                70.5, tolerance = 0.1)
 
 })

@@ -1,6 +1,6 @@
 context("Forest sampling statistics calculations: stratified sample")
 
-trainingData <- clusterBAData %>%
+trainingData <- clusterBaData %>%
   filter(!is.na(bapa)) %>%
   filter(clusterID %in% c(1, 2)) %>%
   rename(stratum = clusterID)
