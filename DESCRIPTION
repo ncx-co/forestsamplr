@@ -1,4 +1,4 @@
-Package: forestSampling
+Package: forestsamplr
 Title: Standard Forest Sampling Design Workups
 Version: 0.0.0.9000
 Authors@R: c(
@@ -11,9 +11,10 @@ Depends:
 License: MIT
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Suggests: testthat,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 Imports: dplyr
+Requires: dplyr

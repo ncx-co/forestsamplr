@@ -4,7 +4,7 @@
 #' Avery and Burkhart's (1967) Forest Measurements, Fifth Edition. The
 #' variance terms refer to the variance of the mean, hence the
 #' \code{sampleSize} terms in the denominators.
-#' @usage summarize_systematic(data, attribute = 'attr', 
+#' @usage summarize_systematic(data, attribute = 'attr',
 #'                             popSize = NA, desiredConfidence = 0.95)
 #' @param data data frame or vector containing observations of
 #' variable of interest. Variable of interest must already be expanded
@@ -24,27 +24,28 @@
 #' 
 #' # Data frame input data can be expressed as:
 #' 
-#' trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
-#'                            plots = c(1, 2, 3, 4, 5, 6))
-#' attribute = 'bapa'
-#' desiredConfidence = 0.9
+#' trainingData <- data.frame(
+#'   bapa = c(120, 140, 160, 110, 100, 90),
+#'   plots = c(1, 2, 3, 4, 5, 6)
+#' )
+#' attribute <- "bapa"
+#' desiredConfidence <- 0.9
 #' 
 #' # Vector input data can be expressed as:
 #' 
 #' vector <- c(120, 140, 160, 110, 100, 90)
-#' 
 #' }
 #' @export
 
-summarize_systematic <- function(data, attribute = 'attr', popSize = NA, desiredConfidence = 0.95) {
+summarize_systematic <- function(data, attribute = "attr",
+                                 popSize = NA, desiredConfidence = 0.95) {
 
   # return data frame of key values
-  output <- summarize_simple_random(data = data, attribute, popSize, desiredConfidence, FALSE)
-  
-  
-  return(output)
-
+  summarize_simple_random(
+    data = data,
+    attribute,
+    popSize,
+    desiredConfidence,
+    FALSE
+  )
 }
-
-
-

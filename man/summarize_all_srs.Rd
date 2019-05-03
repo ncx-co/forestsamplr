@@ -36,7 +36,7 @@ Summarizes population-level statistics for
 simple random sample data. This function has three options: (1) SRS 
 of a finite population or sampled without replacement,
 (2) SRS of an infinite population or sampled with replacement,
-and (3) SRS with a bernoulli distribution.
+and (3) SRS with a Bernoulli distribution.
 }
 \examples{
 \dontrun{
