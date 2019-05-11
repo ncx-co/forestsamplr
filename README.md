@@ -6,11 +6,11 @@ A library of functions for processing natural resource sample data from a variet
 </p>
 
 ## Source Code
-The source code is hosted on GitHub, [here](https://github.com/SilviaTerra/forest_sampling).
+The source code is hosted on GitHub, [here](https://github.com/SilviaTerra/forestsamplr).
 
 ## How to Contribute
 We welcome your contributions! This package is a work in progress, and expansion is welcome.
-Please take a look at the [contribution guidelines](https://github.com/SilviaTerra/forest_sampling/wiki/Contribution-Guidelines).
+Please take a look at the [contribution guidelines](https://github.com/SilviaTerra/forestsamplr/wiki/Contribution-Guidelines).
   
 Wish-list areas include:
 * Test existing functions with data you have access to, suggest feature improvements
@@ -21,7 +21,7 @@ Wish-list areas include:
 
 Download the package:
 ```r
-devtools::install_github("SilviaTerra/forest_sampling")
+devtools::install_github("SilviaTerra/forestsamplr")
 ```
 Helpful link: [Install R Packages Hosted on GitHub](https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html)
 
