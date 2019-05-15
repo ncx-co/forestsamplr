@@ -1,4 +1,4 @@
 library(testthat)
-library(forestSampling)
+library(forestsamplr)
 
-test_check("forestSampling")
+test_check("forestsamplr")

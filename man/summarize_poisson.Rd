@@ -19,7 +19,7 @@ confidence interval limits.
 }
 \description{
 Summarizes population-level statistics for
-Poisson sample data. The calculations are derived from open 
+Poisson-distributed sample data. The calculations are derived from open 
 resources provided by Penn State Eberly College.
 }
 \examples{

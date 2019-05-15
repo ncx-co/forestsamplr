@@ -10,29 +10,31 @@ vignette: >
 ---
 
 
-# Forest Sampling Package   
+# Forest Sampling Package
   
-The Forest Sampling is a package of functions that calculates workups for sampling designs commonly used in forestry. It is an open source opportunity for collaboration and transparency.  
+The Forest Sampling is a package of functions that calculates workups for sampling designs commonly used in forestry. It is an open source opportunity for collaboration and transparency.
   
-These sampling designs include:  
-* Simple Random Sampling  
-* Cluster Sampling  
-* Stratified Sampling  
-* Systematic Sampling  
-* Two-Stage Sampling  
-* 3P Sampling  
+These sampling designs include:
+* Simple Random Sampling
+* Cluster Sampling
+* Stratified Sampling
+* Systematic Sampling
+* Two-Stage Sampling
+* 3P Sampling
 
-Variations are included, described in detail below.  
+Variations are included, described in detail below.
   
 # General Information
   
-* All functions require data input. For most functions, this data must be a data frame formatted in the generalized structure. Select functions can act on vectors (`summarize_simple_random` and `summarize_systematic`).  
-* In most cases, additional parameters are necessary. Defaults have been provided to help minimize this.  
+* All functions require data input. For most functions, this data must be a
+data frame or tibble formatted in the generalized structure. Select functions
+can act on vectors (`summarize_simple_random` and `summarize_systematic`).
+* In most cases, additional parameters are necessary. Defaults have been provided to help minimize this.
   
-## Common parameters, usage information:  
-* `attribute`: assumes target attribute is called `attr`. Set `attribute` to the column header used for the variable of interest. Not required for vector input.  
-* `___Tot`: total number of the ___ unit in the sampling design. Commonly the total number of clusters or plots in the sampling frame.  
-* `desiredConfidence`: Percent confidence level (two-sided) expressed as decimal. Default is set to `0.95`.  
+## Common parameters, usage information:
+* `attribute`: assumes target attribute is called `attr`. Set `attribute` to the column header used for the variable of interest. Not required for vector input.
+* `___Tot`: total number of the ___ unit in the sampling design. Commonly the total number of clusters or plots in the sampling frame.
+* `desiredConfidence`: Percent confidence level (two-sided) expressed as decimal. Default is set to `0.95`.
 
 ## Output:
 
@@ -43,37 +45,37 @@ The outputs of the functions vary, but all produce a data frame containing:
 * upper limit for the confidence interval
 * lower limit for the confidence interval
 
-# Functions:  
-The following are the basic functions and their associated sampling strategy.  
+# Functions:
+The following are the basic functions and their associated sampling strategy.
 
   Function                           | Sampling Strategy
 -------------------------------------|---------------------------------------------------------
 `summarize_all_cluster()`            | cluster sampling
-`summarize_all_simple_random()`      | simple random sampling 
-`summarize_stratified()`             | stratified sampling  
-`summarize_systematic()`             | systematic sampling  
-`summarize_two_stage()`              | two-stage sampling  
+`summarize_all_simple_random()`      | simple random sampling
+`summarize_stratified()`             | stratified sampling
+`summarize_systematic()`             | systematic sampling
+`summarize_two_stage()`              | two-stage sampling
 `summarize_threeP()`                 | 3P sampling
 `summarize_poisson()`                | Poisson sampling
   
-## Cluster Sample:  
+## Cluster Sample:
 
-### Sampling Strategy Definition:  
+### Sampling Strategy Definition:
 
 Each sampling unit is represented as a cluster, a group of several plots.
 
-### Function Definition:  
+### Function Definition:
 
 `summarize_all_cluster(data, attribute = NA, element = TRUE, plotTot = NA, desiredConfidence = 0.95, bernoulli = F)`
 
 ### Options:
 
-Cluster sample has 2 options:  
+Cluster sample has 2 options:
 1. Cluster sample with a normal distribution
-    * Set `bernoulli = FALSE` or do not include the parameter in the function call  
-    * Ex. `summarize_all_cluster(dataPlot, attribute, element = TRUE, bernoulli = F)`  
-2. Cluster sample with a bernoulli distribution  
-    * Set `bernoulli = TRUE`  
+    * Set `bernoulli = FALSE` or do not include the parameter in the function call
+    * Ex. `summarize_all_cluster(dataPlot, attribute, element = TRUE, bernoulli = F)`
+2. Cluster sample with a bernoulli distribution
+    * Set `bernoulli = TRUE`
     * Ex. `summarize_all_cluster(data, attribute, plotTot = 250, bernoulli = T)`
 
 Parameter          | Include parameter in option #: | Description
@@ -87,55 +89,69 @@ bernoulli          |    1, 2                        | logical TRUE if data fitti
   
 ### Data Input:
   
-Option 1 can take in element (plot) data or stand data.  
+Option 1 can take in element (plot) data or stand data.
 
 ```{r include = FALSE}
-plotLevelDataExample <- data.frame(clusterID = c(1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4,
-                                                 5, 5, 5, 5, 5), 
-                                   attr = c(1000, 1250, 950, 900, 1005, 1000, 1250, 950,
-                                            900, 1005, 1000, 1250, 950, 900, 1005, 1000,
-                                            1250, 950, 900), 
-                                   isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, F,
-                                              F, F, F, F))
+plotLevelDataExample <- data.frame(
+  clusterID = c(
+    1, 1, 1, 1, 1, 2, 2, 3, 4, 4, 4, 4, 4, 4,
+    5, 5, 5, 5, 5
+  ),
+  attr = c(
+    1000, 1250, 950, 900, 1005, 1000, 1250, 950,
+    900, 1005, 1000, 1250, 950, 900, 1005, 1000,
+    1250, 950, 900
+  ),
+  isUsed = c(
+    T, T, T, T, T, T, T, T, T, T, T, T, T, T, F,
+    F, F, F, F
+  )
+)
 ```
 
 ```{r include = FALSE}
-clusterLevelDataExample <- data.frame(clusterID = c(1, 2, 3, 4, 5),
-                                      clusterElements = c(4, 2, 9, 4, 10), 
-                                      sumAttr = c(1000, 1250, 950, 900, 1005), 
-                                      isUsed = c(T, T, F, T, T))
+clusterLevelDataExample <- data.frame(
+  clusterID = c(1, 2, 3, 4, 5),
+  clusterElements = c(4, 2, 9, 4, 10),
+  sumAttr = c(1000, 1250, 950, 900, 1005),
+  isUsed = c(T, T, F, T, T)
+)
 ```
 
-Option 2 is the option for the Bernoulli distribution. For this distribution, the total number of plots in the sampling frame must be indicated, and data must be input as follows (where attr is the value of the attribute for each plot):  
+Option 2 is the option for the Bernoulli distribution. For this distribution, the total number of plots in the sampling frame must be indicated, and data must be input as follows (where attr is the value of the attribute for each plot):
 
 ```{r include = FALSE}
-data <- data.frame(plots = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 
-                   propAlive = c(0.75, 0.80, 0.80, 0.85, 0.70,
-                                 0.90, 0.70, 0.75, 0.80, 0.65))
+data <- data.frame(
+  plots = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+  propAlive = c(
+    0.75, 0.80, 0.80, 0.85, 0.70,
+    0.90, 0.70, 0.75, 0.80, 0.65
+  )
+)
 ```
 
-## Simple Random Sample  
+## Simple Random Sample
 
-### Sampling Strategy Definition:  
+### Sampling Strategy Definition:
   
 *n* sampling units are selected. Each sampling unit is selected independently from the selection of other sampling units.
 
 
-### Function Definition:  
+### Function Definition:
 
 `summarize_all_srs(data, attribute = 'attr', popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F, bernoulli = F)`
 
 ### Options:
 
-Simple random sample (SRS) has 3 options:  
+Simple random sample (SRS) has 3 options:
 1. SRS of a finite population or sampled without replacement
-    * Set `infiniteReplacement = FALSE` or do not include the parameter in the function call  
-    * Data input can be as a vector or data frame  
-    * Ex. `summarize_all_srs(data, attribute, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`  
+    * Set `infiniteReplacement = FALSE` or do not include the parameter in the function call
+    * Data input can be as a vector or data frame
+    * Ex. `summarize_all_srs(data, attribute, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = F)`
 2. SRS of an infinite population or sampled with replacement
-    * Set `infiniteReplacement = TRUE`  
-    * Data input can be as a vector or data frame  
-    * Ex. `summarize_all_srs(data, attribute, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = T)`  
+    * Set `infiniteReplacement = TRUE`
+    * Data input can be as a vector or data frame
+    * Ex. `summarize_all_srs(data, attribute, popSize = NA, desiredConfidence = 0.95, infiniteReplacement = T)`
 3. SRS with a Bernoulli distribution
     * Set `bernoulli = TRUE`
     * Data input can only be as a data frame
@@ -152,36 +168,39 @@ infiniteReplacement |     1, 2                       | logical true if sample wa
 bernoulli           |   1, 2, 3                      | logical TRUE if data fitting the Bernoulli distribution is used
   
   
-### Data Input:  
+### Data Input:
   
-  1. Vector (Options 1, 2)  
+  1. Vector (Options 1, 2)
 
 ```{r include = FALSE}
 data <- c(120, 140, 160, 110, 100, 90)
 ```
   
-  2. Data frame (Options 1, 2)  
+  2. Data frame (Options 1, 2)
 
 ```{r include = FALSE}
-data <- data.frame(bapa = c(120, 140, 160, 110, 100, 90), plots = c(1, 2, 3, 4, 5, 6))
-attribute <- 'bapa'
+data <- data.frame(
+  bapa = c(120, 140, 160, 110, 100, 90),
+  plots = c(1, 2, 3, 4, 5, 6)
+)
+attribute <- "bapa"
 ```
 
-  3. For Bernoulli Distribution - data frame input only (Option 3)  
+  3. For Bernoulli Distribution - data frame input only (Option 3)
   
 ```{r include = FALSE}
 data <- data.frame(alive = c(T, T, F, T, F, F), plots = c(1, 2, 3, 4, 5, 6))
-attribute <- 'alive'
+attribute <- "alive"
 ```
   
 ## Stratified Sample:
 
-### Sampling Strategy Definition:  
+### Sampling Strategy Definition:
   
 A simple random sample is performed on at least two subpopulations of known size. The potential subpopulations are formed from dividing the population.
 
 
-### Function Definition:  
+### Function Definition:
 
 `summarize_stratified(trainingData, attribute, stratumTab, desiredConfidence = 0.95, post = T)`
   
@@ -196,32 +215,34 @@ post                | logical true if post-stratification was used
 ### Options:
   
 Stratified sample currently has two options:
-1. Stratified  
-    * Set `post = FALSE`  
-2. Post-Stratified  
-    * Set `post = TRUE`  
+1. Stratified
+    * Set `post = FALSE`
+2. Post-Stratified
+    * Set `post = TRUE`
 
 ### Data Input:
 
 Note: The stratum columns MUST be named 'stratum' and the string you set to equal `attribute`.
 
 ```{r include = FALSE}
-trainingData <- data.frame(bapa = c(120, 140, 160, 110, 100, 90),
-                           stratum = c(1, 1, 1, 2, 2, 2))
+trainingData <- data.frame(
+  bapa = c(120, 140, 160, 110, 100, 90),
+  stratum = c(1, 1, 1, 2, 2, 2)
+)
 stratumTab <- data.frame(stratum = c(1, 2), acres = c(200, 50))
-attribute = 'bapa'
-desiredConfidence = 0.9
+attribute <- "bapa"
+desiredConfidence <- 0.9
 ```
   
-## Systematic Sample:  
+## Systematic Sample:
 
-### Sampling Strategy Definition:  
+### Sampling Strategy Definition:
   
 The first sampling unit is arbitrarily established in the field or randomly selected. Subsequent sampling units are placed at uniform intervals through the target area.
 
-### Function Definition:  
+### Function Definition:
 
-`summarize_systematic(data, attribute = 'attr', popSize = NA, desiredConfidence = 0.95)`  
+`summarize_systematic(data, attribute = 'attr', popSize = NA, desiredConfidence = 0.95)`
 
  Parameter        | Description
 ------------------|-----------------------------------------
@@ -232,34 +253,37 @@ desiredConfidence | numeric desired confidence level (e.g. 0.9)
 
 ### Data Input:
 
-Data input can be either as a vector or data frame.  
+Data input can be either as a vector or data frame.
 
 ```{r include = FALSE}
-dataframe <- data.frame(bapa = c(120, 140, 160, 110, 100, 90), plots = c(1, 2, 3, 4, 5, 6))
-attribute <- 'bapa'
+dataframe <- data.frame(
+  bapa = c(120, 140, 160, 110, 100, 90),
+  plots = c(1, 2, 3, 4, 5, 6)
+)
+attribute <- "bapa"
 ```
 
 ```{r include = FALSE}
 vector <- c(120, 140, 160, 110, 100, 90)
 ```
 
-## Two-Stage Sample:  
+## Two-Stage Sample:
 
-### Sampling Strategy Definition:  
+### Sampling Strategy Definition:
   
 A variation of cluster sampling. A simple random sample of clusters is selected, then a simple random sample of elements within each cluster is selected and sampled.
 
-### Function Definition:  
+### Function Definition:
 
 `summarize_two_stage(data, plot = TRUE, attribute = NA, populationClusters = 0, populationElementsPerCluster = 0, desiredConfidence = 0.95)`
 
 ### Options:
   
 Two-stage sample currently has two data input options:
-1. Plot-level data  
-    * Set `post = FALSE`  
-2. Cluster-level data 
-    * Set `post = TRUE`  
+1. Plot-level data
+    * Set `post = FALSE`
+2. Cluster-level data
+    * Set `post = TRUE`
 
  Parameter                   | Include parameter in option #: | Description
 -----------------------------|--------------------------------|---------------------------------------------
@@ -272,16 +296,20 @@ desiredConfidence            |      1, 2                      | numeric desired 
 
 ### Data Input:
   
-Data can be organized by either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).  
+Data can be organized by either by plot (`plot = TRUE`) or the total sum of the attribute for each cluster (`plot = FALSE`).
 
 ```{r include = FALSE}
-data <- data.frame(clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6), 
-                   volume = c(500, 650, 610, 490, 475, 505, 940, 825, 915, 210, 185, 170, 450,
-                              300, 500, 960, 975, 890), 
-                   isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T))
+data <- data.frame(
+  clusterID = c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6),
+  volume = c(
+    500, 650, 610, 490, 475, 505, 940, 825, 915, 210, 185, 170, 450,
+    300, 500, 960, 975, 890
+  ),
+  isUsed = c(T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T, T)
+)
 ```
 
-Example: `summarize_two_stage(data, plot = T, 'volume', populationClusters = 16, populationElementsPerCluster = 160)`  
+Example: `summarize_two_stage(data, plot = T, 'volume', populationClusters = 16, populationElementsPerCluster = 160)`
 
 ## 3P Sample:
 
@@ -306,8 +334,8 @@ desiredConfidence | numeric desired confidence level (e.g. 0.9)
   
 3P sample currently has two key options:
 1. height
-    a. Height data is included  
-        * An estimate VBAR will be roughly calculated   
+    a. Height data is included
+        * An estimate VBAR will be roughly calculated
         * Set `height = TRUE`
     b. Estimate VBARs are included
         * An estimate VBAR is included in the input dat
@@ -315,53 +343,77 @@ desiredConfidence | numeric desired confidence level (e.g. 0.9)
 2. plot
     a. Plot-level Data is Input
         * Data is set up as plot-level data, defined below
-        * Set `plot = TRUE` 
+        * Set `plot = TRUE`
     b. Tree-level Data is Input
         * Data is set up as tree-level data, defined below
-        * Set `plot = FALSE` 
+        * Set `plot = FALSE`
 
 ### Data Input:
 
 1. Height is included, data is plot-level.
 ```{r include = FALSE}
- dataHeight <- data.frame(plotNum = c(5, 4, 3, 5, 4),
-                          treeCount = c(4, 5, 6, 3, 4),
-                          BAF = c(10, 10, 10, 10, 10),
-                          avgTreeVBARSperPlot = c(9, 8, 7, 8, 2),
-                          treeHeight = c(1, 2, 3, 4, 5))
+dataHeight <- data.frame(
+  plotNum = c(5, 4, 3, 5, 4),
+  treeCount = c(4, 5, 6, 3, 4),
+  BAF = c(10, 10, 10, 10, 10),
+  avgTreeVBARSperPlot = c(9, 8, 7, 8, 2),
+  treeHeight = c(1, 2, 3, 4, 5)
+)
 ```
 Example: `summarize_threeP(dataHeight, cvPercent = 50, trueNetVBAR = 10, height = T, plot = T)`
 
 2. estimateVBAR is included (height data is not used, and so is not included), data is plot-level.
 ```{r include = FALSE}
- dataEstimateVBAR <- data.frame(plotNum = c(1, 2, 3, 4, 5),
-                                treeCount = c(4, 5, 6, 3, 4),
-                                BAF = c(10, 10, 10, 10, 10),
-                                avgTreeVBARSperPlot = c(9, 8, 7, 8, 2),
-                                estimateVBAR = c(1, 2, 3, 4, 5))
+dataEstimateVBAR <- data.frame(
+  plotNum = c(1, 2, 3, 4, 5),
+  treeCount = c(4, 5, 6, 3, 4),
+  BAF = c(10, 10, 10, 10, 10),
+  avgTreeVBARSperPlot = c(9, 8, 7, 8, 2),
+  estimateVBAR = c(1, 2, 3, 4, 5)
+)
 ```
-Example: `summarize_threeP(dataEstimateVBAR, cvPercent = 50, trueNetVBAR = 10, height = F, plot = T)`
+Example:
+```r
+summarize_threeP(
+  dataEstimateVBAR,
+  cvPercent = 50,
+  trueNetVBAR = 10,
+  height = F,
+  plot = T
+)
+```
 
 3. estimateVBAR is included, data is tree-level.
 ```{r include = FALSE}
- dataNotPlot <- data.frame(plotNum = c(1, 1, 2, 2, 3),
-                           BAF = c(10, 10, 10, 10, 10),
-                           VBAR = c(1, 2, 3, 4, 3),
-                           estimateVBAR = c(1, 2, 3, 4, 5))
+dataNotPlot <- data.frame(
+  plotNum = c(1, 1, 2, 2, 3),
+  BAF = c(10, 10, 10, 10, 10),
+  VBAR = c(1, 2, 3, 4, 3),
+  estimateVBAR = c(1, 2, 3, 4, 5)
+)
 ```
-Example: `summarize_threeP(dataNotPlot, cvPercent = 50, trueNetVBAR = 10, height = F, plot = F)`
+Example:
+```r
+summarize_threeP(
+  dataNotPlot,
+  cvPercent = 50,
+  trueNetVBAR = 10,
+  height = F,
+  plot = F
+)
+```
   
 ## Poisson:
 
-### Sampling Strategy Definition:  
+### Sampling Strategy Definition:
   
-An assessment of count data that follows the Poisson distribution.  
+An assessment of count data that follows the Poisson distribution.
   
 Note: The term 'Poisson sampling' was also used to refer to a precursor to 3P sampling (Iles, 2003). The preliminary 3P version is discussed in Gregoire and Valentine's sampling strategies book (2008). However, in this package the clearest distinction is that Poisson sampling analyzes to count data and 3P considers field estimations.
   
-### Function Definition:  
+### Function Definition:
 
-`summarize_poisson(data, desiredConfidence = 0.95)`  
+`summarize_poisson(data, desiredConfidence = 0.95)`
 
  Parameter        | Description
 ------------------|-----------------------------------------
@@ -374,13 +426,12 @@ desiredConfidence | numeric desired confidence level (e.g. 0.9)
 data <- c(2, 3, 4, 3, 4, 5, 2, 7)
 ```
 
-## Sources Used  
+## Sources Used
 
-Avery, T. E., & Burkhart, H., E. (1975). _Forest Measurements_ (5th ed.). New York, NY: McGraw-Hill.  
+Avery, T. E., & Burkhart, H., E. (1975). _Forest Measurements_ (5th ed.). New York, NY: McGraw-Hill.
 
-Gregoire, T. G., & Valentine, H. T. (2008). _Sampling Strategies for Natural Resources and the Environment_. Boca Raton, FL: CRC Press.  
+Gregoire, T. G., & Valentine, H. T. (2008). _Sampling Strategies for Natural Resources and the Environment_. Boca Raton, FL: CRC Press.
 
 Iles, K. (2003). _A Sampler of Inventory Topics_. Canada: Kim Iles & Associates Ltd.
 
 The Pennsylvania State University. (n.d.). _Poisson Sampling_. Retrieved from https://onlinecourses.science.psu.edu/stat504/node/57
-
