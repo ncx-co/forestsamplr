@@ -188,7 +188,9 @@ observeEvent(input$specify_stands, {
   )
   
   vals$forest <- map2(
-    .x = 1:vals$n_sim_stands, .y = vals$stand_acres, ~ make_stand_beta(
+    .x = 1:vals$n_sim_stands,
+    .y = vals$stand_acres,
+    ~ make_stand_beta(
       stand_id = .x,
       acres = .y,
       min_meas = vals$min_meas, 
@@ -460,6 +462,15 @@ observeEvent(input$upload_cruise_button, {
 
 ```{r cruise_functions}
 
+cruise_stands <- function(stand, n_plots) {
+  tibble(
+    stand_id = stand$stand_id,
+    acres = stand$acres,
+    plot_id = 1 : n_plots,
+    measurement = sample(stand$samps, size = n_plots)
+  )
+}
+
 get_sim_stats <- function(sim_df, sim_name, alpha) {
   sim_df %>%
     group_by(stand_id, acres) %>%
@@ -576,15 +587,6 @@ cruise_comparison <- function(stand, cruise_data,
 ```
 
 ```{r cruise_simulations}
-
-cruise_stands <- function(stand, n_plots) {
-  tibble(
-    stand_id = stand$stand_id,
-    acres = stand$acres,
-    plot_id = 1 : n_plots,
-    measurement = sample(stand$samps, size = n_plots)
-  )
-}
 
 vals$cruise_data <- NULL
 
@@ -955,7 +957,7 @@ validation_comparison <- function(
     cruise_incl_test <- PE_cruise <= upper_comp & PE_cruise >= lower_comp
     
     # Is the point estimate of comparison in the CI bounds of cruise?
-    comp_incl_test <- PE_comp <= upper_cruise & PE_comp <= lower_cruise
+    comp_incl_test <- PE_comp <= upper_cruise & PE_comp >= lower_cruise
     
     # Do the CIs of cruise overlap with those of comparison?
     overlap_test <- upper_r > lower_comp & lower_r < upper_comp
@@ -1050,7 +1052,7 @@ valid_compare_summary <- eventReactive(valid_compare(), {
     select(-sim_diffs) %>%
     mutate(
       n_cruise_plots = vals$n_cruise_plots,
-      n_comp_plots = vals$n_comp_plots,
+      n_comp_plots = vals$n_comp_plots
     )
   # select(-sim_diffs, -t_test_p_values)
 })
