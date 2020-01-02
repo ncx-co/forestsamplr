@@ -299,7 +299,9 @@ pop_stats <- eventReactive(
       summarize(
         mu = mean(measurement),
         sigma = sd(measurement)
-      )
+      ) %>%
+      ungroup() %>%
+      arrange(stand_id)
   }
 )
 
@@ -852,7 +854,8 @@ observeEvent(input$upload_comp_cruise_button, {
 })
 
 observeEvent(input$upload_comp_estimates_button, {
-  compEstUpload <- read_csv(input$user_comp_estimates$datapath)
+  compEstUpload <- read_csv(input$user_comp_estimates$datapath) %>%
+    arrange(stand_id)
   vals$estimates <- compEstUpload %>%
     left_join(pop_stats(), by = "stand_id") %>%
     pull(estimate)
